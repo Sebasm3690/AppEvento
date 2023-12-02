@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "party_management", #We add the name of our module to make Django aware of our app
+    # Then Django will also automatically pick up all modules
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
