@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "party_management",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -75,9 +76,13 @@ WSGI_APPLICATION = 'party_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'Eventos2',
+        'USER': 'postgres',
+        'PASSWORD': 'awayouname11',
+        'HOST': 'localhost',  
+        'PORT': '5432',
+    }      
 }
 
 
