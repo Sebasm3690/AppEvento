@@ -29,19 +29,69 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 # We have to put this coomand "python3 manage.py shell" -> Interactive Python interpreter (To work wit this Django project and then also work with the database that belongs to it)
 # from party_management.models import Asistente
 
-# -->  INSERT  <--
+# -->  SAVE (INSERT)  <--
+
 # The databse is not touched yet, this just creates an object in Python ands stores it in a variable
 
 # Pepito = Asistente(nombre="Pepito",apellido="Perez",correo="pepitoperez@espoch.edu.ec",contrasenia="pepito123",ci="0604312546")
 # Pepito.save()   With this you put the insert into the database
 
+#--> CREATE INSTEAD OF SAVE (INSERT) <--
+
+#Asistente.objects.create(nombre="Hanz",apellido="Karl",correo="hanzkarl@gmail.com",contrasenia="hanz123",ci=0704315795)
+
+
 # --> SELECT <--
 
 # object inherit from the model class
-# Asistente.object.all()
 # Also we need the methods in each class to show the class data in a better way
 
+# Asistente.object.all()
 
+
+# --> SELECT * FROM WHERE <--
+
+# Asistente.objects.get(id_asistente=3)
+# Vende.objects.filter(descuento=25)  #filter returns multyple values
+# --> If is lower greater, etc or contains some element (is case sensitive with elements) <--
+# Book.objects.filter(rating__lt=3) #lower than 3
+# Asistente.objects.filter(nombre__contains="Hanz")
+
+# OR 
+
+# from django.db.models import Q
+# Asistente.objects.filter(Q(nombre="Hanz") | Q(nombre="Carlos")) #We can delete the last Q in this case the Q of Carlos
+
+# AND
+
+# The same that above but whit "," insted of "|"
+
+# -->  UPDATE  <--
+
+# When you call save on an object that already existis in a database it will not create a new entry, but instead update the existing entry 
+# This only happen if the object doesn't exist, otherwise Django creates a new object
+
+# Pepito = Asistente.objects.all()[0]
+# Pepito.correo = "pepitoperez@gmail.com"
+# Pepito.save()
+# Asistente.objects.all()  -> Ver el resultado
+
+#--> DELETE DATA <--
+
+# Is like save, but with delete, you delete the class
+
+# Pepito = Asistente.objects.all[0]
+# Pepito.delete()
+
+#--> Query perfomance 
+
+# ** bestsellers = Book.objects.filter(is_bestselling=True) -> The database is not hit by Django, the variable only stores the query definition
+
+# If you do something with your queries sets, the database will be hit
+
+# ** print(bestsellers)  -> The database will be hit (Django goes to the database and run the query ) (If I run this code twice Django reuses chashed results and will no go to the database)
+
+#--> Conclusion --> Is better to store queries in variables to avoid to hit more than once the database
 
 
 # Create your models here.
