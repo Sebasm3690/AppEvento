@@ -1,6 +1,4 @@
-# AppEvento
-
-Diseño de la base de datos
+# Diseño base de datos
 
 # Nombre de la Base de Datos
 
