@@ -1,4 +1,4 @@
-![image](https://github.com/Sebasm3690/AppEvento/assets/123337490/77483b21-20ab-4447-85ba-04e300b4dc7b)# DISEÑO DE LA BASE DE DATOS
+# DISEÑO DE LA BASE DE DATOS
 
 # Nombre de la Base de Datos
 
