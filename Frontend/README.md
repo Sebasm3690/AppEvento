@@ -1,4 +1,4 @@
-# DISEÑO DE LA BASE DE DATOS
+![image](https://github.com/Sebasm3690/AppEvento/assets/123337490/77483b21-20ab-4447-85ba-04e300b4dc7b)# DISEÑO DE LA BASE DE DATOS
 
 # Nombre de la Base de Datos
 
@@ -29,6 +29,11 @@ Se necesita realizar las migraciones respectivas luego de tener los modelos impl
 
 ![image](https://github.com/Sebasm3690/AppEvento/assets/123337490/2ccd9f5d-02fe-4cf2-ab23-db26d6a4d899)
 
+## ORM
+
+Luego de lo anterior se puede aplicar el ORM sin ningun inconveniente
+
+![image](https://github.com/Sebasm3690/AppEvento/assets/123337490/0c0d1177-c6a2-4afb-b4d9-63445fef353c)
 
 
 
