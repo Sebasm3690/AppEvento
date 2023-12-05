@@ -27,6 +27,8 @@ Se necesita tener instalado el DMBS PostgresSQL con la siguiente configuración,
 
 Se necesita realizar las migraciones respectivas luego de tener los modelos implementados, luego de realizar las migraciones ya se pueden realizar las operaciones con ORM mediante consola 
 
+![image](https://github.com/Sebasm3690/AppEvento/assets/123337490/2ccd9f5d-02fe-4cf2-ab23-db26d6a4d899)
+
 
 
 
