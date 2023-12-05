@@ -2,7 +2,11 @@
 
 Diseño de la base de datos
 
-Diseño de la base de datos modelo coneptual
+# Nombre de la Base de Datos
+
+Evento
+
+Diseño de la base de datos modelo conceptual
 ![image](https://github.com/Sebasm3690/AppEvento/assets/123337490/73d19f0e-b587-49a9-ba98-2fa228b116b1)
 
 Diseño de la base de datos esquema lógico (Power Designer)
