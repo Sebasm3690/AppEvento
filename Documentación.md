@@ -43,12 +43,12 @@ Este documento tiene como objetivo principal proporcionar información detallada
 #### Enlace a la Planificación del Proyecto:
 
 ## DESARROLLADO POR:
-- Franklin Alvarez – 6854
-  [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-franklin.alvarez20%40outlook.com-blue?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:francisco.alvarez@espoch.edu.ec)
-- David Cabezas – 6862
-  [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-franklin.alvarez20%40outlook.com-blue?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:david.cabezas@espoch.edu.ec)
-- Sebastián Merino – 6882
-  [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-franklin.alvarez20%40outlook.com-blue?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:sebastian.merino@espoch.edu.ec)
-- Styven Padilla – 6889
-  [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-franklin.alvarez20%40outlook.com-blue?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:styven.padilla@espoch.edu.ec)
+- Franklin Alvarez – 6854 <br><br>
+  [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-francisco.alvarez%40espoch.edu.ec-blue?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:francisco.alvarez@espoch.edu.ec)
+- David Cabezas – 6862 <br><br>
+  [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-david.cabezas%40espoch.edu.ec-red?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:david.cabezas@espoch.edu.ec)
+- Sebastián Merino – 6882 <br><br>
+  [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-sebastian.merino%40espoch.edu.ec-green?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:sebastian.merino@espoch.edu.ec)
+- Styven Padilla – 6889 <br><br>
+  [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-styven.padilla%40espoch.edu.ec-pink?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:styven.padilla@espoch.edu.ec)
 
