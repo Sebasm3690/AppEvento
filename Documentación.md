@@ -5,6 +5,11 @@ Este documento tiene como objetivo principal proporcionar información detallada
 ## ESPECIFICACIÓN DE REQUISITOS
 ### Enlace a la Especificación de Requisitos de PartyConnect: 
 
+
+## DISEÑO DE LA BASE DE DATOS
+### Enlace al Diseño de la Base de Datos:
+
+
 ## PRODUCT BACKLOG
 - **Historia de Usuario #01:**
   - Descripción: [Breve descripción de la historia]
@@ -39,6 +44,11 @@ Este documento tiene como objetivo principal proporcionar información detallada
 
 ## DESARROLLADO POR:
 - Franklin Alvarez – 6854
+  [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-franklin.alvarez20%40outlook.com-blue?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:francisco.alvarez@espoch.edu.ec)
 - David Cabezas – 6862
+  [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-franklin.alvarez20%40outlook.com-blue?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:david.cabezas@espoch.edu.ec)
 - Sebastián Merino – 6882
+  [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-franklin.alvarez20%40outlook.com-blue?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:sebastian.merino@espoch.edu.ec)
 - Styven Padilla – 6889
+  [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-franklin.alvarez20%40outlook.com-blue?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:styven.padilla@espoch.edu.ec)
+
