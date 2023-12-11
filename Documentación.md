@@ -15,8 +15,6 @@
 ## PRODUCT BACKLOG
 - [`Historias de Usuario`](https://liveespochedu-my.sharepoint.com/:w:/g/personal/francisco_alvarez_espoch_edu_ec/EVLP6KNy46lIjgjYEw_dhBcBFHCw5JNjiK3W0GULzWgNHg?e=FAc2db)
 - [`Historias Técnicas`](https://liveespochedu-my.sharepoint.com/:w:/g/personal/francisco_alvarez_espoch_edu_ec/Ec6nelqtYYJEqq8qhr8aMKoBvzAhCBh1z82tkAah9EiLkg?e=4ks8Zp)
-
-### Enlace al Product Backlog:
 - [`Product Backlog`](https://liveespochedu-my.sharepoint.com/:x:/g/personal/francisco_alvarez_espoch_edu_ec/Ed_MAWoe-GpKolK7UbR8u_4BTkiZGnziwXjIinc-VBH2Uw?e=Yy2fLd)
 
 ## SPRINT BACKLOG
