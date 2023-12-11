@@ -5,7 +5,7 @@
 
 ## ESPECIFICACIÓN DE REQUISITOS
 ### Enlace a la Especificación de Requisitos de PartyConnect: 
-- [`Especificación de Requisitos`](https://www.ejemplo.com)
+- [`Especificación de Requisitos`](https://liveespochedu-my.sharepoint.com/:w:/g/personal/francisco_alvarez_espoch_edu_ec/EZGjtqCl4JlBuHHikxmhzWIBcypmBZFo3Urdj7JXjme_Qw?e=TXGaaI)
 
 
 ## DISEÑO DE LA BASE DE DATOS
@@ -25,7 +25,7 @@
   - Prioridad: Media
 
 ### Enlace al Product Backlog:
-- [`Product Backlog`](https://www.ejemplo.com)
+- [`Product Backlog`](https://liveespochedu-my.sharepoint.com/:x:/g/personal/francisco_alvarez_espoch_edu_ec/Ed_MAWoe-GpKolK7UbR8u_4BTkiZGnziwXjIinc-VBH2Uw?e=Yy2fLd)
 
 ## SPRINT BACKLOG
 - **Sprint 1 - Fecha de Inicio: [Fecha] - Fecha de Fin: [Fecha] - Estado: []**
@@ -40,7 +40,7 @@
 
 
 ### Enlace al Sprint Backlog:
-- [`Spring Backlog`](https://www.ejemplo.com)
+- [`Spring Backlog`](https://liveespochedu-my.sharepoint.com/:x:/g/personal/francisco_alvarez_espoch_edu_ec/EdSaFTXyH5dHsn_awqvolU8BlAR7tvHICM2N7eamp5uC-Q?e=lPjzLy)
 
 ## DESARROLLADO EN:
 
@@ -67,12 +67,12 @@
 ![VS Code](https://img.shields.io/badge/Visual_Studio_Code-0078D4?style=for-the-badge&logo=visual%20studio%20code&logoColor=white)
 
 ## DESARROLLADO POR:
-- Franklin Alvarez – 6854 <br><br>
+- Franklin Alvarez – 6854 <br>
   [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-francisco.alvarez%40espoch.edu.ec-blue?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:francisco.alvarez@espoch.edu.ec)
-- David Cabezas – 6862 <br><br>
+- David Cabezas – 6862 <br>
   [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-david.cabezas%40espoch.edu.ec-red?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:david.cabezas@espoch.edu.ec)
-- Sebastián Merino – 6882 <br><br>
+- Sebastián Merino – 6882 <br>
   [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-sebastian.merino%40espoch.edu.ec-green?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:sebastian.merino@espoch.edu.ec)
-- Styven Padilla – 6889 <br><br>
+- Styven Padilla – 6889 <br>
   [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-styven.padilla%40espoch.edu.ec-pink?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:styven.padilla@espoch.edu.ec)
 
