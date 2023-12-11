@@ -13,6 +13,69 @@
 - [`Diseño de la Base de Datos`](https://liveespochedu-my.sharepoint.com/:b:/g/personal/francisco_alvarez_espoch_edu_ec/ETOs9tKfaVpFsHmKPVpbkewBT8lG3Qe5JRT9qZz_Fsj-PQ?e=PEPnYN)
 
 ## PRODUCT BACKLOG
+- [`Historias de Usuario`](https://liveespochedu-my.sharepoint.com/:w:/g/personal/francisco_alvarez_espoch_edu_ec/EVLP6KNy46lIjgjYEw_dhBcBFHCw5JNjiK3W0GULzWgNHg?e=FAc2db)
+- [`Historias Técnicas`](https://liveespochedu-my.sharepoint.com/:w:/g/personal/francisco_alvarez_espoch_edu_ec/Ec6nelqtYYJEqq8qhr8aMKoBvzAhCBh1z82tkAah9EiLkg?e=4ks8Zp)
+
+- **Historia Técnica #01:**
+  - Descripción: [Breve descripción de la tarea técnica]
+  - Prioridad: Media
+
+### Enlace al Product Backlog:
+- [`Product Backlog`](https://liveespochedu-my.sharepoint.com/:x:/g/personal/francisco_alvarez_espoch_edu_ec/Ed_MAWoe-GpKolK7UbR8u_4BTkiZGnziwXjIinc-VBH2Uw?e=Yy2fLd)
+
+## SPRINT BACKLOG
+- **Sprint 1 - Fecha de Inicio: [Fecha] - Fecha de Fin: [Fecha] - Estado: []**
+  - **Tarea 1:**
+    - Descripción: [Breve descripción de la tarea]
+    - Responsable: [Nombre del responsable]
+    - Tiempo estimado: [Tiempo estimado en horas]
+  - **Tarea 2:**
+    - Descripción: [Breve descripción de la tarea]
+    - Responsable: [Nombre del responsable]
+    - Tiempo estimado: [Tiempo estimado en horas]
+
+
+### Enlace al Sprint Backlog:
+- [`Spring Backlog`](https://liveespochedu-my.sharepoint.com/:x:/g/personal/francisco_alvarez_espoch_edu_ec/EdSaFTXyH5dHsn_awqvolU8BlAR7tvHICM2N7eamp5uC-Q?e=lPjzLy)
+
+## DIAGRAMA DE PROCESOS
+- [`Enlace al Diagrama de Procesos`](https://www.ejemplo.com)
+
+## DESARROLLADO EN:
+
+### Lenguajes
+
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![Python](https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white)
+
+### Tecnologías
+
+![HTML](https://img.shields.io/badge/HTML-239120?style=for-the-badge&logo=html5&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS-239120?&style=for-the-badge&logo=css3&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white)
+
+### Bases de Datos
+
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+
+### Herramientas
+
+![Git](https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white)
+![VS Code](https://img.shields.io/badge/Visual_Studio_Code-0078D4?style=for-the-badge&logo=visual%20studio%20code&logoColor=white)
+
+## DESARROLLADO POR:
+- Franklin Alvarez – 6854 <br>
+  [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-francisco.alvarez%40espoch.edu.ec-blue?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:francisco.alvarez@espoch.edu.ec)
+- David Cabezas – 6862 <br>
+  [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-david.cabezas%40espoch.edu.ec-red?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:david.cabezas@espoch.edu.ec)
+- Sebastián Merino – 6882 <br>
+  [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-sebastian.merino%40espoch.edu.ec-green?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:sebastian.merino@espoch.edu.ec)
+- Styven Padilla – 6889 <br>
+  [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-styven.padilla%40espoch.edu.ec-pink?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:styven.padilla@espoch.edu.ec)
+
+<!--
 - **Historia de Usuario #01:**
   - ID: HU-001
   - Descripción: Como un organizador, necesito gestionar los eventos, con la finalidad de crear, editar, eliminar eventos con detalles como nombre, fecha, hora, ubicación y descripción.
@@ -149,63 +212,4 @@
         - Asegurar que el proceso de registro y autenticación sea intuitivo y fácil de usar para garantizar una buena experiencia del usuario.
 
    - Prioridad: Media
-
-- **Historia Técnica #01:**
-  - Descripción: [Breve descripción de la tarea técnica]
-  - Prioridad: Media
-
-### Enlace al Product Backlog:
-- [`Product Backlog`](https://liveespochedu-my.sharepoint.com/:x:/g/personal/francisco_alvarez_espoch_edu_ec/Ed_MAWoe-GpKolK7UbR8u_4BTkiZGnziwXjIinc-VBH2Uw?e=Yy2fLd)
-
-## SPRINT BACKLOG
-- **Sprint 1 - Fecha de Inicio: [Fecha] - Fecha de Fin: [Fecha] - Estado: []**
-  - **Tarea 1:**
-    - Descripción: [Breve descripción de la tarea]
-    - Responsable: [Nombre del responsable]
-    - Tiempo estimado: [Tiempo estimado en horas]
-  - **Tarea 2:**
-    - Descripción: [Breve descripción de la tarea]
-    - Responsable: [Nombre del responsable]
-    - Tiempo estimado: [Tiempo estimado en horas]
-
-
-### Enlace al Sprint Backlog:
-- [`Spring Backlog`](https://liveespochedu-my.sharepoint.com/:x:/g/personal/francisco_alvarez_espoch_edu_ec/EdSaFTXyH5dHsn_awqvolU8BlAR7tvHICM2N7eamp5uC-Q?e=lPjzLy)
-
-## DIAGRAMA DE PROCESOS
-- [`Enlace al Diagrama de Procesos`](https://www.ejemplo.com)
-
-## DESARROLLADO EN:
-
-### Lenguajes
-
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![Python](https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white)
-
-### Tecnologías
-
-![HTML](https://img.shields.io/badge/HTML-239120?style=for-the-badge&logo=html5&logoColor=white)
-![CSS](https://img.shields.io/badge/CSS-239120?&style=for-the-badge&logo=css3&logoColor=white)
-![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white)
-
-### Bases de Datos
-
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
-
-### Herramientas
-
-![Git](https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white)
-![VS Code](https://img.shields.io/badge/Visual_Studio_Code-0078D4?style=for-the-badge&logo=visual%20studio%20code&logoColor=white)
-
-## DESARROLLADO POR:
-- Franklin Alvarez – 6854 <br>
-  [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-francisco.alvarez%40espoch.edu.ec-blue?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:francisco.alvarez@espoch.edu.ec)
-- David Cabezas – 6862 <br>
-  [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-david.cabezas%40espoch.edu.ec-red?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:david.cabezas@espoch.edu.ec)
-- Sebastián Merino – 6882 <br>
-  [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-sebastian.merino%40espoch.edu.ec-green?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:sebastian.merino@espoch.edu.ec)
-- Styven Padilla – 6889 <br>
-  [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-styven.padilla%40espoch.edu.ec-pink?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:styven.padilla@espoch.edu.ec)
-
+-->
