@@ -1,14 +1,16 @@
 # AppEvento
-### Documentación del Software "PartyConnect"
-Este documento tiene como objetivo principal proporcionar información detallada sobre el Sprint Backlog, el Product Backlog y la planificación asociada. Se busca brindar una guía clara y precisa para el desarrollo y seguimiento de las tareas y objetivos relacionados con la gestión de proyectos, permitiendo una mejor comprensión de los procesos involucrados en la ejecución exitosa de cada sprint y la implementación efectiva del backlog.
+> [!IMPORTANT]
+> ### Documentación del Software "PartyConnect"
+> Este documento tiene como objetivo principal proporcionar información detallada sobre la Especificación de Requisitos, Diseño de la Base de Datos, el Sprint Backlog, el Product Backlog y la planificación asociada. Con esta información se busca brindar una guía clara y precisa para el desarrollo del producto software, permitiendo una mejor comprensión de los procesos involucrados en la ejecución exitosa de cada sprint y la implementación efectiva del backlog.
 
 ## ESPECIFICACIÓN DE REQUISITOS
 ### Enlace a la Especificación de Requisitos de PartyConnect: 
-    enlace
+- [`Especificación de Requisitos`](https://www.ejemplo.com)
+
 
 ## DISEÑO DE LA BASE DE DATOS
 ### Enlace al Diseño de la Base de Datos:
-    https://liveespochedu-my.sharepoint.com/:b:/g/personal/francisco_alvarez_espoch_edu_ec/ETOs9tKfaVpFsHmKPVpbkewBT8lG3Qe5JRT9qZz_Fsj-PQ?e=PEPnYN
+- [`Diseño de la Base de Datos`](https://liveespochedu-my.sharepoint.com/:b:/g/personal/francisco_alvarez_espoch_edu_ec/ETOs9tKfaVpFsHmKPVpbkewBT8lG3Qe5JRT9qZz_Fsj-PQ?e=PEPnYN)
 
 ## PRODUCT BACKLOG
 - **Historia de Usuario #01:**
@@ -23,7 +25,7 @@ Este documento tiene como objetivo principal proporcionar información detallada
   - Prioridad: Media
 
 ### Enlace al Product Backlog:
-    enlace
+- [`Product Backlog`](https://www.ejemplo.com)
 
 ## SPRINT BACKLOG
 - **Sprint 1 - Fecha de Inicio: [Fecha] - Fecha de Fin: [Fecha] - Estado: []**
@@ -38,7 +40,7 @@ Este documento tiene como objetivo principal proporcionar información detallada
 
 
 ### Enlace al Sprint Backlog:
-  enlace
+- [`Spring Backlog`](https://www.ejemplo.com)
 
 ## DESARROLLADO EN:
 
