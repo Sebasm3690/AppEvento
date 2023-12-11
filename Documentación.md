@@ -4,11 +4,11 @@ Este documento tiene como objetivo principal proporcionar información detallada
 
 ## ESPECIFICACIÓN DE REQUISITOS
 ### Enlace a la Especificación de Requisitos de PartyConnect: 
-
+    enlace
 
 ## DISEÑO DE LA BASE DE DATOS
 ### Enlace al Diseño de la Base de Datos:
-
+    https://liveespochedu-my.sharepoint.com/:b:/g/personal/francisco_alvarez_espoch_edu_ec/ETOs9tKfaVpFsHmKPVpbkewBT8lG3Qe5JRT9qZz_Fsj-PQ?e=PEPnYN
 
 ## PRODUCT BACKLOG
 - **Historia de Usuario #01:**
@@ -23,6 +23,7 @@ Este documento tiene como objetivo principal proporcionar información detallada
   - Prioridad: Media
 
 ### Enlace al Product Backlog:
+    enlace
 
 ## SPRINT BACKLOG
 - **Sprint 1 - Fecha de Inicio: [Fecha] - Fecha de Fin: [Fecha] - Estado: []**
@@ -36,8 +37,8 @@ Este documento tiene como objetivo principal proporcionar información detallada
     - Tiempo estimado: [Tiempo estimado en horas]
 
 
-
 ### Enlace al Sprint Backlog:
+  enlace
 
 ## DESARROLLADO EN:
 
