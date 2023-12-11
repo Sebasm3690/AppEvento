@@ -42,6 +42,9 @@
 ### Enlace al Sprint Backlog:
 - [`Spring Backlog`](https://liveespochedu-my.sharepoint.com/:x:/g/personal/francisco_alvarez_espoch_edu_ec/EdSaFTXyH5dHsn_awqvolU8BlAR7tvHICM2N7eamp5uC-Q?e=lPjzLy)
 
+## DIAGRAMA DE PROCESOS
+- [`Enlace al Diagrama de Procesos`](https://www.ejemplo.com)
+
 ## DESARROLLADO EN:
 
 ### Lenguajes
