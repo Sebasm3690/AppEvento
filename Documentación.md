@@ -14,11 +14,143 @@
 
 ## PRODUCT BACKLOG
 - **Historia de Usuario #01:**
-  - Descripción: [Breve descripción de la historia]
+  - ID: HU-001
+  - Descripción: Como un organizador, necesito gestionar los eventos, con la finalidad de crear, editar, eliminar eventos con detalles como nombre, fecha, hora, ubicación y descripción.
   - Criterios de aceptación:
-    1. [Criterio 1]
-    2. [Criterio 2]
+    1. Crear un evento:
+        - El organizador debería poder agregar un nuevo evento.
+        - Se deben ingresar detalles como nombre, fecha, hora, ubicación y descripción al crear un evento.
+        - La fecha y hora deben ser válidas y futuras.
+
+    2. Editar un evento:
+        - El organizador debe tener la capacidad de modificar los detalles de un evento existente.
+        - Se deben proporcionar opciones para cambiar el nombre, fecha, hora, ubicación y descripción del evento.
+
+    3. Eliminar un evento:
+        - Debería ser posible eliminar un evento existente.
+        - Se podría incluir una confirmación para evitar eliminaciones accidentales.
+
+    4. Visualizar detalles del evento:
+        - El organizador debería poder ver todos los detalles de un evento, incluyendo nombre, fecha, hora, ubicación y descripción.
+
+    5. Interfaz de usuario:
+        - La interfaz de usuario debería ser intuitiva y fácil de usar para facilitar la gestión de eventos.
+        - Se pueden incluir mensajes informativos para guiar al usuario durante el proceso.
+
+   - Prioridad: Alta
+
+- **Historia de Usuario #02:**
+  - ID: HU-002
+  - Descripción: Como un organizador, necesito gestionar los asistentes del evento, con la finalidad de gestionalr la lista de asistemtes, así como verificar la asistencia en el día del evento.
+  - Criterios de aceptación:
+    1. Agregar asistentes:
+        - El organizador debe tener la capacidad de añadir asistentes al evento.
+        - Se deben recopilar detalles como nombre, información de contacto, y cualquier otro dato relevante.
+
+    2. Visualizar lista de asistentes:
+        - Debería ser posible ver una lista completa de todos los asistentes registrados para el evento.
+        - La lista debería incluir la información clave de cada asistente.
+
+    3. Editar información de asistentes:
+        - El organizador debe tener la opción de modificar la información de los asistentes existentes si es necesario.
+
+    4. Eliminar asistentes:
+        - Debería ser posible quitar a un asistente de la lista si cancela su participación o por alguna otra razón.
+
   - Prioridad: Alta
+ 
+- **Historia de Usuario #03:**
+  - ID: HU-003
+  - Descripción: Como un asistente, necesito comprar boletos, con la finalidad de asistir a los eventos o fiestas.
+  - Criterios de aceptación:
+    1. Explorar eventos:
+        - Los asistentes deberían poder ver una lista de eventos disponibles para comprar boletos.
+        - Se debe mostrar información relevante, como nombre del evento, fecha, hora y lugar.
+
+    2. Seleccionar boletos:
+        - Debería ser posible seleccionar la cantidad y tipo de boletos deseados para un evento específico.
+        - Pueden existir distintas categorías de boletos con precios diferentes.
+
+    3. Revisar detalles de la compra:
+        - Antes de confirmar la compra, el asistente debe tener la posibilidad de revisar los detalles de la transacción, incluyendo la cantidad de boletos, el costo total, y la información del evento.
+
+    4. Proceso de pago:
+        - Debería existir un proceso de pago seguro que permita a los asistentes completar la compra de boletos.
+        - Se pueden incluir opciones de pago, como tarjetas de crédito, débito, u otros métodos populares.
+
+    5. Confirmación de compra:
+        - Después de completar la transacción, el asistente debería recibir una confirmación de compra que incluya un recibo y los detalles del evento.
+
+   - Prioridad: Baja
+ 
+  - **Historia de Usuario #04:**
+  - ID: HU-004
+  - Descripción: Como un organizador, necesito vender boletos a través de la página web, con la finalidad de que los asistentes puedan asistir a diferentes eventos o fiestas.
+  - Criterios de aceptación:
+    1. Creación de eventos:
+        - Los organizadores deben tener la capacidad de crear nuevos eventos para los cuales desean vender boletos.
+        - Deben ingresar detalles como nombre del evento, fecha, hora, ubicación y descripción:
+      
+    2. Configuración de tipos de boletos:
+        - Se debe permitir a los organizadores definir distintos tipos de boletos (por ejemplo, general, VIP) con precios y cantidades disponibles específicos.
+    
+    3. Configuración de precios:
+        - Los organizadores deben tener la opción de establecer precios diferentes para cada tipo de boleto y definir descuentos si es necesario.
+
+    4. Integración de pasarela de pago:
+        - Debería ser posible integrar una pasarela de pago segura para procesar las transacciones de venta de boletos.
+        - Se pueden incluir opciones de pago comunes, como tarjetas de crédito, débito, u otros métodos populares.
+
+    5. Generación de boletos electrónicos:
+        - Después de realizar la compra, la plataforma debería generar boletos electrónicos que se enviarán automáticamente al comprador.
+
+   - Prioridad: Alta
+ 
+    - **Historia de Usuario #05:**
+  - ID: HU-005
+  - Descripción: Como un organizador, necesito vender boletos a través de la página web, con la finalidad de que los asistentes puedan asistir a diferentes eventos o fiestas.
+  - Criterios de aceptación:
+    1. Creación de eventos:
+        - Los organizadores deben tener la capacidad de crear nuevos eventos para los cuales desean vender boletos.
+        - Deben ingresar detalles como nombre del evento, fecha, hora, ubicación y descripción:
+      
+    2. Configuración de tipos de boletos:
+        - Se debe permitir a los organizadores definir distintos tipos de boletos (por ejemplo, general, VIP) con precios y cantidades disponibles específicos.
+    
+    3. Configuración de precios:
+        - Los organizadores deben tener la opción de establecer precios diferentes para cada tipo de boleto y definir descuentos si es necesario.
+
+    4. Integración de pasarela de pago:
+        - Debería ser posible integrar una pasarela de pago segura para procesar las transacciones de venta de boletos.
+        - Se pueden incluir opciones de pago comunes, como tarjetas de crédito, débito, u otros métodos populares.
+
+    5. Generación de boletos electrónicos:
+        - Después de realizar la compra, la plataforma debería generar boletos electrónicos que se enviarán automáticamente al comprador.
+
+   - Prioridad: Alta
+ 
+    - **Historia de Usuario #06:**
+  - ID: HU-006
+  - Descripción: Como un organizador, necesito vender boletos a través de la página web, con la finalidad de que los asistentes puedan asistir a diferentes eventos o fiestas.
+  - Criterios de aceptación:
+    1. Creación de eventos:
+        - Los organizadores deben tener la capacidad de crear nuevos eventos para los cuales desean vender boletos.
+        - Deben ingresar detalles como nombre del evento, fecha, hora, ubicación y descripción:
+      
+    2. Configuración de tipos de boletos:
+        - Se debe permitir a los organizadores definir distintos tipos de boletos (por ejemplo, general, VIP) con precios y cantidades disponibles específicos.
+    
+    3. Configuración de precios:
+        - Los organizadores deben tener la opción de establecer precios diferentes para cada tipo de boleto y definir descuentos si es necesario.
+
+    4. Integración de pasarela de pago:
+        - Debería ser posible integrar una pasarela de pago segura para procesar las transacciones de venta de boletos.
+        - Se pueden incluir opciones de pago comunes, como tarjetas de crédito, débito, u otros métodos populares.
+
+    5. Generación de boletos electrónicos:
+        - Después de realizar la compra, la plataforma debería generar boletos electrónicos que se enviarán automáticamente al comprador.
+
+   - Prioridad: Alta
 
 - **Historia Técnica #01:**
   - Descripción: [Breve descripción de la tarea técnica]
