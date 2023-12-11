@@ -89,7 +89,7 @@
   - Criterios de aceptación:
     1. Creación de eventos:
         - Los organizadores deben tener la capacidad de crear nuevos eventos para los cuales desean vender boletos.
-        - Deben ingresar detalles como nombre del evento, fecha, hora, ubicación y descripción:
+        - Deben ingresar detalles como nombre del evento, fecha, hora, ubicación y descripción.
       
     2. Configuración de tipos de boletos:
         - Se debe permitir a los organizadores definir distintos tipos de boletos (por ejemplo, general, VIP) con precios y cantidades disponibles específicos.
@@ -108,49 +108,47 @@
  
     - **Historia de Usuario #05:**
   - ID: HU-005
-  - Descripción: Como un organizador, necesito vender boletos a través de la página web, con la finalidad de que los asistentes puedan asistir a diferentes eventos o fiestas.
+  - Descripción: Como un administrador, necesito gestionar los organizadores de eventos, con la finalidad de tener una mejor información de los organizadores de eventos o fiestas.
   - Criterios de aceptación:
-    1. Creación de eventos:
-        - Los organizadores deben tener la capacidad de crear nuevos eventos para los cuales desean vender boletos.
-        - Deben ingresar detalles como nombre del evento, fecha, hora, ubicación y descripción:
+    1. Registro de nuevos organizadores:
+        - Los administradores deben tener la capacidad de registrar nuevos organizadores en el sistema.
+        - Deben recopilar información clave como nombre, información de contacto y detalles adicionales si es necesario.
       
-    2. Configuración de tipos de boletos:
-        - Se debe permitir a los organizadores definir distintos tipos de boletos (por ejemplo, general, VIP) con precios y cantidades disponibles específicos.
+    2. Edición de información de organizadores:
+        - Los administradores deben poder editar la información de los organizadores existentes.
+        - Esto incluye la capacidad de modificar detalles como nombre, información de contacto, y cualquier otro dato relevante.
     
-    3. Configuración de precios:
-        - Los organizadores deben tener la opción de establecer precios diferentes para cada tipo de boleto y definir descuentos si es necesario.
+    3. Desactivación de organizadores:
+        - Los administradores deberían tener la capacidad de desactivar temporal o permanentemente a un organizador si es necesario.
+        - Esto podría ser útil en casos de incumplimiento de políticas o cambios en la asociación.
 
-    4. Integración de pasarela de pago:
-        - Debería ser posible integrar una pasarela de pago segura para procesar las transacciones de venta de boletos.
-        - Se pueden incluir opciones de pago comunes, como tarjetas de crédito, débito, u otros métodos populares.
+    4. Visualización de lista de organizadores:
+        - Los administradores deberían poder ver una lista completa de todos los organizadores registrados en el sistema.
+        - La lista puede incluir información como nombre, información de contacto y eventos asociados.
 
-    5. Generación de boletos electrónicos:
-        - Después de realizar la compra, la plataforma debería generar boletos electrónicos que se enviarán automáticamente al comprador.
-
-   - Prioridad: Alta
+   - Prioridad: Media
  
     - **Historia de Usuario #06:**
   - ID: HU-006
-  - Descripción: Como un organizador, necesito vender boletos a través de la página web, con la finalidad de que los asistentes puedan asistir a diferentes eventos o fiestas.
+  - Descripción: Como un asistente, necesito registrarme y autenticarme en la página web, con la finalidad de estar pendiente e informado de los eventos próximos.
   - Criterios de aceptación:
-    1. Creación de eventos:
-        - Los organizadores deben tener la capacidad de crear nuevos eventos para los cuales desean vender boletos.
-        - Deben ingresar detalles como nombre del evento, fecha, hora, ubicación y descripción:
+    1. Registro de cuenta:
+        - Los asistentes deben tener la capacidad de crear una cuenta en la página web.
+        - Se deben recopilar detalles como nombre, dirección de correo electrónico y una contraseña segura.
       
-    2. Configuración de tipos de boletos:
-        - Se debe permitir a los organizadores definir distintos tipos de boletos (por ejemplo, general, VIP) con precios y cantidades disponibles específicos.
+    2. Autenticación:
+        - Después de registrarse, los asistentes deben poder iniciar sesión en la plataforma con su dirección de correo electrónico y contraseña.
     
-    3. Configuración de precios:
-        - Los organizadores deben tener la opción de establecer precios diferentes para cada tipo de boleto y definir descuentos si es necesario.
+    3. Recuperación de contraseña:
+        - Implementar un proceso seguro para que los asistentes puedan restablecer su contraseña en caso de olvido.
 
-    4. Integración de pasarela de pago:
-        - Debería ser posible integrar una pasarela de pago segura para procesar las transacciones de venta de boletos.
-        - Se pueden incluir opciones de pago comunes, como tarjetas de crédito, débito, u otros métodos populares.
+    4. Perfil del asistente:
+        - Proporcionar a los asistentes la posibilidad de completar su perfil con información adicional, como preferencias de eventos o detalles de contacto.
 
-    5. Generación de boletos electrónicos:
-        - Después de realizar la compra, la plataforma debería generar boletos electrónicos que se enviarán automáticamente al comprador.
+    5. Experiencia de usuario amigable:
+        - Asegurar que el proceso de registro y autenticación sea intuitivo y fácil de usar para garantizar una buena experiencia del usuario.
 
-   - Prioridad: Alta
+   - Prioridad: Media
 
 - **Historia Técnica #01:**
   - Descripción: [Breve descripción de la tarea técnica]
