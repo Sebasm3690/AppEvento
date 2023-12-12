@@ -18,15 +18,8 @@
 - [`Product Backlog`](https://liveespochedu-my.sharepoint.com/:x:/g/personal/francisco_alvarez_espoch_edu_ec/Ed_MAWoe-GpKolK7UbR8u_4BTkiZGnziwXjIinc-VBH2Uw?e=Yy2fLd)
 
 ## SPRINT BACKLOG
-- **Sprint 1 - Fecha de Inicio: [Fecha] - Fecha de Fin: [Fecha] - Estado: []**
-  - **Tarea 1:**
-    - Descripción: [Breve descripción de la tarea]
-    - Responsable: [Nombre del responsable]
-    - Tiempo estimado: [Tiempo estimado en horas]
-  - **Tarea 2:**
-    - Descripción: [Breve descripción de la tarea]
-    - Responsable: [Nombre del responsable]
-    - Tiempo estimado: [Tiempo estimado en horas]
+- **Sprint 1 - Fecha de Inicio: 20/11/2023 - Fecha de Fin: 26/11/2023 - Estado: REALIZADO**
+- **Sprint 2 - Fecha de Inicio: 27/11/2023 - Fecha de Fin: 10/12/2023 - Estado: REALIZADO**
 
 
 ### Enlace al Sprint Backlog:
