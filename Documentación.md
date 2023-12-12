@@ -30,7 +30,7 @@
 
 
 ### Enlace al Sprint Backlog:
-- [`Spring Backlog`](https://liveespochedu-my.sharepoint.com/:x:/g/personal/francisco_alvarez_espoch_edu_ec/EdSaFTXyH5dHsn_awqvolU8BlAR7tvHICM2N7eamp5uC-Q?e=lPjzLy)
+- [`Spring Backlog`](https://liveespochedu-my.sharepoint.com/:x:/g/personal/francisco_alvarez_espoch_edu_ec/EYbIwwNqVYNNnIE7JR56sIIBSipVHvauGCn5-znMbJVBfA?e=Tw5xC5)
 
 ## DIAGRAMA DE PROCESOS
 - [`Enlace al Diagrama de Procesos`](https://www.ejemplo.com)
