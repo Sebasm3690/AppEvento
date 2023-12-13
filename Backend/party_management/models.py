@@ -101,8 +101,8 @@ class Organizador(models.Model):
     id_admin = models.ForeignKey("Administrador", on_delete=models.CASCADE)
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
-    ci = models.CharField(max_length=10)
-    correo = models.CharField(max_length=25)
+    ci = models.CharField(max_length=10,unique=True)
+    correo = models.CharField(max_length=25,unique=True)
     constrasenia = models.CharField(max_length=15)
     def __str__(self):
         return f"{self.id_organizador}{self.id_admin}{self.nombre}{self.apellido}{self.ci}{self.correo}{self.constrasenia}"
@@ -121,14 +121,14 @@ class Administrador(models.Model):
     id_admin = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
-    ci = models.CharField(max_length=10)
+    ci = models.CharField(max_length=10,unique=True)
     def __str__(self):
         return f"{self.id_admin} {self.nombre} {self.apellido} {self.ci}"
 
 class Evento(models.Model):
     id_evento = models.AutoField(primary_key=True)
     id_organizador = models.ForeignKey("Organizador", on_delete=models.CASCADE)
-    nombre_evento = models.CharField(max_length=50)
+    nombre_evento = models.CharField(max_length=50,unique=True)
     fecha = models.DateTimeField(auto_now_add=True)
     hora = models.CharField(max_length=8)
     ubicacion = models.CharField(max_length=50)
@@ -142,9 +142,9 @@ class Asistente(models.Model):
     id_asistente = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
-    correo = models.CharField(max_length=25)
+    correo = models.CharField(max_length=25,unique=True)
     contrasenia = models.CharField(max_length=50)
-    ci = models.CharField(max_length=10)
+    ci = models.CharField(max_length=10,unique=True)
     #I don't have to run migrations again because I just added a method (I don't change the structure or the fields of my class)
     def __str__(self):
         return f"{self.id_asistente} {self.nombre} {self.apellido} {self.correo} {self.ci}" #With this you can show the elements of the class in a better way
@@ -168,8 +168,8 @@ class Contiene(models.Model):
 
 class Boleto(models.Model):
     id_boleto = models.AutoField(primary_key=True)
-    stock = models.BooleanField()
-    tipo = models.CharField(max_length=15)
+    stock = models.BooleanField(unique=True)
+    tipo = models.CharField(max_length=15,unique=True)
     precio = models.FloatField()
     def __str__(self):
         return f"{self.id_boleto}{self.stock}{self.tipo}{self.precio}"
