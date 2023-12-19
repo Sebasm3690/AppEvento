@@ -26,7 +26,8 @@
 - [`Spring Backlog`](https://liveespochedu-my.sharepoint.com/:x:/g/personal/francisco_alvarez_espoch_edu_ec/EYbIwwNqVYNNnIE7JR56sIIBSipVHvauGCn5-znMbJVBfA?e=Tw5xC5)
 
 ## DIAGRAMA DE PROCESOS
-- [`Enlace al Diagrama de Procesos`](https://liveespochedu-my.sharepoint.com/:w:/g/personal/francisco_alvarez_espoch_edu_ec/Ea-Hafv68CFGhS3fJo5elYABCl_xDrgrproS_DzZ5NBWvA?e=z17KXX)
+
+- [`Enlace al Diagrama de Procesos`](https://liveespochedu-my.sharepoint.com/:b:/g/personal/francisco_alvarez_espoch_edu_ec/Ebu9vpF4EipLh8KVNCLHgIcB-zLeNLuUORWWNY5BYAZtWA?e=uMXyBL)
 
 ## DESARROLLADO EN:
 
