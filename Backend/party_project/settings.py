@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "coreapi",
-    "party_management"
+    "party_management",
+    'djoser',
 ]
 
 MIDDLEWARE = [
@@ -139,3 +140,5 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Reemplaza con la URL de tu frontend React
 ]
+
+#AUTH_USER_MODEL = 'party_management.Asistente'
