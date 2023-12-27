@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "corsheaders",
     "rest_framework",
+    "coreapi",
     "party_management"
 ]
 
@@ -130,4 +131,11 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# cors authorization
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
+}
+
+#1 Para que funcione React
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Reemplaza con la URL de tu frontend React
+]

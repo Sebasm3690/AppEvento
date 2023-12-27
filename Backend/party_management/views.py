@@ -1,8 +1,8 @@
 from rest_framework import viewsets
-from .serializer import AdminSerializer
-from .models import Administrador
+from .serializer import OrganizerSerializer
+from .models import Organizador
 
 # Create your views here.
-class AdminView(viewsets.ModelViewSet):
-    serializer_class = AdminSerializer
-    queryset = Administrador.objects.all()
+class OrganizerView(viewsets.ModelViewSet):
+    serializer_class = OrganizerSerializer
+    queryset = Organizador.objects.all()
