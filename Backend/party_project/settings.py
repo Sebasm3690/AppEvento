@@ -81,9 +81,9 @@ WSGI_APPLICATION = 'party_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'Eventos',
+        'NAME': 'Eventos2',
         'USER': 'postgres',
-        'PASSWORD': 'awayouname11',
+        'PASSWORD': '15963554',
         'HOST': 'localhost',  # Puedes cambiarlo según la ubicación de tu base de datos
         'PORT': '5432',       # El puerto por defecto de PostgreSQL es 5432
     }
