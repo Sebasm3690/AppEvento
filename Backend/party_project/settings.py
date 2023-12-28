@@ -90,7 +90,7 @@ WSGI_APPLICATION = 'party_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'Eventos2',
+        'NAME': 'AppEventos',
         'USER': 'frank',
         'PASSWORD': '1234',
         'HOST': 'localhost',  
@@ -148,3 +148,8 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Reemplaza con la URL de tu frontend React
 ]
+
+AUTH_USER_MODEL = 'party_management.Asistente'
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True

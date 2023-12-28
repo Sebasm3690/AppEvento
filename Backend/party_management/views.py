@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
+from rest_framework.exceptions import AuthenticationFailed
+import jwt, datetime
 
 #@api_view(['POST'])
 #def login(request):
@@ -70,3 +72,71 @@ class LoginView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response({"error": "Credenciales incorrectas"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+class RegisterViewAs(APIView) :
+    def post(self, request):
+        serializer = AsisSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
+class LoginViewAs(APIView):
+    def post(self, request):
+        email = request.data['email']
+        password = request.data['password']
+
+        user = Asistente.objects.filter(email=email, password=password).first()
+
+        if user is None:
+            raise AuthenticationFailed('Usuario no Encontrado o Contraseña Incorrecta')
+
+        #if user.check_password(password):
+            #raise AuthenticationFailed('Cotraseña Incorrecta!')
+            
+        payload = {
+            'id': user.id_asistente,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+            'iat': datetime.datetime.utcnow()
+        }
+
+        token = jwt.encode(payload, 'secret', algorithm='HS256')
+
+
+        response = Response()
+
+        response.set_cookie(key='jwt', value=token, httponly=True)
+        response.data = {
+            'jwt': token
+        }
+    
+        return response
+    
+class UserViewAs(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if not token:
+            raise AuthenticationFailed('Unauthenticated!')
+
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated!')
+
+        # Utiliza 'id_asistente' en lugar de 'id' en la consulta
+        user = Asistente.objects.filter(id_asistente=payload['id']).first()
+
+        if not user:
+            raise AuthenticationFailed('Usuario no encontrado!')
+
+        serializer = AsisSerializer(user)
+        return Response(serializer.data)
+
+class LogoutViewAs(APIView):
+    def post(self, request):
+        response = Response()
+        response.delete_cookie('jwt')
+        response.data = {
+            'message': 'success'
+        }
+        return response
