@@ -83,7 +83,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'Eventos',
         'USER': 'postgres',
-        'PASSWORD': 'awayouname11',
+        'PASSWORD': '2607',
         'HOST': 'localhost',  # Puedes cambiarlo según la ubicación de tu base de datos
         'PORT': '5432',       # El puerto por defecto de PostgreSQL es 5432
     }

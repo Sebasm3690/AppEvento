@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const ShowOrganizers = () => {
-  const url = "http://127.0.0.1:8000/api/v1/party/";
+  const url = "http://127.0.0.1:8000/api/v1/organizador/";
   const [organizers, setOrganizers] = useState([]);
   const [id_organizador, setId] = useState("");
   const [nombre, setNombre] = useState("");
