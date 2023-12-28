@@ -1,7 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 #--> Migration <-- 
 # Are a feature that basically define steps for Django to execute
 # Steps that will touch the database and manipulate it (For creating new tables or manipulating existing tables)
@@ -123,6 +122,7 @@ class Administrador(models.Model):
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
     ci = models.CharField(max_length=10,unique=True)
+
     def __str__(self):
         return f"{self.id_admin} {self.nombre} {self.apellido} {self.ci}"
 
@@ -139,19 +139,6 @@ class Evento(models.Model):
     def __str__(self):
         return f"{self.id_evento}{self.id_organizador}{self.nombre_evento}{self.fecha}{self.hora}{self.ubicacion}{self.descripcion}{self.tipo}{self.limite}"
 
-class AsistenteAccountManager(BaseUserManager):
-    def create_user(self, correo, nombre, contrasenia = None):
-        if not correo:
-            raise ValueError('Los usuarios deben tener una dirección de correo electrónico')
-        
-        correo = self.normalize_email(correo)
-        usuario = self.model(correo = correo, nombre = nombre)
-        
-        usuario.set_password(contrasenia)
-        usuario.save()
-        
-        return usuario        
-
 class Asistente(models.Model):
     id_asistente = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=50)
@@ -159,23 +146,6 @@ class Asistente(models.Model):
     correo = models.CharField(max_length=25,unique=True)
     contrasenia = models.CharField(max_length=50)
     ci = models.CharField(max_length=10,unique=True)
-    is_active = models.BooleanField(default = True)
-    is_staff = models.BooleanField(default = False)
-    
-    objects = AsistenteAccountManager()
-    
-    USERNAME_FIELD = 'correo'
-    REQUIRED_FIELDS = ['nombre']
-    
-    def get_full_name(self):
-        return self.nombre
-    
-    def get_short_name(self):
-        return self.nombre
-    
-    def __str__(self):
-        return self.correo
-    
     #I don't have to run migrations again because I just added a method (I don't change the structure or the fields of my class)
     def __str__(self):
         return f"{self.id_asistente} {self.nombre} {self.apellido} {self.correo} {self.ci}" #With this you can show the elements of the class in a better way
