@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
-
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 #--> Migration <-- 
 # Are a feature that basically define steps for Django to execute
 # Steps that will touch the database and manipulate it (For creating new tables or manipulating existing tables)
@@ -122,6 +122,7 @@ class Administrador(models.Model):
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
     ci = models.CharField(max_length=10,unique=True)
+
     def __str__(self):
         return f"{self.id_admin} {self.nombre} {self.apellido} {self.ci}"
 
