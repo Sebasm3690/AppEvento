@@ -4,7 +4,7 @@ import withReactContent from "sweetalert2-react-content";
 //Podemos exportar todas estas funciones a los distintos componentes de acuerdo a la necesidad
 
 //Esta función nos servirá para mostrar alertas de sweetalert
-export function show_alerta(mensaje, icono, foco) {
+export function show_alerta(mensaje, icono, foco = "") {
   onfocus(foco);
   const MySwal = withReactContent(Swal);
   MySwal.fire({

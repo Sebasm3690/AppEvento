@@ -103,7 +103,8 @@ class Organizador(models.Model):
     apellido = models.CharField(max_length=50)
     ci = models.CharField(max_length=10,unique=True)
     correo = models.CharField(max_length=25,unique=True)
-    constrasenia = models.CharField(max_length=15)
+    contrasenia = models.CharField(max_length=15)
+    eliminado = models.BooleanField(default=False)
     def __str__(self):
         return f"{self.id_organizador}{self.id_admin}{self.nombre}{self.apellido}{self.ci}{self.correo}{self.constrasenia}"
 
