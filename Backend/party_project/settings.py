@@ -41,13 +41,16 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "coreapi",
-    "party_management"
+    "party_management",
+    'rest_framework_simplejwt',
 ]
 
+# settings.py
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 }
 
@@ -89,12 +92,12 @@ WSGI_APPLICATION = 'party_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'Eventos',
-        'USER': 'postgres',
-        'PASSWORD': '2607',
-        'HOST': 'localhost',  # Puedes cambiarlo según la ubicación de tu base de datos
-        'PORT': '5432',       # El puerto por defecto de PostgreSQL es 5432
-    }
+        'NAME': 'AppEventos',
+        'USER': 'frank',
+        'PASSWORD': '1234',
+        'HOST': 'localhost',  
+        'PORT': '5432',
+    }      
 }
 
 
@@ -147,8 +150,7 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Reemplaza con la URL de tu frontend React
 ]
-
 AUTH_USER_MODEL = 'party_management.Asistente'
 
-CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALOW_ALL = True

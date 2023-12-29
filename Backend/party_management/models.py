@@ -96,19 +96,14 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Abstra
 
 # Create your models here.
 
-class Organizador(AbstractUser):
+class Organizador(models.Model):
     id_organizador = models.AutoField(primary_key=True)
-    username = None
     id_admin = models.ForeignKey("Administrador", on_delete=models.CASCADE)
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
     ci = models.CharField(max_length=10,unique=True)
     correo = models.CharField(max_length=25,unique=True)
     constrasenia = models.CharField(max_length=15)
-
-    USERNAME_FIELD = 'correo'
-    REQUIRED_FIELDS = []
-
     def __str__(self):
         return f"{self.id_organizador}{self.id_admin}{self.nombre}{self.apellido}{self.ci}{self.correo}{self.constrasenia}"
 
@@ -141,7 +136,6 @@ class Evento(models.Model):
     descripcion = models.CharField(max_length=100)
     tipo = models.CharField(max_length=10)
     limite = models.IntegerField()
-
     def __str__(self):
         return f"{self.id_evento}{self.id_organizador}{self.nombre_evento}{self.fecha}{self.hora}{self.ubicacion}{self.descripcion}{self.tipo}{self.limite}"
 
@@ -150,16 +144,17 @@ class Asistente(AbstractUser):
     username = None
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
-    correo = models.CharField(max_length=25,unique=True)
-    contrasenia = models.CharField(max_length=50)
+    email = models.CharField(max_length=25,unique=True)
+    password = models.CharField(max_length=50)
     ci = models.CharField(max_length=10,unique=True)
     
-    USERNAME_FIELD = 'correo'
+    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     
     #I don't have to run migrations again because I just added a method (I don't change the structure or the fields of my class)
     def __str__(self):
         return f"{self.id_asistente} {self.nombre} {self.apellido} {self.correo} {self.ci}" #With this you can show the elements of the class in a better way
+
 
 class OrdenCompra(models.Model):
     num_orden = models.AutoField(primary_key=True)
