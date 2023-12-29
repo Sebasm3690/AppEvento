@@ -14,21 +14,24 @@ function Login() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', 
         body: JSON.stringify({
-          email,
-          password,
+          email: email,
+          password: password,
         }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data);
-        navigate('/asistente');
+      const data = await response.json();
+
+      if (data.jwt) {
+        localStorage.setItem('jwt', data.jwt);
+        window.location.href = '/asistente'; 
       } else {
-        setError('Credenciales incorrectas');
+        throw new Error('Credenciales incorrectas');
       }
     } catch (err) {
-      setError('Hubo un problema al procesar la solicitud');
+      console.error('Error al iniciar sesión:', err);
+      setError('Error al iniciar sesión');
     }
   };  
 

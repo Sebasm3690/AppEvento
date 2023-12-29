@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "coreapi",
-    "party_management"
+    "party_management",
+    'rest_framework_simplejwt',
 ]
 
 # settings.py
@@ -49,6 +50,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 }
 
@@ -148,8 +150,7 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Reemplaza con la URL de tu frontend React
 ]
-
 AUTH_USER_MODEL = 'party_management.Asistente'
 
-CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALOW_ALL = True
