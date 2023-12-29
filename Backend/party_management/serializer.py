@@ -8,6 +8,18 @@ class OrganizerSerializer(serializers.ModelSerializer):
         model = Organizador #Never put comma here, you got an error just here because with comma the interpreter thinks it is a tuple
         fields = '__all__'
 
+        extra_kwargs = {
+         'constrasenia ': {'write_only': True}
+      }
+        
+        def create(self, validated_data):
+         constrasenia  = validated_data.pop('constrasenia', None)
+         instance = self.Meta.model(**validated_data)
+         if constrasenia  is not None:
+            instance.set_password(constrasenia)
+         instance.save()
+         return instance
+
 class VendeSerializer(serializers.ModelSerializer):
    class Meta:
       model=Vende
@@ -22,6 +34,17 @@ class AsisSerializer(serializers.ModelSerializer):
    class Meta:
       model=Asistente
       fields = '__all__'
+      extra_kwargs = {
+         'contrasenia': {'write_only': True}
+      }
+      
+      def create(self, validated_data):
+         contrasenia = validated_data.pop('contrasenia', None)
+         instance = self.Meta.model(**validated_data)
+         if contrasenia is not None:
+            instance.set_password(contrasenia)
+         instance.save()
+         return instance
 
 class EvenSerializer(serializers.ModelSerializer):
    class Meta:

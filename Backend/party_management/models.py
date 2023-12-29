@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
-
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, AbstractUser
 #--> Migration <-- 
 # Are a feature that basically define steps for Django to execute
 # Steps that will touch the database and manipulate it (For creating new tables or manipulating existing tables)
@@ -96,14 +96,19 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Create your models here.
 
-class Organizador(models.Model):
+class Organizador(AbstractUser):
     id_organizador = models.AutoField(primary_key=True)
+    username = None
     id_admin = models.ForeignKey("Administrador", on_delete=models.CASCADE)
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
     ci = models.CharField(max_length=10,unique=True)
     correo = models.CharField(max_length=25,unique=True)
     constrasenia = models.CharField(max_length=15)
+
+    USERNAME_FIELD = 'correo'
+    REQUIRED_FIELDS = []
+
     def __str__(self):
         return f"{self.id_organizador}{self.id_admin}{self.nombre}{self.apellido}{self.ci}{self.correo}{self.constrasenia}"
 
@@ -122,6 +127,7 @@ class Administrador(models.Model):
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
     ci = models.CharField(max_length=10,unique=True)
+
     def __str__(self):
         return f"{self.id_admin} {self.nombre} {self.apellido} {self.ci}"
 
@@ -135,20 +141,25 @@ class Evento(models.Model):
     descripcion = models.CharField(max_length=100)
     tipo = models.CharField(max_length=10)
     limite = models.IntegerField()
+
     def __str__(self):
         return f"{self.id_evento}{self.id_organizador}{self.nombre_evento}{self.fecha}{self.hora}{self.ubicacion}{self.descripcion}{self.tipo}{self.limite}"
 
-class Asistente(models.Model):
+class Asistente(AbstractUser):
     id_asistente = models.AutoField(primary_key=True)
+    username = None
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
     correo = models.CharField(max_length=25,unique=True)
     contrasenia = models.CharField(max_length=50)
     ci = models.CharField(max_length=10,unique=True)
+    
+    USERNAME_FIELD = 'correo'
+    REQUIRED_FIELDS = []
+    
     #I don't have to run migrations again because I just added a method (I don't change the structure or the fields of my class)
     def __str__(self):
         return f"{self.id_asistente} {self.nombre} {self.apellido} {self.correo} {self.ci}" #With this you can show the elements of the class in a better way
-
 
 class OrdenCompra(models.Model):
     num_orden = models.AutoField(primary_key=True)
@@ -178,5 +189,4 @@ class Boleto(models.Model):
 
     # python3 manage.py majemigrations
     #exlusividad = models.IntegerField(validators=[null=True,MinValueValidator(1),MaxValueValidator(5)])
-
 
