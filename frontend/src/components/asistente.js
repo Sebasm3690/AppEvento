@@ -2,35 +2,53 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-function Asistente() {
+const Asistente = () => {
   const [asistenteData, setAsistenteData] = useState(null);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/api/asistente', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+
+      if (response.status === 200) {
+        const data = await response.json();
+        setAsistenteData(data);
+      } else {
+        throw new Error('Error al obtener datos del asistente');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      window.location.href = '/loginas';
+    }
+  };
+  
   const handleLogout = async () => {
     try {
-      // Llama a la API de logout
-      await axios.post('http://localhost:8000/api/logoutAs');
-      // Redirige a la página de inicio de sesión después de cerrar sesión
-      navigate('/loginas');
+      const response = await fetch('http://localhost:8000/api/logoutAs', {
+        method: 'POST',
+        credentials: 'include',
+      });
+
+      if (response.status === 200) {
+        localStorage.removeItem('jwt');
+        window.location.href = '/loginas';
+      } else {
+        throw new Error('Error al cerrar sesión');
+      }
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
     }
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('http://localhost:8000/api/asistente');
-        console.log('Response from API:', response.data);
-        setAsistenteData(response.data);
-      } catch (error) {
-        console.error('Error fetching asistente data:', error);
-      }
-    };
-  
-    fetchData();
-  }, []);
-  
 
   return (
     <div>
@@ -38,7 +56,6 @@ function Asistente() {
       {asistenteData && (
         <>
           <p>Bienvenido, {asistenteData.nombre} {asistenteData.apellido}.</p>
-          {/* Mostrar más información del asistente según tus necesidades */}
         </>
       )}
       <button onClick={handleLogout}>Cerrar sesión</button>

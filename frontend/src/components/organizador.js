@@ -1,49 +1,67 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 
-function Organizador() {
-  const [OrganizadorData, setOrganizadorData] = useState(null);
-  const navigate = useNavigate();
+const Organizador = () => {
+  const [adminData, setAdminData] = useState(null);
 
-  const handleLogout = async () => {
+  useEffect(() => {
+    fetchAdminData();
+  }, []);
+
+  const fetchAdminData = async () => {
     try {
-      // Llama a la API de logout
-      await axios.post('http://localhost:8000/api/logoutOrg');
-      // Redirige a la página de inicio de sesión después de cerrar sesión
-      navigate('/loginorganizador');
+      const response = await fetch('http://localhost:8000/api/organizador/', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+
+      if (response.status === 200) {
+        const data = await response.json();
+        setAdminData(data);
+      } else {
+        throw new Error('Error al obtener datos del Organizador');
+      }
     } catch (error) {
-      console.error('Error al cerrar sesión:', error);
+      console.error('Error:', error);
+      window.location.href = '/loginorg/';
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('http://localhost:8000/api/v1/organizador');
-        console.log('Response from API:', response.data);
-        setOrganizadorData(response.data);
-      } catch (error) {
-        console.error('Error fetching organizador data:', error);
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/api/logoutOrg/', {
+        method: 'POST',
+        credentials: 'include',
+      });
+
+      if (response.status === 200) {
+        localStorage.removeItem('jwt');
+        window.location.href = '/loginorg/';
+      } else {
+        throw new Error('Error al cerrar sesión');
       }
-    };
-
-    fetchData();
-  }, []);
-
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   return (
     <div>
-      <h2>Página del Organizador</h2>
-      {OrganizadorData && (
-        <>
-          <p>Bienvenido, {OrganizadorData.nombre} {OrganizadorData.apellido}.</p>
-          {/* Mostrar más información del asistente según tus necesidades */}
-        </>
+      <h2>Organizadores</h2>
+      {adminData ? (
+        <div>
+          <p>Nombre: {adminData.nombre}</p>
+          <p>Apellido: {adminData.apellido}</p>
+          <p>CI: {adminData.ci}</p>
+          <button onClick={handleLogout}>Cerrar sesión</button>
+        </div>
+      ) : (
+        <p>Cargando datos del organizador...</p>
       )}
-      <button onClick={handleLogout}>Cerrar sesión</button>
     </div>
   );
-}
+};
 
 export default Organizador;

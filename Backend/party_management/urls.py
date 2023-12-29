@@ -19,14 +19,19 @@ router.register(r'boleto', views.BoletoViewSet)
 urlpatterns = [
     path("api/v1/", include(router.urls)),  #/api/v1/
     path("docs/", include_docs_urls(title="Parties API")),
+    path("borrado_logico/<int:id_organizador>/",views.BorradoLogicoOrganizer.as_view(),name="borrado_logico"),
+
     path("api/login/", LoginViewAdm.as_view(), name='login'),
     path('api/logout/', LogoutViewAdm.as_view(), name='logout'),
     path('api/userv/', UserViewAdm.as_view(), name='admview'),
+
     path("register", RegisterViewAs.as_view()),
     path("loginAs", LoginViewAs.as_view()),
     path("asistente", UserViewAs.as_view()),
     path("logoutAs", LogoutViewAs.as_view()),
+
+    path("api/loginOrg/", LoginViewOrg.as_view(), name='login'),
+    path('api/organizador/', UserViewOrg.as_view(), name='organizador'),
+    path('api/logoutOrg/', LogoutViewOrg.as_view(), name='logout')
 ]
-
-
 
