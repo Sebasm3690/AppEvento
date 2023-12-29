@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
@@ -10,16 +9,28 @@ function Login() {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:8000/api/loginAs', {
-        email,
-        password,
+      const response = await fetch('http://localhost:8000/api/loginAs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
       });
-      console.log(response.data);
-      navigate('/asistente');
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        navigate('/asistente');
+      } else {
+        setError('Credenciales incorrectas');
+      }
     } catch (err) {
-      setError('Credenciales incorrectas');
+      setError('Hubo un problema al procesar la solicitud');
     }
-  };
+  };  
 
   return (
     <div>
