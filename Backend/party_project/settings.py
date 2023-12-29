@@ -95,7 +95,7 @@ DATABASES = {
         'NAME': 'AppEventos',
         'USER': 'frank',
         'PASSWORD': '1234',
-        'HOST': 'localhost',  
+        'HOST': 'localhost',
         'PORT': '5432',
     }      
 }
