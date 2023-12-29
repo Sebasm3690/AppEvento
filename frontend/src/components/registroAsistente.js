@@ -12,7 +12,7 @@ const Registro = () => {
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/register', data);
       console.log(response.data);
-      navigate('/asistente');
+      navigate('/loginas');
     } catch (error) {
       setError('email', {
         type: 'manual',
