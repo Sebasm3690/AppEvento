@@ -22,36 +22,38 @@ const Registro = () => {
   };
 
   return (
-    <div>
-      <h2>Registro</h2>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label>Nombre:</label>
-          <input {...register('nombre', { required: 'Campo requerido' })} />
-          {errors.nombre && <p>{errors.nombre.message}</p>}
-        </div>
-        <div>
-          <label>Apellido:</label>
-          <input {...register('apellido', { required: 'Campo requerido' })} />
-          {errors.apellido && <p>{errors.apellido.message}</p>}
-        </div>
-        <div>
-          <label>Email:</label>
-          <input {...register('email', { required: 'Campo requerido', pattern: { value: /^\S+@\S+$/i, message: 'Correo electrónico inválido' } })} />
-          {errors.email && <p>{errors.email.message}</p>}
-        </div>
-        <div>
-          <label>Password:</label>
-          <input type="password" {...register('password', { required: 'Campo requerido' })} />
-          {errors.password && <p>{errors.password.message}</p>}
-        </div>
-        <div>
-          <label>CI:</label>
-          <input {...register('ci', { required: 'Campo requerido' })} />
-          {errors.ci && <p>{errors.ci.message}</p>}
-        </div>
-        <button type="submit">Registrarse</button>
-      </form>
+    <div className="container mt-5">
+      <div className="col-md-6 offset-md-3">
+        <h2>Registro</h2>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="mb-3">
+            <label>Nombre:</label>
+            <input {...register('nombre', { required: 'Campo requerido' })} className="form-control" />
+            {errors.nombre && <p className="text-danger">{errors.nombre.message}</p>}
+          </div>
+          <div className="mb-3">
+            <label>Apellido:</label>
+            <input {...register('apellido', { required: 'Campo requerido' })} className="form-control" />
+            {errors.apellido && <p className="text-danger">{errors.apellido.message}</p>}
+          </div>
+          <div className="mb-3">
+            <label>Email:</label>
+            <input {...register('email', { required: 'Campo requerido', pattern: { value: /^\S+@\S+$/i, message: 'Correo electrónico inválido' } })} className="form-control" />
+            {errors.email && <p className="text-danger">{errors.email.message}</p>}
+          </div>
+          <div className="mb-3">
+            <label>Password:</label>
+            <input type="password" {...register('password', { required: 'Campo requerido' })} className="form-control" />
+            {errors.password && <p className="text-danger">{errors.password.message}</p>}
+          </div>
+          <div className="mb-3">
+            <label>CI:</label>
+            <input {...register('ci', { required: 'Campo requerido' })} className="form-control" />
+            {errors.ci && <p className="text-danger">{errors.ci.message}</p>}
+          </div>
+          <button type="submit" className="btn btn-primary">Registrarse</button>
+        </form>
+      </div>
     </div>
   );
 };

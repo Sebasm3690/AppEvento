@@ -49,17 +49,47 @@ const Organizador = () => {
 
   return (
     <div>
-      <h2>Organizadores</h2>
-      {adminData ? (
-        <div>
-          <p>Nombre: {adminData.nombre}</p>
-          <p>Apellido: {adminData.apellido}</p>
-          <p>CI: {adminData.ci}</p>
-          <button onClick={handleLogout}>Cerrar sesión</button>
+      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <div className="container-fluid">
+          <a className="navbar-brand" href="#">
+            Panel Organizadores
+          </a>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarNav">
+            <ul className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <button className="btn btn-danger" onClick={handleLogout}>
+                  Cerrar sesión
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
-      ) : (
-        <p>Cargando datos del organizador...</p>
-      )}
+      </nav>
+
+      <div className="container mt-5">
+        <div className="col-md-6 offset-md-3">
+          {adminData ? (
+          <div>
+            <p>Nombre: {adminData.nombre}</p>
+            <p>Apellido: {adminData.apellido}</p>
+            <p>CI: {adminData.ci}</p>
+          </div>
+        ) : (
+          <p>Cargando datos del organizador...</p>
+        )}
+        </div>
+      </div>
     </div>
   );
 };
