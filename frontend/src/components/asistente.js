@@ -27,10 +27,10 @@ function Asistente() {
         console.error('Error fetching asistente data:', error);
       }
     };
-
+  
     fetchData();
   }, []);
-
+  
 
   return (
     <div>
