@@ -5,9 +5,9 @@ from .models import *
 
 class OrganizerSerializer(serializers.ModelSerializer):
     class Meta:
-      model= Organizador
-      fields = '__all__'
-
+        model = Organizador #Never put comma here, you got an error just here because with comma the interpreter thinks it is a tuple
+        fields = '__all__'
+    
 class VendeSerializer(serializers.ModelSerializer):
    class Meta:
       model=Vende
@@ -34,7 +34,7 @@ class AsisSerializer(serializers.ModelSerializer):
          instance.save()
          return instance
 
-class EvenSerializer(serializers.ModelSerializer):
+class EventSerializer(serializers.ModelSerializer):
    class Meta:
       model=Evento
       fields = '__all__'
@@ -49,7 +49,7 @@ class ContieneSerializer(serializers.ModelSerializer):
       model=Contiene
       fields = '__all__'
 
-class BoletoSerializer(serializers.ModelSerializer):
+class TicketSerializer(serializers.ModelSerializer):
    class Meta:
       model=Boleto
       fields = '__all__'

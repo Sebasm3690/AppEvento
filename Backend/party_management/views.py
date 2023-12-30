@@ -1,38 +1,36 @@
 from rest_framework import viewsets, status
+from .serializer import OrganizerSerializer
+from .models import Organizador
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
 from .serializer import *
 from .models import *
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
-from django.shortcuts import get_object_or_404
-from rest_framework.views import APIView
 from django.contrib.auth import authenticate, login, logout
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import AuthenticationFailed
 import jwt, datetime
 from jwt.exceptions import DecodeError, InvalidTokenError
 
-#@api_view(['POST'])
-#def login(request):
-#    nombre = request.data.get('nombre')
-#    ci = request.data.get('ci')
-
-    #user = get_object_or_404(Administrador, nombre=nombre, ci=ci)
-
-    #token, created = Token.objects.get_or_create(user=user)
-    #serializer = AdminSerializer(instance=user)
-   ## return Response({"token": token.key, "user": serializer.data})
-
-
-#@api_view(['GET'])
-#def test_token(request):
-    #return Response({})
-
 # Create your views here.
 class OrganizerView(viewsets.ModelViewSet):
     serializer_class = OrganizerSerializer
     queryset = Organizador.objects.all()
+    
+class AdminView(viewsets.ModelViewSet):
+    serializer_class = AdminSerializer
+    queryset = Administrador.objects.all()
+
+class EventView(viewsets.ModelViewSet):
+    serializer_class = EventSerializer
+    queryset = Evento.objects.all()
+
+class TicketView(viewsets.ModelViewSet):
+    serializer_class = TicketSerializer
+    queryset = Boleto.objects.all()
 
 class BorradoLogicoOrganizer(APIView):
     def post(self,request,id_organizador):
@@ -53,17 +51,9 @@ class AsisViewSet(viewsets.ModelViewSet):
     queryset = Asistente.objects.all()
     serializer_class = AsisSerializer
 
-class EvenViewSet(viewsets.ModelViewSet):
-    queryset = Evento.objects.all()
-    serializer_class = EvenSerializer
-
 class ContieneViewSet(viewsets.ModelViewSet):
     queryset = Contiene.objects.all()
     serializer_class = ContieneSerializer
-
-class BoletoViewSet(viewsets.ModelViewSet):
-    queryset = Boleto.objects.all()
-    serializer_class = BoletoSerializer
 
 class OrdenViewSet(viewsets.ModelViewSet):
     queryset = OrdenCompra.objects.all()
