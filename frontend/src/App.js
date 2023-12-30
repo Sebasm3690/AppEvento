@@ -9,10 +9,29 @@ import AsistenteRegistro from "./components/registroAsistente";
 
 import LoginOrganizador from "./components/LoginOrganizador";
 import Organizador from "./components/organizador";
+import DLocalComponent from "./components/pagoprueba";
+import Paypal from "./components/pagoprueba";
 
 function App() {
+
+  const [checkout, setCheckOut] = useState(false);
+
   return (
     <BrowserRouter>
+        <div className="App">
+      {checkout ? (
+        <Paypal />
+      ) : (
+        <button
+          onClick={() => {
+            setCheckOut(true);
+          }}
+        >
+          Checkout
+        </button>
+      )}
+    </div>
+
       <Routes>
         <Route path="/" element={<ShowOrganizers></ShowOrganizers>}></Route>
         <Route path="/loginadm/" element={<LoginAdm></LoginAdm>}></Route>
@@ -24,6 +43,7 @@ function App() {
 
         <Route path="/loginorg/" element={<LoginOrganizador></LoginOrganizador>}></Route>
         <Route path="/organizador/" element={<Organizador></Organizador>}></Route>
+        <Route path="/pagopru/" element={<DLocalComponent></DLocalComponent>}></Route>
       </Routes>
     </BrowserRouter>
   );
