@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import NavBar from "./navbar";
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -36,44 +37,48 @@ function Login() {
   };  
 
   return (
-    <div className="container mt-5">
-      <div className="col-md-6 offset-md-3">
-        <h2 className="mb-4">Login</h2>
-        <form>
-          <div className="mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Correo electrónico"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div className="mb-3">
-            <input
-              type="password"
-              className="form-control"
-              placeholder="Contraseña"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <button
-            type="button"
-            className="btn btn-primary mb-3"
-            onClick={handleLogin}
-          >
-            Iniciar sesión
-          </button>
-          <button
-            type="button"
-            className="btn btn-link"
-            onClick={() => navigate('/registroAsistente')}
-          >
-            Registrarse
-          </button>
-        </form>
-        {error && <p className="text-danger">{error}</p>}
+    <div>
+      <NavBar />
+      <div className="container mt-5">
+        <div className="col-md-6 offset-md-3">
+          <h1>Asistente</h1> <br></br>
+          <h2>Iniciar Sesión</h2>
+          <form>
+            <div className="mb-3">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Correo electrónico"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="mb-3">
+              <input
+                type="password"
+                className="form-control"
+                placeholder="Contraseña"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <button
+              type="button"
+              className="btn btn-primary mb-3"
+              onClick={handleLogin}
+            >
+              Iniciar sesión
+            </button>
+            <button
+              type="button"
+              className="btn btn-link"
+              onClick={() => navigate('/registroAsistente')}
+            >
+              Registrarse
+            </button>
+          </form>
+          {error && <p className="text-danger">{error}</p>}
+        </div>
       </div>
     </div>
   );

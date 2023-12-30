@@ -13,10 +13,12 @@ import LoginOrganizador from "./components/LoginOrganizador";
 import Organizador from "./components/organizador";
 
 import Inicio from "./components/inicio";
+import NavBar from "./components/navbar";
 
 function App() {
   return (
     <BrowserRouter>
+    {/*<NavBar /> */}
       <Routes>
         {/* <Route path="/" element={<CrudEvents></CrudEvents>}></Route>*/}
         <Route path="/" element={<Inicio></Inicio>}></Route>

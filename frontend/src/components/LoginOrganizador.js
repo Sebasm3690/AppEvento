@@ -1,5 +1,6 @@
 // Login.js
 import React, { useState } from 'react';
+import NavBar from "./navbar";
 
 const LoginOrganizador = () => {
   const [username, setUsername] = useState('');
@@ -36,37 +37,41 @@ const LoginOrganizador = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <div className="col-md-6 offset-md-3">
-        <h2>Iniciar sesión Organizadores</h2>
-        <form>
-          <div className="mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Correo electrónico"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </div>
-          <div className="mb-3">
-            <input
-              type="password"
-              className="form-control"
-              placeholder="Contraseña"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-          <button
-            type="button"
-            className="btn btn-primary mb-3"
-            onClick={loginUser}
-          >
-            Iniciar sesión
-          </button>
-        </form>
+    <div>
+       <NavBar />
+      <div className="container mt-5">
+        <div className="col-md-6 offset-md-3">
+          <h1>Organizadores</h1> <br></br>
+          <h2>Iniciar Sesión</h2>
+          <form>
+            <div className="mb-3">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Correo electrónico"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
+            <div className="mb-3">
+              <input
+                type="password"
+                className="form-control"
+                placeholder="Contraseña"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            <button
+              type="button"
+              className="btn btn-primary mb-3"
+              onClick={loginUser}
+            >
+              Iniciar sesión
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
