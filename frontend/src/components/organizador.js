@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
+import CrudEvents from "./Organizer/CrudEvents";
 
 const Organizador = () => {
   const [adminData, setAdminData] = useState(null);
@@ -9,41 +10,41 @@ const Organizador = () => {
 
   const fetchAdminData = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/organizador/', {
-        method: 'GET',
+      const response = await fetch("http://localhost:8000/api/organizador/", {
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
       });
 
       if (response.status === 200) {
         const data = await response.json();
         setAdminData(data);
       } else {
-        throw new Error('Error al obtener datos del Organizador');
+        throw new Error("Error al obtener datos del Organizador");
       }
     } catch (error) {
-      console.error('Error:', error);
-      window.location.href = '/loginorg/';
+      console.error("Error:", error);
+      window.location.href = "/loginorg/";
     }
   };
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/logoutOrg/', {
-        method: 'POST',
-        credentials: 'include',
+      const response = await fetch("http://localhost:8000/api/logoutOrg/", {
+        method: "POST",
+        credentials: "include",
       });
 
       if (response.status === 200) {
-        localStorage.removeItem('jwt');
-        window.location.href = '/loginorg/';
+        localStorage.removeItem("jwt");
+        window.location.href = "/loginorg/";
       } else {
-        throw new Error('Error al cerrar sesión');
+        throw new Error("Error al cerrar sesión");
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
   };
 
@@ -80,14 +81,10 @@ const Organizador = () => {
       <div className="container mt-5">
         <div className="col-md-6 offset-md-3">
           {adminData ? (
-          <div>
-            <p>Nombre: {adminData.nombre}</p>
-            <p>Apellido: {adminData.apellido}</p>
-            <p>CI: {adminData.ci}</p>
-          </div>
-        ) : (
-          <p>Cargando datos del organizador...</p>
-        )}
+            <CrudEvents organizerObj={adminData}></CrudEvents>
+          ) : (
+            <p>Cargando datos del organizador...</p>
+          )}
         </div>
       </div>
     </div>

@@ -16,18 +16,31 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<CrudEvents></CrudEvents>}></Route>
-        <Route path="/organizadores" element={<ShowOrganizers></ShowOrganizers>}></Route>
+        {/*<Route path="/" element={<CrudEvents></CrudEvents>}></Route>*/}
+
+        {/*<Route
+          path="/panelAdmin/"
+          element={<ShowOrganizers></ShowOrganizers>}
+        ></Route>*/}
 
         <Route path="/loginadm/" element={<LoginAdm></LoginAdm>}></Route>
         <Route path="/dashboardadm/" element={<Dashboard></Dashboard>}></Route>
 
         <Route path="/loginas/" element={<LoginAs></LoginAs>}></Route>
         <Route path="/asistente/" element={<Asistente></Asistente>}></Route>
-        <Route path="/registroAsistente/" element={<AsistenteRegistro></AsistenteRegistro>}></Route>
+        <Route
+          path="/registroAsistente/"
+          element={<AsistenteRegistro></AsistenteRegistro>}
+        ></Route>
 
-        <Route path="/loginorg/" element={<LoginOrganizador></LoginOrganizador>}></Route>
-        <Route path="/organizador/" element={<Organizador></Organizador>}></Route>
+        <Route
+          path="/loginorg/"
+          element={<LoginOrganizador></LoginOrganizador>}
+        ></Route>
+        <Route
+          path="/organizador/"
+          element={<Organizador></Organizador>}
+        ></Route>
       </Routes>
     </BrowserRouter>
   );
