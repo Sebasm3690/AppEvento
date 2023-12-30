@@ -78,14 +78,14 @@ const Organizador = () => {
         </div>
       </nav>
 
+      {/*console.log(JSON.stringify(adminData, null, 2))*/}
+
       <div className="container mt-5">
-        <div className="col-md-6 offset-md-3">
-          {adminData ? (
-            <CrudEvents organizerObj={adminData}></CrudEvents>
-          ) : (
-            <p>Cargando datos del organizador...</p>
-          )}
-        </div>
+        {adminData ? (
+          <CrudEvents organizerObj={adminData}></CrudEvents>
+        ) : (
+          <p>Cargando datos del organizador...</p>
+        )}
       </div>
     </div>
   );
