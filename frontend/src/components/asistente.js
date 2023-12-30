@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-
 const Asistente = () => {
   const [asistenteData, setAsistenteData] = useState(null);
 
@@ -50,13 +49,43 @@ const Asistente = () => {
 
   return (
     <div>
-      <h2>Página del Asistente</h2>
-      {asistenteData && (
-        <>
-          <p>Bienvenido, {asistenteData.nombre} {asistenteData.apellido}.</p>
-        </>
-      )}
-      <button onClick={handleLogout}>Cerrar sesión</button>
+      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <div className="container-fluid">
+          <a className="navbar-brand" href="#">
+            Inicio
+          </a>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarNav">
+            <ul className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <button className="btn btn-danger" onClick={handleLogout}>
+                  Cerrar sesión
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <div className="container mt-5">
+        <div className="col-md-6 offset-md-3">
+          {asistenteData && (
+            <>
+              <p className="mb-3">Bienvenido, {asistenteData.nombre} {asistenteData.apellido}.</p>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

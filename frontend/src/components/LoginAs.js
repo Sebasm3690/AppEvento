@@ -36,23 +36,45 @@ function Login() {
   };  
 
   return (
-    <div>
-      <h2>Login</h2>
-      <input
-        type="text"
-        placeholder="Correo electrónico"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Contraseña"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleLogin}>Iniciar sesión</button>
-      <button onClick={() => navigate('/registroAsistente')}>Registrarse</button>
-      {error && <p>{error}</p>}
+    <div className="container mt-5">
+      <div className="col-md-6 offset-md-3">
+        <h2 className="mb-4">Login</h2>
+        <form>
+          <div className="mb-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Correo electrónico"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <input
+              type="password"
+              className="form-control"
+              placeholder="Contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <button
+            type="button"
+            className="btn btn-primary mb-3"
+            onClick={handleLogin}
+          >
+            Iniciar sesión
+          </button>
+          <button
+            type="button"
+            className="btn btn-link"
+            onClick={() => navigate('/registroAsistente')}
+          >
+            Registrarse
+          </button>
+        </form>
+        {error && <p className="text-danger">{error}</p>}
+      </div>
     </div>
   );
 }

@@ -93,8 +93,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'AppEventos',
-        'USER': 'postgres',
-        'PASSWORD': '2607',
+        'USER': 'frank',
+        'PASSWORD': '1234',
         'HOST': 'localhost',  
         'PORT': '5432',
     }      
@@ -149,6 +149,13 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Reemplaza con la URL de tu frontend React
 ]
+
+# UPLOAD IMAGE
+#1
+
+#MEDIA_ROOT = BASE_DIR / 'uploads'    #This is the folder where we wanna sabe our files, in this case our images -> The files will go into our uploads folder in our overall project folder
+#MEDIA_URL =   "/files/"              #Path that should be used by the browser to then request my files -> The path wich the browser can send requests to 
+
 AUTH_USER_MODEL = 'party_management.Asistente'
 
 CORS_ALLOW_CREDENTIALS = True
