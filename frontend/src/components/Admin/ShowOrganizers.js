@@ -37,7 +37,7 @@ const ShowOrganizers = ({ adminObj }) => {
     setOrganizers(respuesta.data);
   };
 
-  console.log("Datos del organizador de mi proyecto:", organizers);
+  console.log("Datos del organizador de:", organizers);
 
   const handleEditarUsuario = (userId) => {
     const organizador = organizers.find(

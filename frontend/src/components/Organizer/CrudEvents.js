@@ -14,8 +14,7 @@ import { show_alerta } from "../../functions";
 
 import "../styles/organizerStyles.css";
 
-const CrudEvents = (organizerObj) => {
-  console.log("Datos del organizador en CrudEvents:", organizerObj);
+const CrudEvents = ({ organizerObj }) => {
   const url = "http://127.0.0.1:8000/api/v1/event/";
   const url_boleto = "http://127.0.0.1:8000/api/v1/ticket/";
   /*Evento */
@@ -51,11 +50,11 @@ const CrudEvents = (organizerObj) => {
   const getEvents = async () => {
     const respuesta = await axios.get(url);
     setEvents(respuesta.data);
-    const respuestaBoleto = await axios.get(url_boleto);
-    setBoletos(respuestaBoleto.data);
+    /*const respuestaBoleto = await axios.get(url_boleto);
+    setBoletos(respuestaBoleto.data);*/
   };
 
-  console.log("Datos del cliente en CrudEvents:", events);
+  console.log("Datos del evento en mi proyectos:", events);
 
   const handleEditarBoleto = (ticketId) => {
     const ticket = boletos.find((boleto) => boleto.id_evento === ticketId);
@@ -319,9 +318,7 @@ const CrudEvents = (organizerObj) => {
           <tbody>
             {events
               .filter(
-                (event) =>
-                  parseInt(event.id_organizador) ===
-                  parseInt(organizerObj.id_organizador)
+                (event) => event.id_organizador === organizerObj.id_organizador
               )
               .map((event) => (
                 <tr key={event.id_evento}>
