@@ -12,6 +12,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import AuthenticationFailed
 import jwt, datetime
 from jwt.exceptions import DecodeError, InvalidTokenError
+
 #@api_view(['POST'])
 #def login(request):
 #    nombre = request.data.get('nombre')
@@ -33,6 +34,13 @@ class OrganizerView(viewsets.ModelViewSet):
     serializer_class = OrganizerSerializer
     queryset = Organizador.objects.all()
 
+class BorradoLogicoOrganizer(APIView):
+    def post(self,request,id_organizador):
+        organizador = get_object_or_404(Organizador, pk=id_organizador)
+        organizador.eliminado = True
+        organizador.save()
+        return Response({'mensaje':'Borrado lógico exitoso'}, status=status.HTTP_200_OK)
+    
 class VendeViewSet(viewsets.ModelViewSet):
     queryset = Vende.objects.all()
     serializer_class = VendeSerializer
@@ -111,6 +119,135 @@ class UserViewAdm(APIView):
         return Response(serializer.data)
 
 class LogoutViewAdm(APIView):
+    def post(self, request):
+        # Cerrar la sesión del usuario almacenando la información en la sesión
+        response = Response()
+        response.delete_cookie('jwt')
+        response.data = {
+            'message': 'logout success'
+        }
+
+        return response
+
+class RegisterViewAs(APIView) :
+    def post(self, request):
+        serializer = AsisSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
+class LoginViewAs(APIView):
+    def post(self, request):
+        email = request.data['email']
+        password = request.data['password']
+
+        user = Asistente.objects.filter(email=email, password=password).first()
+
+        if user is None:
+            raise AuthenticationFailed('Usuario no Encontrado o Contraseña Incorrecta')
+
+        #if user.check_password(password):
+            #raise AuthenticationFailed('Cotraseña Incorrecta!')
+            
+        payload = {
+            'id': user.id_asistente,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+            'iat': datetime.datetime.utcnow()
+        }
+
+        token = jwt.encode(payload, 'secret', algorithm='HS256')
+
+
+        response = Response()
+
+        response.set_cookie(key='jwt', value=token, httponly=True)
+        response.data = {
+            'jwt': token
+        }
+    
+        return response
+    
+class UserViewAs(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if not token:
+            raise AuthenticationFailed('Unauthenticated!')
+
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated!')
+
+        # Utiliza 'id_asistente' en lugar de 'id' en la consulta
+        user = Asistente.objects.filter(id_asistente=payload['id']).first()
+
+        if not user:
+            raise AuthenticationFailed('Usuario no encontrado!')
+
+        serializer = AsisSerializer(user)
+        return Response(serializer.data)
+
+class LogoutViewAs(APIView):
+    def post(self, request):
+        response = Response()
+        response.delete_cookie('jwt')
+        response.data = {
+            'message': 'success'
+        }
+        return response
+
+# Organizador
+    
+class LoginViewOrg(APIView):
+    def post(self, request, *args, **kwargs):
+        nombre = request.data.get('username')
+        ci = request.data.get('password')
+        
+        organizador = Organizador.objects.filter(nombre=nombre, ci=ci).first()
+
+        if organizador  is None:
+            raise AuthenticationFailed('User not found')
+
+        if organizador :
+            request.session['is_logged_in'] = True
+            serializer = OrganizerSerializer(organizador )
+            
+            payload = {
+                'id': organizador.id_organizador,
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+                'iat': datetime.datetime.utcnow()
+            }
+
+            token = jwt.encode(payload, 'secret', algorithm='HS256')
+
+            response = Response()
+
+            response.set_cookie(key='jwt', value=token, httponly=True)
+            response.data ={
+                'jwt': token
+            }
+
+            return response
+        else:
+            return Response({"error": "Credenciales incorrectas"}, status=status.HTTP_401_UNAUTHORIZED)
+
+class UserViewOrg(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if not token:
+            raise AuthenticationFailed('No inicio sesion correctamente')
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('No inicio sesion')
+        
+        admin = Organizador.objects.filter(id_organizador=payload['id']).first()
+        serializer = OrganizerSerializer(admin)
+        return Response(serializer.data)
+
+class LogoutViewOrg(APIView):
     def post(self, request):
         # Cerrar la sesión del usuario almacenando la información en la sesión
         response = Response()

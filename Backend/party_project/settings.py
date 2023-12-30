@@ -92,14 +92,13 @@ WSGI_APPLICATION = 'party_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'Eventos2',
-        'USER': 'postgres',
-        'PASSWORD': '15963554',
-        'HOST': 'localhost',  # Puedes cambiarlo según la ubicación de tu base de datos
-        'PORT': '5432',       # El puerto por defecto de PostgreSQL es 5432
-    }
+        'NAME': 'AppEventos',
+        'USER': 'frank',
+        'PASSWORD': '1234',
+        'HOST': 'localhost',  
+        'PORT': '5432',
+    }      
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -150,6 +149,7 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Reemplaza con la URL de tu frontend React
 ]
+AUTH_USER_MODEL = 'party_management.Asistente'
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALOW_ALL = True

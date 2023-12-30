@@ -1,21 +1,22 @@
-// Login.js
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const LoginAdm = () => {
-  const [username, setUsername] = useState('');
+function Login() {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const loginUser = async () => {
+  const handleLogin = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/login/', {
+      const response = await fetch('http://localhost:8000/api/loginAs', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include', // Para enviar y recibir cookies desde el servidor
+        credentials: 'include', 
         body: JSON.stringify({
-          username: username,
+          email: email,
           password: password,
         }),
       });
@@ -24,29 +25,28 @@ const LoginAdm = () => {
 
       if (data.jwt) {
         localStorage.setItem('jwt', data.jwt);
-        // Redirecciona a otra página después de iniciar sesión
-        window.location.href = '/dashboardadm/'; // Ajusta según tu estructura de rutas
+        window.location.href = '/asistente'; 
       } else {
         throw new Error('Credenciales incorrectas');
       }
     } catch (err) {
       console.error('Error al iniciar sesión:', err);
-      setError('Credenciales incorrectas');
+      setError('Error al iniciar sesión');
     }
-  };
+  };  
 
   return (
     <div className="container mt-5">
       <div className="col-md-6 offset-md-3">
-        <h2>Iniciar sesión</h2>
+        <h2 className="mb-4">Login</h2>
         <form>
           <div className="mb-3">
             <input
               type="text"
               className="form-control"
               placeholder="Correo electrónico"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className="mb-3">
@@ -58,18 +58,25 @@ const LoginAdm = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
           <button
             type="button"
             className="btn btn-primary mb-3"
-            onClick={loginUser}
+            onClick={handleLogin}
           >
             Iniciar sesión
           </button>
+          <button
+            type="button"
+            className="btn btn-link"
+            onClick={() => navigate('/registroAsistente')}
+          >
+            Registrarse
+          </button>
         </form>
+        {error && <p className="text-danger">{error}</p>}
       </div>
     </div>
   );
-};
+}
 
-export default LoginAdm;
+export default Login;

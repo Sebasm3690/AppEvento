@@ -1,16 +1,15 @@
-// Dashboard.js
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const Dashboard = () => {
-  const [adminData, setAdminData] = useState(null);
+const Asistente = () => {
+  const [asistenteData, setAsistenteData] = useState(null);
 
   useEffect(() => {
-    fetchAdminData();
+    fetchData();
   }, []);
 
-  const fetchAdminData = async () => {
+  const fetchData = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/userv/', {
+      const response = await fetch('http://localhost:8000/api/asistente', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -20,31 +19,31 @@ const Dashboard = () => {
 
       if (response.status === 200) {
         const data = await response.json();
-        setAdminData(data);
+        setAsistenteData(data);
       } else {
-        throw new Error('Error al obtener datos del administrador');
+        throw new Error('Error al obtener datos del asistente');
       }
     } catch (error) {
       console.error('Error:', error);
-      window.location.href = '/loginadm/';
+      window.location.href = '/loginas';
     }
   };
-
+  
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/logout/', {
+      const response = await fetch('http://localhost:8000/api/logoutAs', {
         method: 'POST',
         credentials: 'include',
       });
 
       if (response.status === 200) {
         localStorage.removeItem('jwt');
-        window.location.href = '/loginadm/';
+        window.location.href = '/loginas';
       } else {
         throw new Error('Error al cerrar sesión');
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error al cerrar sesión:', error);
     }
   };
 
@@ -53,7 +52,7 @@ const Dashboard = () => {
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
           <a className="navbar-brand" href="#">
-            Panel Administrador
+            Inicio
           </a>
           <button
             className="navbar-toggler"
@@ -80,20 +79,15 @@ const Dashboard = () => {
 
       <div className="container mt-5">
         <div className="col-md-6 offset-md-3">
-          {adminData ? (
-            <div>
-              <p>ID del Administrador: {adminData.id_admin}</p>
-              <p>Nombre: {adminData.nombre}</p>
-              <p>Apellido: {adminData.apellido}</p>
-              <p>CI: {adminData.ci}</p>
-            </div>
-          ) : (
-            <p>Cargando datos del administrador...</p>
+          {asistenteData && (
+            <>
+              <p className="mb-3">Bienvenido, {asistenteData.nombre} {asistenteData.apellido}.</p>
+            </>
           )}
         </div>
       </div>
     </div>
   );
-};
+}
 
-export default Dashboard;
+export default Asistente;

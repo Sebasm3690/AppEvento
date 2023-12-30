@@ -1,7 +1,6 @@
-// Dashboard.js
 import React, { useEffect, useState } from 'react';
 
-const Dashboard = () => {
+const Organizador = () => {
   const [adminData, setAdminData] = useState(null);
 
   useEffect(() => {
@@ -10,7 +9,7 @@ const Dashboard = () => {
 
   const fetchAdminData = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/userv/', {
+      const response = await fetch('http://localhost:8000/api/organizador/', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -22,24 +21,24 @@ const Dashboard = () => {
         const data = await response.json();
         setAdminData(data);
       } else {
-        throw new Error('Error al obtener datos del administrador');
+        throw new Error('Error al obtener datos del Organizador');
       }
     } catch (error) {
       console.error('Error:', error);
-      window.location.href = '/loginadm/';
+      window.location.href = '/loginorg/';
     }
   };
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/logout/', {
+      const response = await fetch('http://localhost:8000/api/logoutOrg/', {
         method: 'POST',
         credentials: 'include',
       });
 
       if (response.status === 200) {
         localStorage.removeItem('jwt');
-        window.location.href = '/loginadm/';
+        window.location.href = '/loginorg/';
       } else {
         throw new Error('Error al cerrar sesión');
       }
@@ -53,7 +52,7 @@ const Dashboard = () => {
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
           <a className="navbar-brand" href="#">
-            Panel Administrador
+            Panel Organizadores
           </a>
           <button
             className="navbar-toggler"
@@ -81,19 +80,18 @@ const Dashboard = () => {
       <div className="container mt-5">
         <div className="col-md-6 offset-md-3">
           {adminData ? (
-            <div>
-              <p>ID del Administrador: {adminData.id_admin}</p>
-              <p>Nombre: {adminData.nombre}</p>
-              <p>Apellido: {adminData.apellido}</p>
-              <p>CI: {adminData.ci}</p>
-            </div>
-          ) : (
-            <p>Cargando datos del administrador...</p>
-          )}
+          <div>
+            <p>Nombre: {adminData.nombre}</p>
+            <p>Apellido: {adminData.apellido}</p>
+            <p>CI: {adminData.ci}</p>
+          </div>
+        ) : (
+          <p>Cargando datos del organizador...</p>
+        )}
         </div>
       </div>
     </div>
   );
 };
 
-export default Dashboard;
+export default Organizador;

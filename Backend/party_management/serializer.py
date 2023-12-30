@@ -5,8 +5,8 @@ from .models import *
 
 class OrganizerSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Organizador #Never put comma here, you got an error just here because with comma the interpreter thinks it is a tuple
-        fields = '__all__'
+      model= Organizador
+      fields = '__all__'
 
 class VendeSerializer(serializers.ModelSerializer):
    class Meta:
@@ -22,6 +22,17 @@ class AsisSerializer(serializers.ModelSerializer):
    class Meta:
       model=Asistente
       fields = '__all__'
+      extra_kwargs = {
+         'password': {'write_only': True}
+      }
+      
+      def create(self, validated_data):
+         password = validated_data.pop('password', None)
+         instance = self.Meta.model(**validated_data)
+         if password is not None:
+            instance.set_password(password)
+         instance.save()
+         return instance
 
 class EvenSerializer(serializers.ModelSerializer):
    class Meta:
