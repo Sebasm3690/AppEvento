@@ -106,7 +106,7 @@ class Organizador(models.Model):
     contrasenia = models.CharField(max_length=15)
     eliminado = models.BooleanField(default=False)
     def __str__(self):
-        return f"{self.id_organizador}{self.id_admin}{self.nombre}{self.apellido}{self.ci}{self.correo}{self.constrasenia}"
+        return f"{self.id_organizador}{self.id_admin}{self.nombre}{self.apellido}{self.ci}{self.correo}{self.contrasenia}"
 
 
 class Vende(models.Model):
@@ -131,13 +131,14 @@ class Evento(models.Model):
     id_organizador = models.ForeignKey("Organizador", on_delete=models.CASCADE)
     nombre_evento = models.CharField(max_length=50,unique=True)
     fecha = models.DateTimeField(auto_now_add=True)
-    hora = models.CharField(max_length=8)
+    hora = models.TimeField()
     ubicacion = models.CharField(max_length=50)
     descripcion = models.CharField(max_length=100)
     tipo = models.CharField(max_length=10)
     limite = models.IntegerField()
+    #image = models.ImageField(upload_to="images/") #It'll go into a subfolder of our uploads folder named images #UPLOAD IMAGE #2
     def __str__(self):
-        return f"{self.id_evento}{self.id_organizador}{self.nombre_evento}{self.fecha}{self.hora}{self.ubicacion}{self.descripcion}{self.tipo}{self.limite}"
+        return f"{self.id_evento} {self.id_organizador} {self.nombre_evento} {self.fecha} {self.hora} {self.ubicacion} {self.descripcion} {self.tipo} {self.limite}"
 
 class Asistente(models.Model):
     id_asistente = models.AutoField(primary_key=True)

@@ -10,7 +10,7 @@ import {
   FormGroup,
   ModalFooter,
 } from "reactstrap";
-import { show_alerta } from "../functions";
+import { show_alerta } from "../../functions";
 
 const ShowOrganizers = () => {
   const url = "http://127.0.0.1:8000/api/v1/organizer/";

@@ -10,4 +10,9 @@ class AdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = Administrador
         fields = '__all__'
+
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Evento
+        fields = '__all__'
     
