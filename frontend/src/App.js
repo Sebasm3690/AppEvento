@@ -1,8 +1,10 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import ShowOrganizers from "./components/ShowOrganizers";
-import LoginAdm from "./components/LoginAdm";
+import ShowOrganizers from "./components/Admin/ShowOrganizers";
+import CrudEvents from "./components/Organizer/CrudEvents";
 
+import LoginAdm from "./components/LoginAdm";
 import Dashboard from "./components/DashboardAdm";
+
 import LoginAs from "./components/LoginAs";
 import Asistente from "./components/asistente";
 import AsistenteRegistro from "./components/registroAsistente";
@@ -14,7 +16,9 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<ShowOrganizers></ShowOrganizers>}></Route>
+        <Route path="/" element={<CrudEvents></CrudEvents>}></Route>
+        <Route path="/organizadores" element={<ShowOrganizers></ShowOrganizers>}></Route>
+
         <Route path="/loginadm/" element={<LoginAdm></LoginAdm>}></Route>
         <Route path="/dashboardadm/" element={<Dashboard></Dashboard>}></Route>
 
