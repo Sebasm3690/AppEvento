@@ -14,6 +14,7 @@ import Organizador from "./components/organizador";
 
 import Inicio from "./components/inicio";
 import NavBar from "./components/navbar";
+import EditarPerfil from "./components/Asistente/editarPerfil"
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
           path="/registroAsistente/"
           element={<AsistenteRegistro></AsistenteRegistro>}
         ></Route>
+        <Route path="/editarPerfil" element={<EditarPerfil />} />
 
         <Route
           path="/loginorg/"
