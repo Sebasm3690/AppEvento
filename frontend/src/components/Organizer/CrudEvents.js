@@ -16,6 +16,8 @@ import "../styles/organizerStyles.css";
 
 const CrudEvents = () => {
   const url = "http://127.0.0.1:8000/api/v1/event/";
+  const url_boleto = "http://127.0.0.1:8000/api/v1/ticket/";
+  /*Evento */
   const [events, setEvents] = useState([]);
   const [id, setId] = useState(0);
   const [nombre, setNombre] = useState("");
@@ -24,11 +26,20 @@ const CrudEvents = () => {
   const [ubicacion, setUbicacion] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [tipo, setTipo] = useState("");
+  /*Boleto*/
+  const [boletos, setBoletos] = useState([]);
+  const [idBoleto, setIdBoleto] = useState(0);
+  const [stock, setStock] = useState(0);
+  const [tipoBoleto, setTipoBoleto] = useState("");
+  const [precio, setPrecio] = useState(0);
+
   const [limite, setLimite] = useState(0);
   //const [image, setImage] = useState("");
   const [id_organizador, setIdOrganizador] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showModalInsert, setShowModalInsert] = useState(false);
+  const [showModalBoleto, setShowModalBoleto] = useState(false);
+  const [showModalBoletoIngresar, setShowModalBoletoIngresar] = useState(false);
 
   //Función para consumir API y obtener todo el objeto {}
 
@@ -39,6 +50,18 @@ const CrudEvents = () => {
   const getEvents = async () => {
     const respuesta = await axios.get(url);
     setEvents(respuesta.data);
+    const respuestaBoleto = await axios.get(url_boleto);
+    setBoletos(respuestaBoleto.data);
+  };
+
+  const handleEditarBoleto = (ticketId) => {
+    const ticket = boletos.find((boleto) => boleto.id_evento === ticketId);
+    if (ticket) {
+      setIdBoleto(boletos.id_boleto);
+      setStock(boletos.stock);
+      setTipoBoleto(boletos.tipo);
+      setPrecio(boletos.precio);
+    }
   };
 
   const handleEditarEvento = (eventId) => {
@@ -92,10 +115,74 @@ const CrudEvents = () => {
     }
   };*/
 
-  const validar = async (op) => {
+  const validarBoletoEditar = async (op) => {
+    setShowModalBoleto(false);
+    setShowModalBoletoIngresar(false);
     var parametros;
-    alert(id);
-    alert(url);
+    if (stock === 0) {
+      show_alerta("Escribe si hay stock dosponible", "warning");
+    } else if (tipo === "") {
+      show_alerta("Escribe el tipo de boleto", "warning");
+    } else if (precio === 0) {
+      show_alerta("Escribe el precio del boleto", "warning");
+    }
+
+    parametros = {
+      stock: stock,
+      tipo: tipo,
+      precio: precio,
+    };
+
+    axios
+      .put(url_boleto, parametros)
+      .then((response) => {
+        console.log("Respuesta del servidor:", response.data);
+        show_alerta("El boleto ha sido agregado exitosamente", "success");
+      })
+      .catch((error) => {
+        console.error("Error al realizar la solicitud POST:", error);
+      });
+  };
+
+  const validarBoletoIngresar = async (op) => {
+    setShowModalBoletoIngresar(false);
+    setShowModalBoleto(false);
+    var parametros;
+    if (stock === 0) {
+      show_alerta("Escribe si hay stock dosponible", "warning");
+    } else if (tipo === "") {
+      show_alerta("Escribe el tipo de boleto", "warning");
+    } else if (precio === 0) {
+      show_alerta("Escribe el precio del boleto", "warning");
+    }
+
+    parametros = {
+      stock: stock,
+      tipo: tipo,
+      precio: precio,
+    };
+
+    // Convertir el objeto a una cadena JSON
+    const parametrosString = JSON.stringify(parametros, null, 2);
+
+    // Mostrar un alert con la información del objeto
+    alert(parametrosString);
+
+    axios
+      .post(url_boleto, parametros)
+      .then((response) => {
+        console.log("Respuesta del servidor:", response.data);
+        show_alerta("El boleto ha sido agregado exitosamente", "success");
+      })
+      .catch((error) => {
+        console.error("Error al realizar la solicitud POST:", error);
+      });
+  };
+
+  const validar = async (op) => {
+    setShowModal(false);
+
+    var parametros;
     const urlEditar = `http://127.0.0.1:8000/api/v1/event/${id}/`;
     //var metodo;
     if (nombre.trim() === "") {
@@ -117,6 +204,8 @@ const CrudEvents = () => {
     } else if (id_organizador === "") {
       show_alerta("Escribe el  nombre del organizador", "warning");
     }
+    setShowModalInsert(false);
+    setShowModalBoleto(true);
 
     if (op === 1) {
       parametros = {
@@ -132,10 +221,10 @@ const CrudEvents = () => {
       };
 
       // Convertir el objeto a una cadena JSON
-      const parametrosString = JSON.stringify(parametros, null, 2);
+      //const parametrosString = JSON.stringify(parametros, null, 2);
 
       // Mostrar un alert con la información del objeto
-      alert(parametrosString);
+      //alert(parametrosString);
 
       //metodo = "POST";
       console.log("Parámetros que se enviarán:", parametros);
@@ -274,7 +363,7 @@ const CrudEvents = () => {
       <Modal isOpen={showModal}>
         <ModalHeader>
           <div>
-            <h3>Editar Registro</h3>
+            <h3>Editar Organizador</h3>
           </div>
         </ModalHeader>
 
@@ -404,14 +493,14 @@ const CrudEvents = () => {
 
         <ModalFooter>
           <Button color="primary" onClick={() => validar(2)}>
-            Editar
+            Siguiente
           </Button>
           <Button color="danger" onClick={() => setShowModal(false)}>
             Cancelar
           </Button>
         </ModalFooter>
       </Modal>
-      {/*------------------------------------- */}
+      {/*-------------Insertar Evento---------------- */}
 
       <Modal isOpen={showModalInsert}>
         <ModalHeader>
@@ -525,13 +614,161 @@ const CrudEvents = () => {
 
         <ModalFooter>
           <Button color="primary" onClick={() => validar(1)}>
-            Insertar
+            Siguiente
           </Button>
           <Button
             className="btn btn-danger"
             onClick={() => setShowModalInsert(false)}
           >
             Cancelar
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+      {/*----------------Modal Boleto Editar-------------------*/}
+
+      {/*Ventana modal*/}
+
+      <Modal isOpen={showModalBoleto}>
+        <ModalHeader>
+          <div>
+            <h3>Editar Boleto</h3>
+          </div>
+        </ModalHeader>
+
+        {/* Vista previa de la imagen }
+
+        {image && (
+          <img
+            src={image}
+            alt="Imagen de vista previa"
+            style={{ maxWidth: "100%", height: "auto" }}
+          />
+        )}
+
+        {----------------------------*/}
+
+        <ModalBody>
+          <FormGroup>
+            <label>Id:</label>
+            <input
+              className="form-control"
+              readOnly
+              type="text"
+              name="id_evento" //e es nuestro evento o lo que ingresa el usuario, con target apuntamos al valor ingresado por el usuario y se actualiza el objeto gracias al método set
+              value={idBoleto}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <label>Stock:</label>
+            <input
+              className="form-control"
+              name="nombre_evento"
+              type="text"
+              onChange={(e) => setStock(e.target.value)}
+              value={stock}
+            />
+          </FormGroup>
+          <FormGroup>
+            <label>Tipo:</label>
+            <input
+              className="form-control"
+              name="fecha"
+              type="text"
+              onChange={(e) => setTipoBoleto(e.target.value)}
+              value={tipoBoleto}
+            />
+          </FormGroup>
+          <FormGroup>
+            <label>Precio:</label>
+            <input
+              className="form-control"
+              name="hora"
+              type="money"
+              onChange={(e) => setPrecio(e.target.value)}
+              value={precio}
+            />
+          </FormGroup>
+        </ModalBody>
+
+        <ModalFooter>
+          <Button color="primary" onClick={() => validarBoletoEditar()}>
+            Finalizar
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+      {/*----------------Modal Boleto Ingresar-------------------*/}
+
+      {/*Ventana modal*/}
+
+      <Modal isOpen={showModalBoleto}>
+        <ModalHeader>
+          <div>
+            <h3>Ingresar Boleto</h3>
+          </div>
+        </ModalHeader>
+
+        {/* Vista previa de la imagen }
+
+        {image && (
+          <img
+            src={image}
+            alt="Imagen de vista previa"
+            style={{ maxWidth: "100%", height: "auto" }}
+          />
+        )}
+
+        {----------------------------*/}
+
+        <ModalBody>
+          <FormGroup>
+            <label>Id:</label>
+            <input
+              className="form-control"
+              readOnly
+              type="text"
+              name="id_evento" //e es nuestro evento o lo que ingresa el usuario, con target apuntamos al valor ingresado por el usuario y se actualiza el objeto gracias al método set
+              value={idBoleto}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <label>Stock:</label>
+            <input
+              className="form-control"
+              name="nombre_evento"
+              type="text"
+              onChange={(e) => setStock(e.target.value)}
+              value={stock}
+            />
+          </FormGroup>
+          <FormGroup>
+            <label>Tipo:</label>
+            <input
+              className="form-control"
+              name="fecha"
+              type="text"
+              onChange={(e) => setTipoBoleto(e.target.value)}
+              value={tipoBoleto}
+            />
+          </FormGroup>
+          <FormGroup>
+            <label>Precio:</label>
+            <input
+              className="form-control"
+              name="hora"
+              type="money"
+              onChange={(e) => setPrecio(e.target.value)}
+              value={precio}
+            />
+          </FormGroup>
+        </ModalBody>
+
+        <ModalFooter>
+          <Button color="primary" onClick={() => validarBoletoIngresar()}>
+            Finalizar
           </Button>
         </ModalFooter>
       </Modal>

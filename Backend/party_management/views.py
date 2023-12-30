@@ -25,6 +25,11 @@ class EventView(viewsets.ModelViewSet):
     serializer_class = EventSerializer
     queryset = Evento.objects.all()
 
+
+class TicketView(viewsets.ModelViewSet):
+    serializer_class = TicketSerializer
+    queryset = Boleto.objects.all()
+
 class BorradoLogicoOrganizer(APIView):
     def post(self,request,id_organizador):
         organizador = get_object_or_404(Organizador, pk=id_organizador)

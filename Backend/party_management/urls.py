@@ -11,6 +11,7 @@ router = routers.DefaultRouter()
 router.register(r"organizer",views.OrganizerView,"organizer")  #/api/v1/organizer/
 router.register(r"admin",views.AdminView,"admin") #api/v1/admin/
 router.register(r"event",views.EventView,"event")
+router.register(r"ticket",views.TicketView,"ticket")
 
 urlpatterns = [
     path("api/v1/", include(router.urls)),  #/api/v1/

@@ -139,3 +139,10 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Reemplaza con la URL de tu frontend React
 ]
+
+
+# UPLOAD IMAGE
+#1
+
+#MEDIA_ROOT = BASE_DIR / 'uploads'    #This is the folder where we wanna sabe our files, in this case our images -> The files will go into our uploads folder in our overall project folder
+#MEDIA_URL =   "/files/"              #Path that should be used by the browser to then request my files -> The path wich the browser can send requests to 

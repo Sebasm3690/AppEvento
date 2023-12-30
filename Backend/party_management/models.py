@@ -170,7 +170,7 @@ class Contiene(models.Model):
 
 class Boleto(models.Model):
     id_boleto = models.AutoField(primary_key=True)
-    stock = models.BooleanField(unique=True)
+    stock = models.IntegerField(unique=True)
     tipo = models.CharField(max_length=15,unique=True)
     precio = models.FloatField()
     def __str__(self):

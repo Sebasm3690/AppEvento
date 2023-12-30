@@ -16,3 +16,7 @@ class EventSerializer(serializers.ModelSerializer):
         model = Evento
         fields = '__all__'
     
+class TicketSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Boleto
+        fields = '__all__'
