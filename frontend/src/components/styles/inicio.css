@@ -1,0 +1,52 @@
+.inicio-container {
+  background-color: #333;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.inicio-item {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff; 
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.rol-info {
+  flex-grow: 1;
+}
+
+.inicio-button {
+  text-decoration: none;
+  color: #fff; 
+  background-color: #007bff;
+  padding: 10px 15px;
+  border: 1px solid #007bff; 
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.inicio-button:hover {
+  background-color: #0056b3; 
+}
+
+.bienvenida {
+  text-align: center;
+  background-color: #007bff; 
+  color: #fff; 
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.bienvenida h1 {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.bienvenida p {
+  font-size: 1.2em;
+  margin: 0;
+}
