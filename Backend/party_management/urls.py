@@ -41,6 +41,8 @@ urlpatterns = [
     path('api/vereven/', EventoMuestra.as_view(), name='evenmuestra'),
     path('api/lista/evendet/<int:id_evento>/', EventoDetail.as_view(), name='evendet'),
     path('api/crear-orden/', OrdenCompraView.as_view(), name='crearord'),
-    path('api/contiene/agregar/', ContieneCreateAPIView.as_view(), name='agregarcont')
+    path('api/contiene/agregar/', ContieneCreateAPIView.as_view(), name='agregarcont'),
+    path('obtener_stock/<int:id_boleto>/', ObtenerStockBoleto.as_view(), name='obtenerbol'),
+    path('actualizar_stock/<int:id_boleto>/', ActualizarStockView.as_view(), name='actualizar_stock'),
 ]
 

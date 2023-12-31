@@ -305,3 +305,23 @@ class ContieneCreateAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ObtenerStockBoleto(APIView):
+    def get(self, request, id_boleto):
+        try:
+            boleto = Boleto.objects.get(id_boleto=id_boleto)
+            serializer = TicketSerializer(boleto)
+            return Response({'stock': serializer.data['stock']})
+        except Boleto.DoesNotExist:
+            return Response({'error': 'Boleto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+class ActualizarStockView(APIView):
+    def put(self, request, id_boleto):
+        try:
+            boleto = Boleto.objects.get(id_boleto=id_boleto)
+            new_stock = request.data.get('stock')
+            boleto.stock = new_stock
+            boleto.save()
+            return Response({'status': 'success'}, status=status.HTTP_200_OK)
+        except Boleto.DoesNotExist:
+            return Response({'status': 'error', 'message': 'Boleto no encontrado'}, status=status.HTTP_404_NOT_FOUND)

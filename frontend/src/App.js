@@ -22,6 +22,8 @@ import EventoDetail from "./components/DetallesEven";
 import CompraR from "./components/CompraP";
 import BoletosList from "./components/pedido";
 
+import TuComponente from "./components/pruebafetchstock";
+
 function App() {
   return (
     <BrowserRouter>
@@ -60,6 +62,9 @@ function App() {
         <Route path="/meventos/eventonum/:id" element={<EventoDetail></EventoDetail>}></Route>
         <Route path="/comprarEv/" element={<CompraR></CompraR>}></Route>
         <Route path="/verboletos/" element={<BoletosList></BoletosList>}></Route>
+
+        <Route path="/stockboletos/" element={<TuComponente></TuComponente>}></Route>
+
       </Routes>
     </BrowserRouter>
   );
