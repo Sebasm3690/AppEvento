@@ -12,6 +12,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import AuthenticationFailed
 import jwt, datetime
 from jwt.exceptions import DecodeError, InvalidTokenError
+from rest_framework import generics
+from django.utils import timezone
 
 #@api_view(['POST'])
 #def login(request):
@@ -257,3 +259,59 @@ class LogoutViewOrg(APIView):
         }
 
         return response
+
+class EventoMuestra(generics.ListAPIView):
+    queryset = Evento.objects.all()
+    serializer_class = EvenSerializer
+
+class EventoDetail(generics.RetrieveAPIView):
+    queryset = Evento.objects.all()
+    serializer_class = EvenSerializer
+    lookup_field = 'id_evento'
+
+    def get(self, request, *args, **kwargs):
+        try:
+            return super().get(request, *args, **kwargs)
+        except Evento.DoesNotExist:
+            return Response({"detail": "El evento no existe."}, status=status.HTTP_404_NOT_FOUND)
+
+class OrdenCompraView(APIView):
+    def post(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if not token:
+            raise AuthenticationFailed('Unauthenticated!')
+
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated!')
+
+        # Obtener el usuario basado en el token
+        user = Asistente.objects.filter(id_asistente=payload['id']).first()
+
+        if not user:
+            raise AuthenticationFailed('Usuario no encontrado!')
+
+        # Aquí asumimos que tienes una lógica para calcular el valor_total. 
+        # Puedes adaptar esto según tus necesidades.
+        valor_total = request.data.get('valor_total')  # Suponiendo que envíes el valor_total en la solicitud
+
+        # Crear una nueva orden de compra
+        orden_compra = OrdenCompra.objects.create(
+            id_asistente=user,
+            valor_total=valor_total,
+            fecha=timezone.now()
+        )
+
+        serializer = OrdenSerializer(orden_compra)
+
+        return Response(serializer.data)
+    
+class ContieneCreateAPIView(APIView):
+     def post(self, request, format=None):
+        serializer = ContieneSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

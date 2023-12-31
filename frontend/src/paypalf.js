@@ -15,7 +15,7 @@ function Payjs() {
             setCheckOut(true);
           }}
         >
-          Checkout
+          Ver metodos de pago
         </button>
       )}
     </div>
