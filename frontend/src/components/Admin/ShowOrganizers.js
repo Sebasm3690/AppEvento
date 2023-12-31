@@ -12,7 +12,8 @@ import {
 } from "reactstrap";
 import { show_alerta } from "../../functions";
 
-const ShowOrganizers = () => {
+const ShowOrganizers = ({ adminObj }) => {
+  console.log("Datos del organizador en CrudEvents:", adminObj);
   const url = "http://127.0.0.1:8000/api/v1/organizer/";
   const [organizers, setOrganizers] = useState([]);
   const [id, setId] = useState(0);
@@ -35,6 +36,8 @@ const ShowOrganizers = () => {
     const respuesta = await axios.get(url);
     setOrganizers(respuesta.data);
   };
+
+  console.log("Datos del organizador de:", organizers);
 
   const handleEditarUsuario = (userId) => {
     const organizador = organizers.find(
@@ -181,6 +184,7 @@ const ShowOrganizers = () => {
           <tbody>
             {organizers
               .filter((organizer) => !organizer.eliminado)
+              .filter((organizer) => organizer.id_admin === adminObj.id_admin)
               .map((organizer) => (
                 <tr key={organizer.id_organizador}>
                   <td>{organizer.id_organizador}</td>

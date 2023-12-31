@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import EditarPerfil from "./Asistente/editarPerfil"
 
 const Asistente = () => {
   const [asistenteData, setAsistenteData] = useState(null);
@@ -51,8 +53,11 @@ const Asistente = () => {
     <div>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
-          <a className="navbar-brand" href="#">
+          <a className="navbar-brand" href="/asistente">
             Inicio
+          </a>
+          <a className="navbar-brand" href="/editarPerfil">
+            Editar Perfil
           </a>
           <button
             className="navbar-toggler"
@@ -84,6 +89,8 @@ const Asistente = () => {
               <p className="mb-3">Bienvenido, {asistenteData.nombre} {asistenteData.apellido}.</p>
             </>
           )}
+
+          <Link to={`/meventos/`}>Ver Eventos</Link>
         </div>
       </div>
     </div>
