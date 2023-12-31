@@ -11,10 +11,16 @@ import AsistenteRegistro from "./components/registroAsistente";
 
 import LoginOrganizador from "./components/LoginOrganizador";
 import Organizador from "./components/organizador";
-
 import Inicio from "./components/inicio";
 import NavBar from "./components/navbar";
 import EditarPerfil from "./components/Asistente/editarPerfil"
+
+import Payjs from "./paypalf";
+import React from "react";
+import EventosList from "./components/EventoList";
+import EventoDetail from "./components/DetallesEven";
+import CompraR from "./components/CompraP";
+import BoletosList from "./components/pedido";
 
 function App() {
   return (
@@ -48,6 +54,12 @@ function App() {
           path="/organizador/"
           element={<Organizador></Organizador>}
         ></Route>
+
+        <Route path="/payfinal/" element={<Payjs></Payjs>}></Route>
+        <Route path="/meventos/" element={<EventosList></EventosList>}></Route>
+        <Route path="/meventos/eventonum/:id" element={<EventoDetail></EventoDetail>}></Route>
+        <Route path="/comprarEv/" element={<CompraR></CompraR>}></Route>
+        <Route path="/verboletos/" element={<BoletosList></BoletosList>}></Route>
       </Routes>
     </BrowserRouter>
   );

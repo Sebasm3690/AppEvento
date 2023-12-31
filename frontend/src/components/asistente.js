@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import EditarPerfil from "./Asistente/editarPerfil"
 
 const Asistente = () => {
@@ -88,6 +89,8 @@ const Asistente = () => {
               <p className="mb-3">Bienvenido, {asistenteData.nombre} {asistenteData.apellido}.</p>
             </>
           )}
+
+          <Link to={`/meventos/`}>Ver Eventos</Link>
         </div>
       </div>
     </div>

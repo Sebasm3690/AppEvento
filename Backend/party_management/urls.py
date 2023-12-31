@@ -17,6 +17,7 @@ router.register(r'vende', views.VendeViewSet)
 router.register(r'administrador', views.AdminViewSet)
 router.register(r'OrdenCompra', views.OrdenViewSet)
 router.register(r'Asistente', views.AsisViewSet)
+router.register(r'boleto', views.TicketView)
 router.register(r'contiene', views.ContieneViewSet)
 
 urlpatterns = [
@@ -35,5 +36,11 @@ urlpatterns = [
 
     path("api/loginOrg/", LoginViewOrg.as_view(), name='login'),
     path('api/organizador/', UserViewOrg.as_view(), name='organizador'),
-    path('api/logoutOrg/', LogoutViewOrg.as_view(), name='logout')
+    path('api/logoutOrg/', LogoutViewOrg.as_view(), name='logout'),
+    
+    path('api/vereven/', EventoMuestra.as_view(), name='evenmuestra'),
+    path('api/lista/evendet/<int:id_evento>/', EventoDetail.as_view(), name='evendet'),
+    path('api/crear-orden/', OrdenCompraView.as_view(), name='crearord'),
+    path('api/contiene/agregar/', ContieneCreateAPIView.as_view(), name='agregarcont')
 ]
+
