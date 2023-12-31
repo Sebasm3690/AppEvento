@@ -110,7 +110,7 @@ class Organizador(models.Model):
 
 
 class Vende(models.Model):
-    id_boleto = models.OneToOneField("Organizador", primary_key=True, on_delete=models.CASCADE, related_name='vende_boleto')
+    id_boleto = models.OneToOneField("Boleto", primary_key=True, on_delete=models.CASCADE, related_name='vende_boleto')
     id_organizador = models.ForeignKey("Organizador", on_delete=models.CASCADE, related_name='vende_organizador')
     iva = models.FloatField()
     descuento = models.FloatField()
@@ -132,14 +132,13 @@ class Evento(models.Model):
     id_organizador = models.ForeignKey("Organizador", on_delete=models.CASCADE)
     nombre_evento = models.CharField(max_length=50,unique=True)
     fecha = models.DateTimeField(auto_now_add=True)
-    hora = models.TimeField()
+    hora = models.CharField(max_length=8)
     ubicacion = models.CharField(max_length=50)
     descripcion = models.CharField(max_length=100)
     tipo = models.CharField(max_length=10)
     limite = models.IntegerField()
-    #image = models.ImageField(upload_to="images/") #It'll go into a subfolder of our uploads folder named images #UPLOAD IMAGE #2
     def __str__(self):
-        return f"{self.id_evento} {self.id_organizador} {self.nombre_evento} {self.fecha} {self.hora} {self.ubicacion} {self.descripcion} {self.tipo} {self.limite}"
+        return f"{self.id_evento}{self.id_organizador}{self.nombre_evento}{self.fecha}{self.hora}{self.ubicacion}{self.descripcion}{self.tipo}{self.limite}"
 
 class Asistente(AbstractUser):
     id_asistente = models.AutoField(primary_key=True)
@@ -155,7 +154,7 @@ class Asistente(AbstractUser):
     
     #I don't have to run migrations again because I just added a method (I don't change the structure or the fields of my class)
     def __str__(self):
-        return f"{self.id_asistente} {self.nombre} {self.apellido} {self.correo} {self.ci}" #With this you can show the elements of the class in a better way
+        return f"{self.id_asistente} {self.nombre} {self.apellido} {self.email} {self.ci}" #With this you can show the elements of the class in a better way
 
 
 class OrdenCompra(models.Model):
@@ -168,16 +167,16 @@ class OrdenCompra(models.Model):
     
 
 class Contiene(models.Model):
-    id_boleto = models.OneToOneField("OrdenCompra", primary_key=True, on_delete=models.CASCADE)
-    num_orden = models.IntegerField()
+    id_boleto = models.OneToOneField("Boleto", primary_key=True, on_delete=models.CASCADE)
+    num_orden = models.ForeignKey("OrdenCompra", on_delete=models.CASCADE)
     cantidad_total = models.IntegerField()
     def __str__(self):
         return f"{self.id_boleto}{self.num_orden}{self.cantidad_total}"
 
 class Boleto(models.Model):
     id_boleto = models.AutoField(primary_key=True)
-    stock = models.IntegerField(unique=True)
-    tipo = models.CharField(max_length=15,unique=True)
+    stock = models.IntegerField()
+    tipo = models.CharField(max_length=15)
     precio = models.FloatField()
     def __str__(self):
         return f"{self.id_boleto}{self.stock}{self.tipo}{self.precio}"
@@ -186,4 +185,3 @@ class Boleto(models.Model):
 
     # python3 manage.py majemigrations
     #exlusividad = models.IntegerField(validators=[null=True,MinValueValidator(1),MaxValueValidator(5)])
-

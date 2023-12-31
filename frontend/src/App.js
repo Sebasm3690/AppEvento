@@ -28,6 +28,7 @@ function App() {
 
         <Route path="/loginorg/" element={<LoginOrganizador></LoginOrganizador>}></Route>
         <Route path="/organizador/" element={<Organizador></Organizador>}></Route>
+
       </Routes>
     </BrowserRouter>
   );
