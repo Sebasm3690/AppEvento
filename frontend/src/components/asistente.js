@@ -91,6 +91,8 @@ const Asistente = () => {
           )}
 
           <Link to={`/meventos/`}>Ver Eventos</Link>
+          <br />
+          <Link to={`/historialas/`}>Ver Compras</Link>
         </div>
       </div>
     </div>
