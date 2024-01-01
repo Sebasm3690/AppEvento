@@ -325,3 +325,23 @@ class ActualizarStockView(APIView):
             return Response({'status': 'success'}, status=status.HTTP_200_OK)
         except Boleto.DoesNotExist:
             return Response({'status': 'error', 'message': 'Boleto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+class ObtenerStockVende(APIView):
+    def get(self, request, id_boleto):
+        try:
+            boleto = Vende.objects.get(id_boleto=id_boleto)
+            serializer = VendeSerializer(boleto)
+            return Response({'stock': serializer.data['stock_actual']})
+        except Boleto.DoesNotExist:
+            return Response({'error': 'Boleto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+class ActualizarVende(APIView):
+    def put(self, request, id_boleto):
+        try:
+            boleto = Vende.objects.get(id_boleto=id_boleto)
+            new_stock = request.data.get('stock_actual')
+            boleto.stock_actual = new_stock
+            boleto.save()
+            return Response({'status': 'success'}, status=status.HTTP_200_OK)
+        except Boleto.DoesNotExist:
+            return Response({'status': 'error', 'message': 'Boleto no encontrado'}, status=status.HTTP_404_NOT_FOUND)

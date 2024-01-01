@@ -115,6 +115,7 @@ class Vende(models.Model):
     iva = models.FloatField()
     descuento = models.FloatField()
     ice = models.FloatField()
+    stock_actual = models.IntegerField(default=0)
     def __str__(self):
         return f"{self.id_boleto} {self.id_organizador} {self.iva} {self.descuento} {self.ice}"
     
