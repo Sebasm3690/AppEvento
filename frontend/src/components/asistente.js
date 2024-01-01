@@ -11,7 +11,7 @@ const Asistente = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/asistenteid/', {
+      const response = await fetch('http://localhost:8000/api/asistente', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
