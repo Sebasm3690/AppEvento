@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 function BoletosList() {
   const [boletos, setBoletos] = useState([]);
+  const [nuevBoletos, setNuevBoletos] = useState([]);
   const [total, setTotal] = useState(0);
   const [totalBoletosSeleccionados, setTotalBoletosSeleccionados] = useState(0);
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ function BoletosList() {
         });
 
         if (response.status !== 200) {
-          navigate('/loginas');  // Redirigir al usuario a la página de inicio de sesión si no está autenticado
+          navigate('/loginas');
         }
       } catch (error) {
         console.error('Error al verificar la autenticación:', error);
@@ -31,12 +32,32 @@ function BoletosList() {
   }, [navigate]);
 
   useEffect(() => {
-    // Código para cargar los boletos desde tu API
+    // Cargar los boletos desde tu API original
     fetch('http://localhost:8000/api/api/v1/boleto/')
-      .then(response => response.json()) 
+      .then(response => response.json())
       .then(data => setBoletos(data.map(boleto => ({ ...boleto, isChecked: false, cantidad: 0 }))))
       .catch(error => console.error('Error al obtener los boletos:', error));
   }, []);
+
+  useEffect(() => {
+    const fetchStockForBoletos = async () => {
+      const promises = boletos.map(boleto => {
+        return fetch(`http://localhost:8000/api/verstockv/${boleto.id_boleto}/`)
+          .then(response => response.json())
+          .then(data => data.stock)
+          .catch(error => {
+            console.error(`Error al obtener el stock del boleto ${boleto.id_boleto}:`, error);
+            return 0;
+          });
+      });
+
+      Promise.all(promises).then(stockValues => {
+        setNuevBoletos(stockValues);
+      });
+    };
+
+    fetchStockForBoletos();
+  }, [boletos]);
 
   useEffect(() => {
     let suma = 0;
@@ -53,7 +74,6 @@ function BoletosList() {
 
   const handleRealizarPedido = async () => {
     try {
-      // Verificar autenticación antes de realizar el pedido
       const authResponse = await fetch('http://localhost:8000/api/asistente', {
         method: 'GET',
         headers: {
@@ -63,7 +83,7 @@ function BoletosList() {
       });
 
       if (authResponse.status !== 200) {
-        navigate('/loginas');  // Redirigir al usuario a la página de inicio de sesión si no está autenticado
+        navigate('/loginas');
         return;
       }
 
@@ -80,7 +100,7 @@ function BoletosList() {
       <h1>Boletos Disponibles</h1>
       <p>Total de boletos a llevar: {totalBoletosSeleccionados}</p>
       <ul>
-        {boletos.map(boleto => (
+        {boletos.map((boleto, index) => (
           <li key={boleto.id_boleto}>
             <input
               type="checkbox"
@@ -91,14 +111,14 @@ function BoletosList() {
             />
             <strong>Tipo:</strong> {boleto.tipo}, 
             <strong> Precio:</strong> ${boleto.precio}, 
-            <strong> Stock:</strong> {boleto.stock}
+            <strong> Stock:</strong> {nuevBoletos[index]}, 
             <strong> Id:</strong> {boleto.id_boleto}
             {boleto.isChecked && (
               <input
                 type="number"
                 placeholder="Cantidad"
                 min="1"
-                max={boleto.stock}
+                max={nuevBoletos[index]}
                 onChange={e => {
                   const cantidad = parseInt(e.target.value, 10);
                   setBoletos(prevBoletos => prevBoletos.map(b => (b.id_boleto === boleto.id_boleto ? { ...b, cantidad } : b)));

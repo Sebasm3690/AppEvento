@@ -117,7 +117,7 @@ class Vende(models.Model):
     ice = models.FloatField()
     stock_actual = models.IntegerField(default=0)
     def __str__(self):
-        return f"{self.id_boleto} {self.id_organizador} {self.iva} {self.descuento} {self.ice}"
+        return f"{self.id_boleto} {self.id_organizador} {self.iva} {self.descuento} {self.ice} {self.stock_actual}"
     
 class Administrador(models.Model):
     id_admin = models.AutoField(primary_key=True)

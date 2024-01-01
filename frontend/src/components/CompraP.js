@@ -16,7 +16,7 @@ const CompraR = () => {
     useEffect(() => {
         const fetchStock = async () => {
             try {
-                const response = await fetch(`http://127.0.0.1:8000/obtener_stock/${id}/`);
+                const response = await fetch(`http://127.0.0.1:8000/api/verstockv/${id}/`);
                 const data = await response.json();
                 setCurrentStock(data.stock);
             } catch (error) {
@@ -46,14 +46,14 @@ const CompraR = () => {
             const data1 = await response1.json();
 
             const updatedStock = currentStock - parseInt(description, 10);
-            const response3 = await fetch(`http://127.0.0.1:8000/actualizar_stock/${id}/`, {
+            const response3 = await fetch(`http://127.0.0.1:8000/api/actuv/${id}/`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 credentials: 'include',
                 body: JSON.stringify({
-                    stock: updatedStock,
+                    stock_actual: updatedStock,
                 }),
             });
 
