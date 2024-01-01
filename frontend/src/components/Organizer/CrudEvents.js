@@ -17,6 +17,7 @@ import "../styles/organizerStyles.css";
 const CrudEvents = ({ organizerObj }) => {
   const url = "http://127.0.0.1:8000/api/v1/event/";
   const url_boleto = "http://127.0.0.1:8000/api/v1/ticket/";
+  const url_venta = "http://127.0.0.1:8000/api/api/v1/vende/";
   /*Evento */
   const [events, setEvents] = useState([]);
   const [id, setId] = useState(0);
@@ -32,41 +33,59 @@ const CrudEvents = ({ organizerObj }) => {
   const [stock, setStock] = useState(0);
   const [tipoBoleto, setTipoBoleto] = useState("");
   const [precio, setPrecio] = useState(0);
+  const [idEventoBoleto, setIdEventoBoleto] = useState(0);
 
   const [limite, setLimite] = useState(0);
   //const [image, setImage] = useState("");
-  const [id_organizador, setIdOrganizador] = useState(null);
+
+  /*Venta*/
+  const [ventas, setVentas] = useState([]);
+  const [iva, setIva] = useState(0);
+  const [descuento, setDescuento] = useState(0);
+  const [ice, setIce] = useState(0);
+  const [id_organizador, setIdOrganizador] = useState(
+    organizerObj.id_organizador
+  );
+  const [stockActual, setStockActual] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [showModalInsert, setShowModalInsert] = useState(false);
   const [showModalBoleto, setShowModalBoleto] = useState(false);
   const [showModalBoletoIngresar, setShowModalBoletoIngresar] = useState(false);
-
+  const [showModalImpuestosIngresar, setShowModalImpuestosIngresar] =
+    useState(false);
   //Función para consumir API y obtener todo el objeto {}
 
   useEffect(() => {
     getEvents();
+    handleEliminarEventoPasado();
   }, []);
 
   const getEvents = async () => {
     const respuesta = await axios.get(url);
     setEvents(respuesta.data);
-    /*const respuestaBoleto = await axios.get(url_boleto);
-    setBoletos(respuestaBoleto.data);*/
+    const respuestaBoleto = await axios.get(url_boleto);
+    setBoletos(respuestaBoleto.data);
+    const respuestaVenta = await axios.get(url_venta);
+    setVentas(respuestaVenta.data);
   };
 
-  console.log("Datos del evento en mi proyectos:", events);
-
-  const handleEditarBoleto = (ticketId) => {
-    const ticket = boletos.find((boleto) => boleto.id_evento === ticketId);
-    if (ticket) {
-      setIdBoleto(boletos.id_boleto);
-      setStock(boletos.stock);
-      setTipoBoleto(boletos.tipo);
-      setPrecio(boletos.precio);
+  const handleEditarBoleto = () => {
+    setShowModalBoleto(true);
+    const boletosEvento = boletos.find((boleto) => boleto.id_evento === id); //Se muestran solo los boletos que corresponden a dicho evento
+    if (boletosEvento) {
+      alert("Si se encontró");
+      setIdBoleto(boletosEvento.id_boleto);
+      setStock(boletosEvento.stock);
+      setTipoBoleto(boletosEvento.tipoBoleto);
+      setPrecio(boletosEvento.precio);
+      setShowModalBoleto(true);
+    } else {
+      alert("No se encontró");
     }
   };
 
   const handleEditarEvento = (eventId) => {
+    setShowModal(true);
     const evento = events.find((event) => event.id_evento === eventId);
     if (evento) {
       setId(evento.id_evento);
@@ -78,24 +97,72 @@ const CrudEvents = ({ organizerObj }) => {
       setTipo(evento.tipo);
       setLimite(evento.limite);
       //setImage(evento.image);
-      setIdOrganizador(evento.id_organizador);
+      setShowModal(true);
     }
-
-    setShowModal(true);
   };
 
-  /*const handleEliminarEvento = async (eventId) => {
-    //You must put async when you use await
+  const handleEliminarEventoPasado = async () => {
+    const fechaActual = new Date();
+
+    //Aqui me retorna evento por evento cada evento que tenga la fecha del evento menor a la fecha actual
+    const eventosPasados = events.filter((event) => {
+      const fechaEvento = new Date(event.fecha);
+      return fechaEvento <= fechaActual;
+    });
+
+    // Eliminación lógica del evento pasado
+    const eliminacionesLogicas = eventosPasados.map((eventoPasado) =>
+      axios.post(
+        `http://127.0.0.1:8000/borrado_logico_evento/${eventoPasado.id_evento}/`
+      )
+    );
+
+    // Esperar a que todas las eliminaciones lógicas se completen antes de obtener los eventos actualizados
+    await Promise.all(eliminacionesLogicas);
+
+    setEvents((prevEvents) =>
+      prevEvents.filter((prevEvent) => {
+        const fechaPrevEvento = new Date(prevEvent.fecha);
+        return fechaPrevEvento > fechaActual; // Mantener solo los eventos futuros
+      })
+    );
+  };
+
+  const handleEliminarEvento = async (eventId) => {
     const evento = events.find((event) => event.id_evento === eventId);
-    if (evento) {
+    if (!evento) {
+      console.error("Evento no encontrado");
+      return;
+    }
+
+    const boletoEvento = boletos.find(
+      (boleto) => boleto.id_evento === evento.id_evento
+    ); //Encontrar los boletos de dicho evento
+    if (!boletoEvento) {
+      console.error("Boleto no encontrado");
+      return;
+    }
+    const ventaEvento = ventas.find(
+      (venta) => venta.id_boleto === boletoEvento.id_boleto //Encontrar las ventas donde se realizaron dichos boletos
+    );
+
+    if (ventaEvento.stock_actual === boletoEvento.stock) {
+      //El stock actual debe ser igual al stock para que se permita elimninar el evento logicamente
       //Solicitud para el borrado lógico
-      await axios.post(`http://127.0.0.1:8000/borrado_logico/${userId}/`);
-      //Acutalizar lista de organizadores despues del borrado lógico
-      setOrganizers((prevOrganizadores) =>
-        prevOrganizadores.filter((o) => o.id_organizador !== userId)
+      await axios.post(
+        `http://127.0.0.1:8000/borrado_logico_evento/${eventId}/`
+      );
+      //Acutalizar lista de eventos despues del borrado lógico
+      setEvents((prevEvents) =>
+        prevEvents.filter((prevEvent) => prevEvent.id_evento !== eventId)
+      );
+    } else {
+      show_alerta(
+        "No se puede borrar el evento, ya que hay clientes que compraron boletos para dicho evento",
+        "warning"
       );
     }
-  };*/
+  };
 
   /*Imágen*/
 
@@ -118,72 +185,187 @@ const CrudEvents = ({ organizerObj }) => {
   };*/
 
   const validarBoletoEditar = async (op) => {
-    setShowModalBoleto(false);
-    setShowModalBoletoIngresar(false);
-    var parametros;
+    const urlEditar = `http://127.0.0.1:8000/api/v1/ticket/${idBoleto}/`;
+    var parametrosBoleto;
+
     if (stock === 0) {
       show_alerta("Escribe si hay stock dosponible", "warning");
-    } else if (tipo === "") {
+    } else if (tipoBoleto === "") {
       show_alerta("Escribe el tipo de boleto", "warning");
     } else if (precio === 0) {
       show_alerta("Escribe el precio del boleto", "warning");
     }
 
-    parametros = {
+    parametrosBoleto = {
       stock: stock,
-      tipo: tipo,
+      tipoBoleto: tipoBoleto,
       precio: precio,
+      id_evento: id, //Se queda igual por el editar de evento
     };
 
     axios
-      .put(url_boleto, parametros)
+      .put(urlEditar, parametrosBoleto)
       .then((response) => {
         console.log("Respuesta del servidor:", response.data);
-        show_alerta("El boleto ha sido agregado exitosamente", "success");
+        show_alerta("El boleto ha sido editado exitosamente", "success");
+        setShowModalBoleto(false);
       })
       .catch((error) => {
-        console.error("Error al realizar la solicitud POST:", error);
+        console.error("Error al realizar la solicitud PUT:", error);
       });
   };
 
-  const validarBoletoIngresar = async (op) => {
+  const handleIngresarVenta = async (id_boleto_venta) => {
+    var parametrosVenta;
+    parametrosVenta = {
+      id_boleto: id_boleto_venta,
+      iva: iva,
+      descuento: 0,
+      ice: ice,
+      stock_actual: stock,
+      precio_actual: precio,
+      id_organizador: id_organizador,
+    };
+
+    axios
+      .post(url_venta, parametrosVenta)
+      .then((response) => {
+        console.log("Respuesta del servidor:", response.data);
+        show_alerta("Boleto listo para vender", "success");
+      })
+      .catch((error) => {
+        console.error("Error al realizar la solicitud POST VENTA:", error);
+      });
     setShowModalBoletoIngresar(false);
-    setShowModalBoleto(false);
-    var parametros;
+  };
+
+  const validarBoletoIngresar = async () => {
+    var parametrosBoleto;
+    var id_boleto_venta;
+
     if (stock === 0) {
       show_alerta("Escribe si hay stock dosponible", "warning");
-    } else if (tipo === "") {
+    } else if (tipo.trim() === "") {
       show_alerta("Escribe el tipo de boleto", "warning");
     } else if (precio === 0) {
       show_alerta("Escribe el precio del boleto", "warning");
     }
 
-    parametros = {
-      stock: stock,
-      tipo: tipo,
-      precio: precio,
+    const apiConfig = {
+      boleto: {
+        tipo: "tipoBoleto",
+      },
+    };
+
+    parametrosBoleto = {
+      stock: parseInt(stock),
+      [apiConfig.boleto.tipo]: tipoBoleto.trim(),
+      precio: parseInt(precio),
+      id_evento: idEventoBoleto, //El valor se toma del response.data.id_evento del "const validar" en la opción 1 al insertar el evento
     };
 
     // Convertir el objeto a una cadena JSON
-    const parametrosString = JSON.stringify(parametros, null, 2);
+    //const parametrosString = JSON.stringify(parametrosBoleto, null, 2);
 
     // Mostrar un alert con la información del objeto
-    alert(parametrosString);
+    //alert(parametrosString);
 
     axios
-      .post(url_boleto, parametros)
+      .post(url_boleto, parametrosBoleto)
       .then((response) => {
+        id_boleto_venta = response.data.id_boleto;
         console.log("Respuesta del servidor:", response.data);
         show_alerta("El boleto ha sido agregado exitosamente", "success");
       })
       .catch((error) => {
         console.error("Error al realizar la solicitud POST:", error);
       });
+    setShowModalBoletoIngresar(false);
+    // Configurar el temporizador
+    setTimeout(() => handleIngresarVenta(id_boleto_venta), 5000);
+  };
+
+  /*********************************/
+
+  const validarImpuestoEditar = async () => {
+    const preciosSI = ventas.map((venta) => venta.precio_actual); //Precios de venta
+
+    var jsonString = JSON.stringify(preciosSI);
+    alert(jsonString);
+    if (iva === 0) {
+      show_alerta("Escribe el IVA", "warning");
+    } else if (ice === 0) {
+      show_alerta("Escribe el tipo de boleto", "warning");
+    }
+
+    ventas.map((venta) =>
+      axios
+        .put(`http://127.0.0.1:8000/api/v1/vende/${venta.id_boleto}/`, {
+          id_boleto: venta.id_boleto,
+          iva: iva,
+          descuento: descuento,
+          ice: ice,
+          stock_actual: stock,
+          precio_actual: precio,
+          id_organizador: venta.id_organizador,
+        })
+        .then((response) => {
+          console.log("Respuesta del servidor:", response.data);
+          show_alerta(
+            "Los impuestos han sido agregados exitosamente",
+            "success"
+          );
+          setShowModalImpuestosIngresar(false);
+        })
+        .catch((error) => {
+          console.error(
+            `Error del servidor para la venta ${venta.id_evento}:`,
+            error
+          );
+        })
+    );
+
+    try {
+      const boletosActualizados = boletos.map(async (boleto, index) => {
+        // Realizar la operación boleto = boleto + 1/100
+        let precioICE = preciosSI[index] + (preciosSI[index] * ice) / 100;
+        // Realizar la operación boleto = boleto * 100
+        let precioIVA = (preciosSI[index] * iva) / 100;
+        // Precio total
+        let precioTotal = precioICE + precioIVA;
+
+        // Realizar la solicitud HTTP con Axios
+        await axios.put(
+          `http://127.0.0.1:8000/api/v1/ticket/${boleto.id_boleto}/`,
+          {
+            id_boleto: boleto.id_boleto,
+            stock: boleto.stock,
+            tipoBoleto: boleto.tipoBoleto,
+            precio: precioTotal, // Aquí se utiliza el nuevo valor de precio
+            id_evento: boleto.id_evento,
+          }
+        );
+
+        console.log(`Venta ${boleto.id_evento} actualizada con éxito.`);
+
+        // Devolver el boleto actualizado
+        return {
+          ...boleto,
+          precio: precioTotal,
+        };
+      });
+
+      // Esperar a que todas las solicitudes HTTP se completen
+      await Promise.all(boletosActualizados);
+
+      show_alerta("Los impuestos han sido agregados exitosamente", "success");
+      setShowModalImpuestosIngresar(false);
+    } catch (error) {
+      console.error("Error al actualizar boletos:", error);
+    }
   };
 
   const validar = async (op) => {
-    setShowModal(false);
-
     var parametros;
     const urlEditar = `http://127.0.0.1:8000/api/v1/event/${id}/`;
     //var metodo;
@@ -204,10 +386,8 @@ const CrudEvents = ({ organizerObj }) => {
       //} else if (image === "") {
       //show_alerta("Agrega una imágen al evento", "warning");
     } else if (id_organizador === "") {
-      show_alerta("Escribe el  nombre del organizador", "warning");
+      show_alerta("Escribe el id del organizador", "warning");
     }
-    setShowModalInsert(false);
-    setShowModalBoleto(true);
 
     if (op === 1) {
       parametros = {
@@ -233,24 +413,30 @@ const CrudEvents = ({ organizerObj }) => {
       axios
         .post(url, parametros)
         .then((response) => {
+          setIdEventoBoleto(response.data.id_evento);
           console.log("Respuesta del servidor:", response.data);
           show_alerta("El evento ha sido agregado exitosamente", "success");
+          setShowModalInsert(false);
+          setShowModalBoletoIngresar(true);
         })
         .catch((error) => {
+          show_alerta(
+            "No pueden quedar campos vacíos, y el nombre del evento no puede repetirse",
+            "warning"
+          );
           console.error("Error al realizar la solicitud POST:", error);
         });
     } else {
-      alert(id);
       parametros = {
         nombre_evento: nombre.trim(),
-        fecha,
-        hora,
+        fecha: fecha,
+        hora: hora,
         ubicacion: ubicacion.trim(),
         descripcion: descripcion.trim(),
         tipo: tipo.trim(),
-        limite,
+        limite: limite,
         //image,
-        id_organizador,
+        id_organizador: id_organizador,
       };
       //metodo = "PUT";
 
@@ -263,6 +449,8 @@ const CrudEvents = ({ organizerObj }) => {
         .catch((error) => {
           console.error("Error al realizar la solicitud PUT:", error);
         });
+      setShowModal(false);
+      handleEditarBoleto();
     }
     //enviarSolicitud(metodo, parametros);
   };
@@ -298,6 +486,16 @@ const CrudEvents = ({ organizerObj }) => {
         >
           Agregar evento nuevo
         </button>
+
+        {events.some((evento) => evento.eliminado === false) && (
+          <button
+            className="btn btn-success"
+            onClick={() => setShowModalImpuestosIngresar(true)}
+          >
+            Agregar impuestos
+          </button>
+        )}
+
         <br></br>
         <Table className="table">
           <thead>
@@ -320,6 +518,7 @@ const CrudEvents = ({ organizerObj }) => {
               .filter(
                 (event) => event.id_organizador === organizerObj.id_organizador
               )
+              .filter((event) => event.eliminado === false)
               .map((event) => (
                 <tr key={event.id_evento}>
                   <td>{event.id_evento}</td>
@@ -351,7 +550,7 @@ const CrudEvents = ({ organizerObj }) => {
                     </button>{" "}
                     <button
                       className="btn btn-danger"
-                      //onClick={() => handleEliminarEvento(event.id_evento)}
+                      onClick={() => handleEliminarEvento(event.id_evento)}
                     >
                       Dar de baja
                     </button>
@@ -367,7 +566,7 @@ const CrudEvents = ({ organizerObj }) => {
       <Modal isOpen={showModal}>
         <ModalHeader>
           <div>
-            <h3>Editar Organizador</h3>
+            <h3>Editar Evento</h3>
           </div>
         </ModalHeader>
 
@@ -487,6 +686,7 @@ const CrudEvents = ({ organizerObj }) => {
             <label>Id_organizador:</label>
             <input
               className="form-control"
+              readOnly
               name="id_organizador"
               type="text"
               onChange={(e) => setIdOrganizador(e.target.value)}
@@ -514,16 +714,6 @@ const CrudEvents = ({ organizerObj }) => {
         </ModalHeader>
 
         <ModalBody>
-          <FormGroup>
-            <label>Id:</label>
-            <input
-              className="form-control"
-              readOnly
-              type="text"
-              name="id_evento" //e es nuestro evento o lo que ingresa el usuario, con target apuntamos al valor ingresado por el usuario y se actualiza el objeto gracias al método set
-            />
-          </FormGroup>
-
           <FormGroup>
             <label>Nombre:</label>
             <input
@@ -604,16 +794,6 @@ const CrudEvents = ({ organizerObj }) => {
               onChange={handleImageUpload}
             />
     </FormGroup>*/}
-
-          <FormGroup>
-            <label>Id_organizador:</label>
-            <input
-              className="form-control"
-              name="id_organizador"
-              type="text"
-              onChange={(e) => setIdOrganizador(e.target.value)}
-            />
-          </FormGroup>
         </ModalBody>
 
         <ModalFooter>
@@ -632,6 +812,8 @@ const CrudEvents = ({ organizerObj }) => {
       {/*----------------Modal Boleto Editar-------------------*/}
 
       {/*Ventana modal*/}
+
+      {/*boletos.filter(boleto).map((boleto) => boleto.id_organizador)*/}
 
       <Modal isOpen={showModalBoleto}>
         <ModalHeader>
@@ -694,6 +876,16 @@ const CrudEvents = ({ organizerObj }) => {
               value={precio}
             />
           </FormGroup>
+          <FormGroup>
+            <label>Id_evento:</label>
+            <input
+              className="form-control"
+              name="hora"
+              type="money"
+              onChange={(e) => setIdEventoBoleto(e.target.value)}
+              value={id}
+            />
+          </FormGroup>
         </ModalBody>
 
         <ModalFooter>
@@ -707,7 +899,7 @@ const CrudEvents = ({ organizerObj }) => {
 
       {/*Ventana modal*/}
 
-      <Modal isOpen={showModalBoleto}>
+      <Modal isOpen={showModalBoletoIngresar}>
         <ModalHeader>
           <div>
             <h3>Ingresar Boleto</h3>
@@ -728,50 +920,85 @@ const CrudEvents = ({ organizerObj }) => {
 
         <ModalBody>
           <FormGroup>
-            <label>Id:</label>
-            <input
-              className="form-control"
-              readOnly
-              type="text"
-              name="id_evento" //e es nuestro evento o lo que ingresa el usuario, con target apuntamos al valor ingresado por el usuario y se actualiza el objeto gracias al método set
-              value={idBoleto}
-            />
-          </FormGroup>
-
-          <FormGroup>
             <label>Stock:</label>
             <input
               className="form-control"
-              name="nombre_evento"
+              name="stock"
               type="text"
               onChange={(e) => setStock(e.target.value)}
-              value={stock}
             />
           </FormGroup>
           <FormGroup>
             <label>Tipo:</label>
             <input
               className="form-control"
-              name="fecha"
+              name="tipoBoleto"
               type="text"
               onChange={(e) => setTipoBoleto(e.target.value)}
-              value={tipoBoleto}
             />
           </FormGroup>
           <FormGroup>
             <label>Precio:</label>
             <input
               className="form-control"
-              name="hora"
+              name="precio"
               type="money"
               onChange={(e) => setPrecio(e.target.value)}
-              value={precio}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <label>Id_evento:</label>
+            <input
+              className="form-control"
+              name="number"
+              type="money"
+              value={idEventoBoleto}
             />
           </FormGroup>
         </ModalBody>
 
         <ModalFooter>
           <Button color="primary" onClick={() => validarBoletoIngresar()}>
+            Finalizar
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+      {/*----------------Modal Impuestos Editar-------------------*/}
+
+      {/*Ventana modal*/}
+
+      <Modal isOpen={showModalImpuestosIngresar}>
+        <ModalHeader>
+          <div>
+            <h3>Ingresar Impuestos</h3>
+          </div>
+        </ModalHeader>
+
+        <ModalBody>
+          <FormGroup>
+            <label>Iva:</label>
+            <input
+              className="form-control"
+              name="iva"
+              type="money"
+              onChange={(e) => setIva(e.target.value)}
+            />
+          </FormGroup>
+          <FormGroup>
+            <label>ICE:</label>
+            <input
+              className="form-control"
+              name="ice"
+              type="money"
+              onChange={(e) => setIce(e.target.value)}
+            />
+          </FormGroup>
+        </ModalBody>
+
+        <ModalFooter>
+          <Button color="primary" onClick={() => validarImpuestoEditar()}>
             Finalizar
           </Button>
         </ModalFooter>
