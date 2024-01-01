@@ -399,7 +399,7 @@ class UserId(APIView):
         except jwt.ExpiredSignatureError:
             raise AuthenticationFailed('Unauthenticated!')
 
-        id_asistente = payload.get('id_asistente')
+        id_asistente = payload.get('id')
 
         user = Asistente.objects.filter(id_asistente=id_asistente).first()
 

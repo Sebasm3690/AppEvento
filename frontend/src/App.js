@@ -24,6 +24,7 @@ import BoletosList from "./components/pedido";
 
 import TuComponente from "./components/pruebafetchstock";
 import ComprasAsistente from "./components/historialAs";
+import VerQR from "./components/MostrarQR";
 
 function App() {
   return (
@@ -66,6 +67,7 @@ function App() {
 
         <Route path="/stockboletos/" element={<TuComponente></TuComponente>}></Route>
         <Route path="/historialas/" element={<ComprasAsistente></ComprasAsistente>}></Route>
+        <Route path="/observarqr/" element={<VerQR></VerQR>}></Route>
 
       </Routes>
     </BrowserRouter>
