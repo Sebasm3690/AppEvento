@@ -16,6 +16,10 @@ import jwt, datetime
 from jwt.exceptions import DecodeError, InvalidTokenError
 from rest_framework import generics
 from django.utils import timezone
+import qrcode
+from io import BytesIO
+from django.http import HttpResponse
+
 
 # Create your views here.
 class OrganizerView(viewsets.ModelViewSet):
@@ -345,3 +349,66 @@ class ActualizarVende(APIView):
             return Response({'status': 'success'}, status=status.HTTP_200_OK)
         except Boleto.DoesNotExist:
             return Response({'status': 'error', 'message': 'Boleto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+        
+class ContieneQRViewSet(viewsets.ModelViewSet):
+    queryset = Contiene.objects.all()
+    serializer_class = ContieneSerializer
+
+    def generate_qr_code(self, contiene):
+        data = f"Codigo: {contiene.boleto_cdg},\n Orden: {contiene.num_orden}, \n Cantidad: {contiene.cantidad_total}"
+        
+        # Generar el código QR
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(data)
+        qr.make(fit=True)
+
+        # Crear una imagen del código QR
+        img = qr.make_image(fill='black', back_color='white')
+        buffer = BytesIO()
+        img.save(buffer, format="PNG")
+        
+        return HttpResponse(buffer.getvalue(), content_type="image/png")
+
+    def retrieve(self, request, *args, **kwargs):
+        contiene = self.get_object()
+        return self.generate_qr_code(contiene)
+
+class HistorialComprasUsuarioAPIView(generics.ListAPIView):
+    serializer_class = OrdenSerializer
+
+    def get_queryset(self):
+        # Obtiene el id_asistente del usuario solicitado desde los parámetros de la URL
+        id_asistente = self.kwargs['id_asistente']
+        # Filtra las ordenes de compra basadas en el id_asistente
+        return OrdenCompra.objects.filter(id_asistente=id_asistente)
+
+class UserId(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if not token:
+            raise AuthenticationFailed('Unauthenticated!')
+
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated!')
+
+        id_asistente = payload.get('id_asistente')
+
+        user = Asistente.objects.filter(id_asistente=id_asistente).first()
+
+        if not user:
+            raise AuthenticationFailed('Usuario no encontrado!')
+
+        serializer = AsisSerializer(user)
+
+        return Response({
+            'id_asistente': id_asistente,
+            'user_data': serializer.data
+        })

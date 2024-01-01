@@ -19,6 +19,7 @@ router.register(r'OrdenCompra', views.OrdenViewSet)
 router.register(r'Asistente', views.AsisViewSet)
 router.register(r'boleto', views.TicketView)
 router.register(r'contiene', views.ContieneViewSet)
+router.register(r'contieneqr', views.ContieneQRViewSet)
 
 urlpatterns = [
     path("api/v1/", include(router.urls)),  #/api/v1/
@@ -46,6 +47,7 @@ urlpatterns = [
     path('actualizar_stock/<int:id_boleto>/', ActualizarStockView.as_view(), name='actualizar_stock'),
     path('api/actuv/<int:id_boleto>/', ActualizarVende.as_view(), name='actualizar_vende'),
     path('api/verstockv/<int:id_boleto>/', ObtenerStockVende.as_view(), name='obtener_vende'),
+    path('historial-compras/<int:id_asistente>/', HistorialComprasUsuarioAPIView.as_view(), name='historial-compras-usuario'),
+    path('api/asistenteid/', UserId.as_view(), name='evenmuestra'),
     
 ]
-

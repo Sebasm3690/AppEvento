@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, AbstractUser
+import random
+import string
 #--> Migration <-- 
 # Are a feature that basically define steps for Django to execute
 # Steps that will touch the database and manipulate it (For creating new tables or manipulating existing tables)
@@ -164,16 +166,32 @@ class OrdenCompra(models.Model):
     id_asistente = models.ForeignKey("Asistente", on_delete=models.CASCADE)
     fecha = models.DateTimeField(auto_now_add=True)
     valor_total = models.FloatField()
+
     def __str__(self):
         return f"{self.num_orden}{self.id_asistente}{self.fecha}{self.valor_total}"
     
 
 class Contiene(models.Model):
     id_boleto = models.OneToOneField("Boleto", primary_key=True, on_delete=models.CASCADE)
+    boleto_cdg = models.CharField(default='', max_length=50)  # Asegúrate de que este campo sea opcional
     num_orden = models.ForeignKey("OrdenCompra", on_delete=models.CASCADE)
     cantidad_total = models.IntegerField()
+
+    def generate_random_code(self):
+        numbers = ''.join(random.choices(string.digits, k=12))  # Genera 12 números aleatorios
+        letters = ''.join(random.choices(string.ascii_uppercase, k=3))  # Genera 3 letras aleatorias
+        return numbers + letters
+
+    def save(self, *args, **kwargs):
+        # Si no se ha proporcionado un boleto_cdg, entonces genera uno automáticamente
+        if not self.boleto_cdg:
+            self.boleto_cdg = self.generate_random_code()
+        
+        # Llamar al método save de la superclase para guardar el objeto
+        super(Contiene, self).save(*args, **kwargs)
+
     def __str__(self):
-        return f"{self.id_boleto}{self.num_orden}{self.cantidad_total}"
+        return f"{self.id_boleto}{self.num_orden}{self.cantidad_total}{self.boleto_cdg}"
 
 class Boleto(models.Model):
     id_boleto = models.AutoField(primary_key=True)

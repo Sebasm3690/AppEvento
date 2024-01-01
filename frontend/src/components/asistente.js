@@ -11,7 +11,7 @@ const Asistente = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/asistente', {
+      const response = await fetch('http://localhost:8000/api/asistenteid/', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -91,6 +91,8 @@ const Asistente = () => {
           )}
 
           <Link to={`/meventos/`}>Ver Eventos</Link>
+          <br />
+          <Link to={`/historialas/`}>Ver Compras</Link>
         </div>
       </div>
     </div>

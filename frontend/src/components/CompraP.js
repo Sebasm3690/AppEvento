@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const CompraR = () => {
     const [error, setError] = useState(null);
@@ -9,7 +10,6 @@ const CompraR = () => {
     const id = params.get('id').split("/")[0];
     const currentDate = new Date().toLocaleDateString();
     const navigate = useNavigate();
-
 
     const [currentStock, setCurrentStock] = useState(null);
 
@@ -27,11 +27,21 @@ const CompraR = () => {
         fetchStock();
     }, [id]);
 
+    const generateQRCode = async (id) => {
+        try {
+            const response = await axios.get(`http://127.0.0.1:8000/api/api/v1/contieneqr/${id}/`); // Ajusta la URL según tu configuración
+            console.log(response.data); // Solo para depuración
+            return response.data; // Puedes devolver la respuesta o manejarla de acuerdo a tus necesidades.
+        } catch (error) {
+            console.error('Error al generar el código QR:', error);
+            throw error;
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            // Primera solicitud POST para crear la orden de compra
             const response1 = await fetch('http://localhost:8000/api/crear-orden/', {
                 method: 'POST',
                 headers: {
@@ -61,12 +71,22 @@ const CompraR = () => {
 
             if (data3.status === 'success') {
                 alert("Compra realizada correctamente! Se le enviara su entrada al correo electronico registrado");
-                navigate('/asistente/')
+
+                // Llamar a la función para generar el código QR
+                try {
+                    const qrCodeData = await generateQRCode(id);
+                    console.log('Código QR generado:', qrCodeData);
+                    // Aquí puedes guardar el código QR en el estado o mostrarlo al usuario.
+                } catch (error) {
+                    console.error('Error al generar el código QR:', error);
+                }
+
+                navigate('/asistente/');
             }
 
             if (data1.num_orden) {
                 console.log('Orden de compra creada con éxito.');
-                // Segunda solicitud POST para consumir la API ContieneCreateAPIView
+
                 const response2 = await fetch('http://127.0.0.1:8000/api/contiene/agregar/', {
                     method: 'POST',
                     headers: {
@@ -111,4 +131,5 @@ const CompraR = () => {
 };
 
 export default CompraR;
+
 
