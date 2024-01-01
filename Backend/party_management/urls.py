@@ -44,5 +44,7 @@ urlpatterns = [
     path('api/contiene/agregar/', ContieneCreateAPIView.as_view(), name='agregarcont'),
     path('obtener_stock/<int:id_boleto>/', ObtenerStockBoleto.as_view(), name='obtenerbol'),
     path('actualizar_stock/<int:id_boleto>/', ActualizarStockView.as_view(), name='actualizar_stock'),
+    
+    path('compra', PurchaseEmailView.as_view(), name='compra'),
 ]
 

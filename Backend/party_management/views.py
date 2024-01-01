@@ -16,6 +16,11 @@ import jwt, datetime
 from jwt.exceptions import DecodeError, InvalidTokenError
 from rest_framework import generics
 from django.utils import timezone
+from django.http import HttpResponse
+import os
+import resend
+
+resend.api_key = os.environ["RESEND_API_KEY"]
 
 # Create your views here.
 class OrganizerView(viewsets.ModelViewSet):
@@ -126,8 +131,60 @@ class RegisterViewAs(APIView) :
         serializer = AsisSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        #return Response(serializer.data)
+        
+        nombre_usuario = serializer.data.get('nombre', 'Usuario Desconocido')
+        apellido_usuario = serializer.data.get('apellido', 'Usuario Desconocido')
+
+        params = {
+            "from": "Acme <onboarding@resend.dev>",
+            "to": ["frank1995alvcr@gmail.com"],
+            "subject": f"Bienvenido a PartyConnect, {nombre_usuario}!",
+            "html": f"""
+                <html>
+                <head>
+                    <style>
+                        body {{
+                            font-family: 'Arial', sans-serif;
+                            background-color: #f4f4f4;
+                            color: #333;
+                            padding: 20px;
+                        }}
+                        .welcome-container {{
+                            max-width: 600px;
+                            margin: 0 auto;
+                            background-color: #fff;
+                            padding: 20px;
+                            border-radius: 8px;
+                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                        }}
+                        h1 {{
+                            color: #007bff;
+                        }}
+                        p {{
+                            font-size: 16px;
+                        }}
+                    </style>
+                </head>
+                <body>
+                    <div class="welcome-container">
+                        <h1>Bienvenido a PartyConnect, {nombre_usuario} {apellido_usuario}!</h1>
+                        <p>
+                            Gracias por unirte a nuestra aplicación. Estamos emocionados de tenerte con nosotros.
+                            Esperamos que disfrutes de todas las increíbles características que PartyConnect tiene para ofrecer.
+                        </p>
+                        <p>¡Que te diviertas!</p>
+                        <p>¡Buena Buzz!</p>
+                    </div>
+                </body>
+                </html>
+            """,
+        }
+       
+        email = resend.Emails.send(params)
+        print(email) 
         return Response(serializer.data)
-    
+        
 class LoginViewAs(APIView):
     def post(self, request):
         email = request.data['email']
@@ -325,3 +382,61 @@ class ActualizarStockView(APIView):
             return Response({'status': 'success'}, status=status.HTTP_200_OK)
         except Boleto.DoesNotExist:
             return Response({'status': 'error', 'message': 'Boleto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+class PurchaseEmailView(APIView):
+    def post(self, request):
+        nombre_evento = request.data.get('nombre_evento', 'Evento Desconocido')
+        cantidad = request.data.get('cantidad', 1)
+        total = request.data.get('total', 0.0)
+        fecha_evento = request.data.get('fecha_evento', 'Fecha Desconocida')
+
+        params = {
+            "from": "Acme <onboarding@resend.dev>",
+            "to": ["frank1995alvcr@gmail.com"],
+            "subject": f"¡Confirmación de Boletos para {nombre_evento}!",
+            "html": f"""
+                <html>
+                <head>
+                    <style>
+                        body {{
+                            font-family: 'Arial', sans-serif;
+                            background-color: #ffbb33; /* Amarillo PartyConnect */
+                            color: #333;
+                            padding: 20px;
+                        }}
+                        .confirmation-container {{
+                            max-width: 600px;
+                            margin: 0 auto;
+                            background-color: #fff;
+                            padding: 20px;
+                            border-radius: 8px;
+                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                        }}
+                        h1 {{
+                            color: #e60073; /* Rosa PartyConnect */
+                        }}
+                        p {{
+                            font-size: 16px;
+                        }}
+                    </style>
+                </head>
+                <body>
+                    <div class="confirmation-container">
+                        <h1>¡Gracias por tu compra!</h1>
+                        <p>Confirmamos la compra de boletos para el evento {nombre_evento}:</p>
+                        <ul>
+                            <li>Nombre del Evento: {nombre_evento}</li>
+                            <li>Cantidad de Boletos: {cantidad}</li>
+                            <li>Total Pagado: ${total}</li>
+                            <li>Fecha del Evento: {fecha_evento}</li>
+                        </ul>
+                        <p>¡Esperamos que tengas una experiencia increíble en {nombre_evento}!</p>
+                    </div>
+                </body>
+                </html>
+            """,
+        }
+
+        email = resend.Emails.send(params)
+        print(email) 
+        return Response({"message": "Correo de compra enviado"})
