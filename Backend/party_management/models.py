@@ -117,7 +117,9 @@ class Vende(models.Model):
     iva = models.FloatField()
     descuento = models.FloatField()
     ice = models.FloatField()
-    stock_actual = models.IntegerField(default=0)
+    stock_actual = models.IntegerField()
+    precio_actual = models.FloatField()
+    
     def __str__(self):
         return f"{self.id_boleto} {self.id_organizador} {self.iva} {self.descuento} {self.ice} {self.stock_actual}"
     
@@ -134,15 +136,15 @@ class Evento(models.Model):
     id_evento = models.AutoField(primary_key=True)
     id_organizador = models.ForeignKey("Organizador", on_delete=models.CASCADE)
     nombre_evento = models.CharField(max_length=50,unique=True)
-    fecha = models.DateTimeField(auto_now_add=True)
-    hora = models.TimeField()
+    fecha = models.DateField() #El "auto_now_add=True" le establece automáticamente la fecha, se establece la fecha por defecto como la fecha del momento de ceración
+    hora = models.CharField(max_length=8)
     ubicacion = models.CharField(max_length=50)
     descripcion = models.CharField(max_length=100)
     tipo = models.CharField(max_length=10)
     limite = models.IntegerField()
-    #image = models.ImageField(upload_to="images/") #It'll go into a subfolder of our uploads folder named images #UPLOAD IMAGE #2
+    eliminado = models.BooleanField(default=False)
     def __str__(self):
-        return f"{self.id_evento} {self.id_organizador} {self.nombre_evento} {self.fecha} {self.hora} {self.ubicacion} {self.descripcion} {self.tipo} {self.limite}"
+        return f"{self.id_evento}{self.id_organizador}{self.nombre_evento}{self.fecha}{self.hora}{self.ubicacion}{self.descripcion}{self.tipo}{self.limite}"
 
 class Asistente(AbstractUser):
     id_asistente = models.AutoField(primary_key=True)
@@ -172,9 +174,9 @@ class OrdenCompra(models.Model):
     
 
 class Contiene(models.Model):
-    id_boleto = models.OneToOneField("Boleto", primary_key=True, on_delete=models.CASCADE)
-    boleto_cdg = models.CharField(default='', max_length=50)  # Asegúrate de que este campo sea opcional
-    num_orden = models.ForeignKey("OrdenCompra", on_delete=models.CASCADE)
+    id_boleto = models.OneToOneField("OrdenCompra", primary_key=True, on_delete=models.CASCADE)
+    boleto_cdg = models.CharField(default='', max_length=50) 
+    num_orden = models.IntegerField()
     cantidad_total = models.IntegerField()
 
     def generate_random_code(self):
@@ -193,16 +195,17 @@ class Contiene(models.Model):
     def __str__(self):
         return f"{self.id_boleto}{self.num_orden}{self.cantidad_total}{self.boleto_cdg}"
 
+
 class Boleto(models.Model):
     id_boleto = models.AutoField(primary_key=True)
+    id_evento = models.ForeignKey("Evento", on_delete=models.CASCADE)
     stock = models.IntegerField()
-    tipo = models.CharField(max_length=15)
+    tipoBoleto = models.CharField(max_length=15)
     precio = models.FloatField()
     def __str__(self):
-        return f"{self.id_boleto}{self.stock}{self.tipo}{self.precio}"
+        return f"{self.id_boleto}{self.stock}{self.tipoBoleto}{self.precio}"
     #->Add another field (Alter)
     #Django does not accept null values
 
     # python3 manage.py majemigrations
     #exlusividad = models.IntegerField(validators=[null=True,MinValueValidator(1),MaxValueValidator(5)])
-

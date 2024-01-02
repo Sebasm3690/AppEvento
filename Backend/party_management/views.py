@@ -19,7 +19,6 @@ from django.utils import timezone
 import qrcode
 from io import BytesIO
 from django.http import HttpResponse
-from django.http import HttpResponse
 import os
 import resend
 
@@ -49,6 +48,13 @@ class BorradoLogicoOrganizer(APIView):
         organizador.save()
         return Response({'mensaje':'Borrado lógico exitoso'}, status=status.HTTP_200_OK)
     
+class BorradoLogicoOEvent(APIView):
+    def post(self,request,id_evento):
+        evento = get_object_or_404(Evento, pk=id_evento)
+        evento.eliminado = True
+        evento.save()
+        return Response({'mensaje':'Borrado lógico exitoso'}, status=status.HTTP_200_OK)
+
 class VendeViewSet(viewsets.ModelViewSet):
     queryset = Vende.objects.all()
     serializer_class = VendeSerializer
@@ -309,7 +315,7 @@ class LogoutViewOrg(APIView):
         }
 
         return response
-
+    
 class EventoMuestra(generics.ListAPIView):
     queryset = Evento.objects.all()
     serializer_class = EventSerializer
