@@ -172,10 +172,14 @@ class OrdenCompra(models.Model):
     
 
 class Contiene(models.Model):
-    id_boleto = models.OneToOneField("Boleto", primary_key=True, on_delete=models.CASCADE)
+    id_contiene = models.AutoField(primary_key=True)
+    id_boleto = models.ForeignKey("Boleto", on_delete=models.CASCADE)
     boleto_cdg = models.CharField(default='', max_length=50)  # Asegúrate de que este campo sea opcional
     num_orden = models.ForeignKey("OrdenCompra", on_delete=models.CASCADE)
     cantidad_total = models.IntegerField()
+
+    class Meta:
+        unique_together = (('id_boleto', 'num_orden'),)
 
     def generate_random_code(self):
         numbers = ''.join(random.choices(string.digits, k=12))  # Genera 12 números aleatorios
