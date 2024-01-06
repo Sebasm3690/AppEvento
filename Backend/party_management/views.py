@@ -19,6 +19,8 @@ from django.utils import timezone
 import qrcode
 from io import BytesIO
 from django.http import HttpResponse
+from django.core.mail import send_mail
+from django.views.decorators.csrf import csrf_exempt
 
 
 # Create your views here.
@@ -371,7 +373,7 @@ class ContieneQRViewSet(viewsets.ModelViewSet):
         img = qr.make_image(fill='black', back_color='white')
         buffer = BytesIO()
         img.save(buffer, format="PNG")
-        
+
         return HttpResponse(buffer.getvalue(), content_type="image/png")
 
     def retrieve(self, request, *args, **kwargs):
@@ -410,5 +412,29 @@ class UserId(APIView):
 
         return Response({
             'id_asistente': id_asistente,
-            'user_data': serializer.data
+            'user_data': serializer.data,
+            'email': user.email
         })
+    
+@csrf_exempt
+def enviar_correo(request, id_asistente):
+    try:
+        asistente = Asistente.objects.get(id_asistente=id_asistente)
+    except Asistente.DoesNotExist:
+        return HttpResponse('El asistente no existe.', status=404)
+
+    if request.method == 'POST':
+        subject = f'{asistente.nombre} Aqui esta tu boleto'
+        message = f'Hola {asistente.nombre}, Gracias por realizar la compra!.'
+        from_email = 'partyconnect069@gmail.com'
+        
+        # Usar el correo electrónico del asistente autenticado
+        to_email = [asistente.email]  # Suponiendo que el correo electrónico se obtuvo de alguna manera
+
+        try:
+            send_mail(subject, message, from_email, to_email)
+            return HttpResponse(f'Correo enviado con éxito a {asistente.email}.')
+        except Exception as e:
+            return HttpResponse(f'Error al enviar el correo a {asistente.email}: {e}')
+
+    return HttpResponse('Endpoint para enviar correo. Realiza una solicitud POST para enviar un correo.')

@@ -29,15 +29,51 @@ const CompraR = () => {
 
     const generateQRCode = async (id) => {
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/api/api/v1/contieneqr/${id}/`); // Ajusta la URL según tu configuración
-            console.log(response.data); // Solo para depuración
-            return response.data; // Puedes devolver la respuesta o manejarla de acuerdo a tus necesidades.
+            const response = await axios.get(`http://127.0.0.1:8000/api/api/v1/contieneqr/${id}/`);
+            console.log(response.data);
+            return response.data;
         } catch (error) {
             console.error('Error al generar el código QR:', error);
             throw error;
         }
     };
 
+    const sendEmailToAsistente = async () => {
+        try {
+            // Realizar la solicitud GET para obtener los datos del asistente
+            const response = await fetch('http://localhost:8000/api/asistente', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                credentials: 'include' // Para enviar las cookies si es necesario
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Error al obtener los datos del asistente: ${response.statusText}`);
+            }
+    
+            const data = await response.json();
+            const asistenteId = data.id_asistente; // Asegúrate de que 'id_asistente' sea el campo correcto en tu modelo Asistente.
+    
+            // Realizar la solicitud POST para enviar el correo
+            const sendEmailResponse = await fetch(`http://127.0.0.1:8000/api/enviar-correo/${asistenteId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Puedes agregar más headers si es necesario
+                },
+                credentials: 'include' // Para enviar las cookies si es necesario
+            });
+    
+            const responseData = await sendEmailResponse.json();
+            console.log(responseData);
+    
+        } catch (error) {
+            console.error('Error al enviar el correo:', error);
+        }
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -70,43 +106,13 @@ const CompraR = () => {
             const data3 = await response3.json();
 
             if (data3.status === 'success') {
-                alert("Compra realizada correctamente! Se le enviara su entrada al correo electronico registrado");
+                alert("Compra realizada correctamente! Se le enviará su entrada al correo electrónico registrado");
 
-                // Llamar a la función para generar el código QR
-                try {
-                    const qrCodeData = await generateQRCode(id);
-                    console.log('Código QR generado:', qrCodeData);
-                    // Aquí puedes guardar el código QR en el estado o mostrarlo al usuario.
-                } catch (error) {
-                    console.error('Error al generar el código QR:', error);
-                }
+                // Llamar a la función para enviar correo
+                await sendEmailToAsistente();
 
                 navigate('/asistente/');
             }
-
-            if (data1.num_orden) {
-                console.log('Orden de compra creada con éxito.');
-
-                const response2 = await fetch('http://127.0.0.1:8000/api/contiene/agregar/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify({
-                        id_boleto: id,
-                        num_orden: data1.num_orden,
-                        cantidad_total: description,
-                    }),
-                });
-
-                const data2 = await response2.json();
-
-                if (data2.status === 'success') {
-                    console.log('API ContieneCreateAPIView consumida con éxito.');
-                }
-            } 
-
         } catch (error) {
             console.error('Error:', error);
             setError('Error al realizar la compra');

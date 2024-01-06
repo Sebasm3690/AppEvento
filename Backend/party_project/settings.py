@@ -160,3 +160,12 @@ AUTH_USER_MODEL = 'party_management.Asistente'
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALOW_ALL = True
+
+# settings.py
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'partyconnect069@gmail.com'  # Tu dirección de correo electrónico de Gmail
+EMAIL_HOST_PASSWORD = 'clfbgachlrurtoed '  # Tu contraseña de Gmail
