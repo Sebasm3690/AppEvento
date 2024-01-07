@@ -49,5 +49,5 @@ urlpatterns = [
     path('api/verstockv/<int:id_boleto>/', ObtenerStockVende.as_view(), name='obtener_vende'),
     path('historial-compras/<int:id_asistente>/', HistorialComprasUsuarioAPIView.as_view(), name='historial-compras-usuario'),
     path('api/asistenteid/', UserId.as_view(), name='evenmuestra'),
-    path('enviar-correo/<int:id_asistente>/', views.enviar_correo, name='enviar_correo'),
+    path('asistentes/<int:id_asistente>/contiene/<int:id_contiene>/enviar_correo/', views.enviar_correo, name='enviar_correo'),
 ]

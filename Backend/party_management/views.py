@@ -21,6 +21,7 @@ from io import BytesIO
 from django.http import HttpResponse
 from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
+from django.core.mail import EmailMessage
 
 
 # Create your views here.
@@ -417,22 +418,32 @@ class UserId(APIView):
         })
     
 @csrf_exempt
-def enviar_correo(request, id_asistente):
+def enviar_correo(request, id_asistente, id_contiene):
     try:
         asistente = Asistente.objects.get(id_asistente=id_asistente)
     except Asistente.DoesNotExist:
         return HttpResponse('El asistente no existe.', status=404)
 
+    try:
+        # Obtén el boleto (Contiene) específico para este asistente
+        contiene = Contiene.objects.get(id_contiene=id_contiene, num_orden__id_asistente=id_asistente)
+    except Contiene.DoesNotExist:
+        return HttpResponse('No se encontró el boleto específico para este asistente.', status=400)
+
     if request.method == 'POST':
-        subject = f'{asistente.nombre} Aqui esta tu boleto'
-        message = f'Hola {asistente.nombre}, Gracias por realizar la compra!.'
+        # Genera el código QR para el boleto específico
+        qr_image = ContieneQRViewSet().generate_qr_code(contiene)
+
+        subject = f'{asistente.nombre}, aquí está tu boleto'
+        message = f'Hola {asistente.nombre}, gracias por realizar la compra. Adjunto encontrarás tu boleto específico.'
         from_email = 'partyconnect069@gmail.com'
-        
-        # Usar el correo electrónico del asistente autenticado
-        to_email = [asistente.email]  # Suponiendo que el correo electrónico se obtuvo de alguna manera
+        to_email = [asistente.email]
 
         try:
-            send_mail(subject, message, from_email, to_email)
+            # Crea un objeto EmailMessage y adjunta el código QR
+            email = EmailMessage(subject, message, from_email, to_email)
+            email.attach(f'boleto_qr_{contiene.id_contiene}.png', qr_image.getvalue(), 'image/png')
+            email.send()
             return HttpResponse(f'Correo enviado con éxito a {asistente.email}.')
         except Exception as e:
             return HttpResponse(f'Error al enviar el correo a {asistente.email}: {e}')
