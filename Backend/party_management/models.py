@@ -152,6 +152,7 @@ class Asistente(AbstractUser):
     email = models.CharField(max_length=25,unique=True)
     password = models.CharField(max_length=50)
     ci = models.CharField(max_length=10,unique=True)
+    confirmed = models.BooleanField(default=False) 
     
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

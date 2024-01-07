@@ -22,6 +22,9 @@ from django.http import HttpResponse
 from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import EmailMessage
+from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.shortcuts import redirect
+from django.http import JsonResponse
 
 
 # Create your views here.
@@ -128,12 +131,71 @@ class LogoutViewAdm(APIView):
 
         return response
 
-class RegisterViewAs(APIView) :
+class RegisterViewAs(APIView):
     def post(self, request):
         serializer = AsisSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+
+        # Guardar el usuario sin confirmar
+        user = serializer.save(confirmed=False)  # Asumiendo que tienes un campo 'confirmed' en tu modelo Asistente
+
+        # Generar el token JWT para el usuario registrado
+        payload = {
+            'id': user.id_asistente,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+            'iat': datetime.datetime.utcnow()
+        }
+
+        token = jwt.encode(payload, 'tu_clave_secreta', algorithm='HS256')  # Cambia 'tu_clave_secreta' por una clave segura
+
+        # Enviar correo de confirmación con el token
+        subject = 'Confirmación de registro'
+        message = f'Haga clic en el siguiente enlace para confirmar su correo: http://127.0.0.1:8000/confirmar/{token}'
+        from_email = 'partyconnect069@gmail.com'  # Usa la misma dirección de correo configurada en settings.py
+        to_email = [user.email]  # Asumiendo que tu modelo Asistente tiene un campo 'email'
+        
+        send_mail(subject, message, from_email, to_email)
+
+        # Configurar la respuesta con el token
+        response = Response()
+        response.set_cookie(key='jwt', value=token, httponly=True)  # Opcional: usa cookies si lo prefieres
+        response.data = {
+            'jwt': token,
+            'message': 'Registro exitoso. Por favor, confirme su correo electrónico.'
+        }
+
+        return response
+
+def confirmar_correo(request, token):
+    try:
+        # Decodificar el token JWT para obtener el ID del usuario
+        payload = jwt.decode(token, 'tu_clave_secreta', algorithms=['HS256'])
+        user_id = payload['id']
+        
+        # Obtener el usuario de la base de datos
+        user = Asistente.objects.get(id_asistente=user_id)
+        
+        # Marcar el correo como confirmado
+        user.confirmed = True
+        user.save()
+
+        user.confirmation_token = None
+        user.save()
+
+        # Enviar correo de confirmación al usuario
+        subject = 'Confirmación de correo electrónico exitosa'
+        message = 'Estimado/a {},\n\nSu correo electrónico ha sido confirmado exitosamente.'.format(user.nombre)
+        from_email = 'partyconnect069@gmail.com'  # Cambia esto al correo desde el cual deseas enviar el mensaje
+        to_email = [user.email]
+
+        send_mail(subject, message, from_email, to_email)
+
+        # Devolver una respuesta con un mensaje de éxito
+        return JsonResponse({'message': 'Correo confirmado exitosamente. Se ha enviado una confirmación.'})
+
+    except (jwt.ExpiredSignatureError, jwt.DecodeError, Asistente.DoesNotExist) as e:
+        # En caso de error, devolver un mensaje adecuado
+        return JsonResponse({'error': 'Token inválido o usuario no encontrado.'}, status=400)
     
 class LoginViewAs(APIView):
     def post(self, request):
@@ -142,6 +204,9 @@ class LoginViewAs(APIView):
 
         user = Asistente.objects.filter(email=email, password=password).first()
 
+        if user and not user.confirmed:
+            raise AuthenticationFailed('Por favor, confirma tu correo electrónico antes de iniciar sesión.')
+        
         if user is None:
             raise AuthenticationFailed('Usuario no Encontrado o Contraseña Incorrecta')
 

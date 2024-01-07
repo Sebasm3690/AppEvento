@@ -50,4 +50,5 @@ urlpatterns = [
     path('historial-compras/<int:id_asistente>/', HistorialComprasUsuarioAPIView.as_view(), name='historial-compras-usuario'),
     path('api/asistenteid/', UserId.as_view(), name='evenmuestra'),
     path('asistentes/<int:id_asistente>/contiene/<int:id_contiene>/enviar_correo/', views.enviar_correo, name='enviar_correo'),
+    path('confirmar/<str:token>/', confirmar_correo, name='confirmar_correo'),
 ]
