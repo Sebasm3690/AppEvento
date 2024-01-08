@@ -180,7 +180,7 @@ class OrdenCompra(models.Model):
 class Contiene(models.Model):
     id_contiene = models.AutoField(primary_key=True)
     id_boleto = models.ForeignKey("Boleto", on_delete=models.CASCADE)
-    boleto_cdg = models.CharField(default='', max_length=50)  # Asegúrate de que este campo sea opcional
+    boleto_cdg = models.CharField(default='', max_length=50, unique=True)  # Asegúrate de que este campo sea opcional
     num_orden = models.ForeignKey("OrdenCompra", on_delete=models.CASCADE)
     cantidad_total = models.IntegerField()
 
