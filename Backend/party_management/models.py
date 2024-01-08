@@ -112,12 +112,17 @@ class Organizador(models.Model):
 
 
 class Vende(models.Model):
-    id_boleto = models.OneToOneField("Boleto", primary_key=True, on_delete=models.CASCADE, related_name='vende_boleto')
+    id_vende = models.AutoField(primary_key=True)
+    id_boleto = models.ForeignKey("Boleto", on_delete=models.CASCADE, related_name='vende_boleto')
     id_organizador = models.ForeignKey("Organizador", on_delete=models.CASCADE, related_name='vende_organizador')
     iva = models.FloatField()
     descuento = models.FloatField()
     ice = models.FloatField()
     stock_actual = models.IntegerField(default=0)
+
+    class Meta:
+        unique_together = (('id_boleto', 'id_organizador'),)
+
     def __str__(self):
         return f"{self.id_boleto} {self.id_organizador} {self.iva} {self.descuento} {self.ice} {self.stock_actual}"
     
