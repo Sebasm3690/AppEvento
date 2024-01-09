@@ -26,6 +26,8 @@ urlpatterns = [
     path("docs/", include_docs_urls(title="Parties API")),
     path("borrado_logico_organizador/<int:id_organizador>/",views.BorradoLogicoOrganizer.as_view(),name="borrado_logico:organizador"),
     path("borrado_logico_evento/<int:id_evento>/",views.BorradoLogicoOEvent.as_view(),name="borrado_logico_evento"),
+    path("recuperar_organizador/<int:id_organizador>/",views.recuperarOrganizer.as_view(),name="recuperar_organizador"),
+    path("recuperar_evento/<int:id_evento>/",views.recuperarEvento.as_view(),name="recuperar_evento"),
 
     path("api/login/", LoginViewAdm.as_view(), name='login'),
     path('api/logout/', LogoutViewAdm.as_view(), name='logout'),

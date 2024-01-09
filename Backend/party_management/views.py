@@ -19,10 +19,10 @@ from django.utils import timezone
 import qrcode
 from io import BytesIO
 from django.http import HttpResponse
-import os
-import resend
+#import os
+#import resend
 
-resend.api_key = os.environ["RESEND_API_KEY"]
+#resend.api_key = os.environ["RESEND_API_KEY"]
 
 # Create your views here.
 class OrganizerView(viewsets.ModelViewSet):
@@ -47,7 +47,21 @@ class BorradoLogicoOrganizer(APIView):
         organizador.eliminado = True
         organizador.save()
         return Response({'mensaje':'Borrado lógico exitoso'}, status=status.HTTP_200_OK)
-    
+
+class recuperarOrganizer(APIView):
+    def post(self,request,id_organizador):
+        organizador = get_object_or_404(Organizador,pk=id_organizador)
+        organizador.eliminado = False
+        organizador.save()
+        return Response({"Mensaje":"Recuperación de organizador exitosa"},status=status.HTTP_200_OK)
+
+class recuperarEvento(APIView):
+    def post(self,request,id_evento):
+        evento = get_object_or_404(Evento,pk=id_evento)
+        evento.eliminado = False
+        evento.save()
+        return Response({"Mensaje":"Recuperación de evento exitosa"},status=status.HTTP_200_OK)
+
 class BorradoLogicoOEvent(APIView):
     def post(self,request,id_evento):
         evento = get_object_or_404(Evento, pk=id_evento)
