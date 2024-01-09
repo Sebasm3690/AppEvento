@@ -14,6 +14,15 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import AuthenticationFailed
 import jwt, datetime
 from jwt.exceptions import DecodeError, InvalidTokenError
+from rest_framework import generics
+from django.utils import timezone
+import qrcode
+from io import BytesIO
+from django.http import HttpResponse
+#import os
+#import resend
+
+#resend.api_key = os.environ["RESEND_API_KEY"]
 
 # Create your views here.
 class OrganizerView(viewsets.ModelViewSet):
@@ -38,7 +47,21 @@ class BorradoLogicoOrganizer(APIView):
         organizador.eliminado = True
         organizador.save()
         return Response({'mensaje':'Borrado lógico exitoso'}, status=status.HTTP_200_OK)
-    
+
+class recuperarOrganizer(APIView):
+    def post(self,request,id_organizador):
+        organizador = get_object_or_404(Organizador,pk=id_organizador)
+        organizador.eliminado = False
+        organizador.save()
+        return Response({"Mensaje":"Recuperación de organizador exitosa"},status=status.HTTP_200_OK)
+
+class recuperarEvento(APIView):
+    def post(self,request,id_evento):
+        evento = get_object_or_404(Evento,pk=id_evento)
+        evento.eliminado = False
+        evento.save()
+        return Response({"Mensaje":"Recuperación de evento exitosa"},status=status.HTTP_200_OK)
+
 class BorradoLogicoOEvent(APIView):
     def post(self,request,id_evento):
         evento = get_object_or_404(Evento, pk=id_evento)
@@ -131,8 +154,60 @@ class RegisterViewAs(APIView) :
         serializer = AsisSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        #return Response(serializer.data)
+        
+        nombre_usuario = serializer.data.get('nombre', 'Usuario Desconocido')
+        apellido_usuario = serializer.data.get('apellido', 'Usuario Desconocido')
+
+        params = {
+            "from": "Acme <onboarding@resend.dev>",
+            "to": ["frank1995alvcr@gmail.com"],
+            "subject": f"Bienvenido a PartyConnect, {nombre_usuario}!",
+            "html": f"""
+                <html>
+                <head>
+                    <style>
+                        body {{
+                            font-family: 'Arial', sans-serif;
+                            background-color: #f4f4f4;
+                            color: #333;
+                            padding: 20px;
+                        }}
+                        .welcome-container {{
+                            max-width: 600px;
+                            margin: 0 auto;
+                            background-color: #fff;
+                            padding: 20px;
+                            border-radius: 8px;
+                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                        }}
+                        h1 {{
+                            color: #007bff;
+                        }}
+                        p {{
+                            font-size: 16px;
+                        }}
+                    </style>
+                </head>
+                <body>
+                    <div class="welcome-container">
+                        <h1>Bienvenido a PartyConnect, {nombre_usuario} {apellido_usuario}!</h1>
+                        <p>
+                            Gracias por unirte a nuestra aplicación. Estamos emocionados de tenerte con nosotros.
+                            Esperamos que disfrutes de todas las increíbles características que PartyConnect tiene para ofrecer.
+                        </p>
+                        <p>¡Que te diviertas!</p>
+                        <p>¡Buena Buzz!</p>
+                    </div>
+                </body>
+                </html>
+            """,
+        }
+       
+        email = resend.Emails.send(params)
+        print(email) 
         return Response(serializer.data)
-    
+        
 class LoginViewAs(APIView):
     def post(self, request):
         email = request.data['email']
@@ -254,5 +329,221 @@ class LogoutViewOrg(APIView):
         }
 
         return response
+    
+class EventoMuestra(generics.ListAPIView):
+    queryset = Evento.objects.all()
+    serializer_class = EventSerializer
+
+class EventoDetail(generics.RetrieveAPIView):
+    queryset = Evento.objects.all()
+    serializer_class = EventSerializer
+    lookup_field = 'id_evento'
+
+    def get(self, request, *args, **kwargs):
+        try:
+            return super().get(request, *args, **kwargs)
+        except Evento.DoesNotExist:
+            return Response({"detail": "El evento no existe."}, status=status.HTTP_404_NOT_FOUND)
+
+class OrdenCompraView(APIView):
+    def post(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if not token:
+            raise AuthenticationFailed('Unauthenticated!')
+
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated!')
+
+        # Obtener el usuario basado en el token
+        user = Asistente.objects.filter(id_asistente=payload['id']).first()
+
+        if not user:
+            raise AuthenticationFailed('Usuario no encontrado!')
+
+        # Aquí asumimos que tienes una lógica para calcular el valor_total. 
+        # Puedes adaptar esto según tus necesidades.
+        valor_total = request.data.get('valor_total')  # Suponiendo que envíes el valor_total en la solicitud
+
+        # Crear una nueva orden de compra
+        orden_compra = OrdenCompra.objects.create(
+            id_asistente=user,
+            valor_total=valor_total,
+            fecha=timezone.now()
+        )
+
+        serializer = OrdenSerializer(orden_compra)
+
+        return Response(serializer.data)
+    
+class ContieneCreateAPIView(APIView):
+     def post(self, request, format=None):
+        serializer = ContieneSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ObtenerStockBoleto(APIView):
+    def get(self, request, id_boleto):
+        try:
+            boleto = Boleto.objects.get(id_boleto=id_boleto)
+            serializer = TicketSerializer(boleto)
+            return Response({'stock': serializer.data['stock']})
+        except Boleto.DoesNotExist:
+            return Response({'error': 'Boleto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+class ActualizarStockView(APIView):
+    def put(self, request, id_boleto):
+        try:
+            boleto = Boleto.objects.get(id_boleto=id_boleto)
+            new_stock = request.data.get('stock')
+            boleto.stock = new_stock
+            boleto.save()
+            return Response({'status': 'success'}, status=status.HTTP_200_OK)
+        except Boleto.DoesNotExist:
+            return Response({'status': 'error', 'message': 'Boleto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
 
+class ObtenerStockVende(APIView):
+    def get(self, request, id_boleto):
+        try:
+            boleto = Vende.objects.get(id_boleto=id_boleto)
+            serializer = VendeSerializer(boleto)
+            return Response({'stock': serializer.data['stock_actual']})
+        except Boleto.DoesNotExist:
+            return Response({'error': 'Boleto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+class ActualizarVende(APIView):
+    def put(self, request, id_boleto):
+        try:
+            boleto = Vende.objects.get(id_boleto=id_boleto)
+            new_stock = request.data.get('stock_actual')
+            boleto.stock_actual = new_stock
+            boleto.save()
+            return Response({'status': 'success'}, status=status.HTTP_200_OK)
+        except Boleto.DoesNotExist:
+            return Response({'status': 'error', 'message': 'Boleto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+        
+class ContieneQRViewSet(viewsets.ModelViewSet):
+    queryset = Contiene.objects.all()
+    serializer_class = ContieneSerializer
+
+    def generate_qr_code(self, contiene):
+        data = f"Codigo: {contiene.boleto_cdg},\n Orden: {contiene.num_orden}, \n Cantidad: {contiene.cantidad_total}"
+        
+        # Generar el código QR
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(data)
+        qr.make(fit=True)
+
+        # Crear una imagen del código QR
+        img = qr.make_image(fill='black', back_color='white')
+        buffer = BytesIO()
+        img.save(buffer, format="PNG")
+        
+        return HttpResponse(buffer.getvalue(), content_type="image/png")
+
+    def retrieve(self, request, *args, **kwargs):
+        contiene = self.get_object()
+        return self.generate_qr_code(contiene)
+
+class HistorialComprasUsuarioAPIView(generics.ListAPIView):
+    serializer_class = OrdenSerializer
+
+    def get_queryset(self):
+        # Obtiene el id_asistente del usuario solicitado desde los parámetros de la URL
+        id_asistente = self.kwargs['id_asistente']
+        # Filtra las ordenes de compra basadas en el id_asistente
+        return OrdenCompra.objects.filter(id_asistente=id_asistente)
+
+class UserId(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if not token:
+            raise AuthenticationFailed('Unauthenticated!')
+
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated!')
+
+        id_asistente = payload.get('id')
+
+        user = Asistente.objects.filter(id_asistente=id_asistente).first()
+
+        if not user:
+            raise AuthenticationFailed('Usuario no encontrado!')
+
+        serializer = AsisSerializer(user)
+
+        return Response({
+            'id_asistente': id_asistente,
+            'user_data': serializer.data
+        })
+        
+class PurchaseEmailView(APIView):
+    def post(self, request):
+        nombre_evento = request.data.get('nombre_evento', 'Evento Desconocido')
+        cantidad = request.data.get('cantidad', 1)
+        total = request.data.get('total', 0.0)
+        fecha_evento = request.data.get('fecha_evento', 'Fecha Desconocida')
+
+        params = {
+            "from": "Acme <onboarding@resend.dev>",
+            "to": ["frank1995alvcr@gmail.com"],
+            "subject": f"¡Confirmación de Boletos para {nombre_evento}!",
+            "html": f"""
+                <html>
+                <head>
+                    <style>
+                        body {{
+                            font-family: 'Arial', sans-serif;
+                            background-color: #ffbb33; /* Amarillo PartyConnect */
+                            color: #333;
+                            padding: 20px;
+                        }}
+                        .confirmation-container {{
+                            max-width: 600px;
+                            margin: 0 auto;
+                            background-color: #fff;
+                            padding: 20px;
+                            border-radius: 8px;
+                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                        }}
+                        h1 {{
+                            color: #e60073; /* Rosa PartyConnect */
+                        }}
+                        p {{
+                            font-size: 16px;
+                        }}
+                    </style>
+                </head>
+                <body>
+                    <div class="confirmation-container">
+                        <h1>¡Gracias por tu compra!</h1>
+                        <p>Confirmamos la compra de boletos para el evento {nombre_evento}:</p>
+                        <ul>
+                            <li>Nombre del Evento: {nombre_evento}</li>
+                            <li>Cantidad de Boletos: {cantidad}</li>
+                            <li>Total Pagado: ${total}</li>
+                            <li>Fecha del Evento: {fecha_evento}</li>
+                        </ul>
+                        <p>¡Esperamos que tengas una experiencia increíble en {nombre_evento}!</p>
+                    </div>
+                </body>
+                </html>
+            """,
+        }
+
+        email = resend.Emails.send(params)
+        print(email) 
+        return Response({"message": "Correo de compra enviado"})

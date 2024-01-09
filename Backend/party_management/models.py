@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, AbstractUser
+import random
+import string
 #--> Migration <-- 
 # Are a feature that basically define steps for Django to execute
 # Steps that will touch the database and manipulate it (For creating new tables or manipulating existing tables)
@@ -110,15 +112,20 @@ class Organizador(models.Model):
 
 
 class Vende(models.Model):
-    id_boleto = models.OneToOneField("Boleto", primary_key=True, on_delete=models.CASCADE, related_name='vende_boleto')
+    id_vende = models.AutoField(primary_key=True)
+    id_boleto = models.ForeignKey("Boleto", on_delete=models.CASCADE, related_name='vende_boleto')
     id_organizador = models.ForeignKey("Organizador", on_delete=models.CASCADE, related_name='vende_organizador')
     iva = models.FloatField()
     descuento = models.FloatField()
     ice = models.FloatField()
-    stock_actual = models.IntegerField()
+    stock_actual = models.IntegerField(default=0)
     precio_actual = models.FloatField()
+
+    class Meta:
+        unique_together = (('id_boleto', 'id_organizador'),)
+
     def __str__(self):
-        return f"{self.id_boleto} {self.id_organizador} {self.iva} {self.descuento} {self.ice}"
+        return f"{self.id_boleto} {self.id_organizador} {self.iva} {self.descuento} {self.ice} {self.stock_actual}"
     
 class Administrador(models.Model):
     id_admin = models.AutoField(primary_key=True)
@@ -132,16 +139,17 @@ class Administrador(models.Model):
 class Evento(models.Model):
     id_evento = models.AutoField(primary_key=True)
     id_organizador = models.ForeignKey("Organizador", on_delete=models.CASCADE)
-    nombre_evento = models.CharField(max_length=50,unique=True)
-    fecha = models.DateField() #El "auto_now_add=True" le establece automáticamente la fecha, se establece la fecha por defecto como la fecha del momento de ceración
-    hora = models.CharField(max_length=8)
+    nombre_evento = models.CharField(max_length=50)
+    fecha = models.DateField()
+    hora = models.TimeField()
     ubicacion = models.CharField(max_length=50)
     descripcion = models.CharField(max_length=100)
     tipo = models.CharField(max_length=10)
     limite = models.IntegerField()
     eliminado = models.BooleanField(default=False)
+    #image = models.ImageField(upload_to="images/") #It'll go into a subfolder of our uploads folder named images #UPLOAD IMAGE #2
     def __str__(self):
-        return f"{self.id_evento}{self.id_organizador}{self.nombre_evento}{self.fecha}{self.hora}{self.ubicacion}{self.descripcion}{self.tipo}{self.limite}"
+        return f"{self.id_evento} {self.id_organizador} {self.nombre_evento} {self.fecha} {self.hora} {self.ubicacion} {self.descripcion} {self.tipo} {self.limite}"
 
 class Asistente(AbstractUser):
     id_asistente = models.AutoField(primary_key=True)
@@ -151,6 +159,7 @@ class Asistente(AbstractUser):
     email = models.CharField(max_length=25,unique=True)
     password = models.CharField(max_length=50)
     ci = models.CharField(max_length=10,unique=True)
+    confirmed = models.BooleanField(default=False) 
     
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -165,17 +174,36 @@ class OrdenCompra(models.Model):
     id_asistente = models.ForeignKey("Asistente", on_delete=models.CASCADE)
     fecha = models.DateTimeField(auto_now_add=True)
     valor_total = models.FloatField()
+
     def __str__(self):
         return f"{self.num_orden}{self.id_asistente}{self.fecha}{self.valor_total}"
     
 
 class Contiene(models.Model):
-    id_boleto = models.OneToOneField("Boleto", primary_key=True, on_delete=models.CASCADE)
+    id_contiene = models.AutoField(primary_key=True)
+    id_boleto = models.ForeignKey("Boleto", on_delete=models.CASCADE)
+    boleto_cdg = models.CharField(default='', max_length=50)  # Asegúrate de que este campo sea opcional
     num_orden = models.ForeignKey("OrdenCompra", on_delete=models.CASCADE)
     cantidad_total = models.IntegerField()
-    def __str__(self):
-        return f"{self.id_boleto}{self.num_orden}{self.cantidad_total}"
 
+    class Meta:
+        unique_together = (('id_boleto', 'num_orden'),)
+
+    def generate_random_code(self):
+        numbers = ''.join(random.choices(string.digits, k=12))  # Genera 12 números aleatorios
+        letters = ''.join(random.choices(string.ascii_uppercase, k=3))  # Genera 3 letras aleatorias
+        return numbers + letters
+
+    def save(self, *args, **kwargs):
+        # Si no se ha proporcionado un boleto_cdg, entonces genera uno automáticamente
+        if not self.boleto_cdg:
+            self.boleto_cdg = self.generate_random_code()
+        
+        # Llamar al método save de la superclase para guardar el objeto
+        super(Contiene, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.id_boleto}{self.num_orden}{self.cantidad_total}{self.boleto_cdg}"
 
 class Boleto(models.Model):
     id_boleto = models.AutoField(primary_key=True)

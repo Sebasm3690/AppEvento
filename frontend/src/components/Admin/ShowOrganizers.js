@@ -13,6 +13,10 @@ import {
 import { show_alerta } from "../../functions";
 
 const ShowOrganizers = ({ adminObj }) => {
+  const botonDerechaStyles = {
+    marginLeft: "auto",
+  };
+
   console.log("Datos del organizador en CrudEvents:", adminObj);
   const url = "http://127.0.0.1:8000/api/v1/organizer/";
   const [organizers, setOrganizers] = useState([]);
@@ -25,6 +29,7 @@ const ShowOrganizers = ({ adminObj }) => {
   const [id_admin, setId_admin] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [showModalInsert, setShowModalInsert] = useState(false);
+  const [showModalRecuperar, setShowModalRecuperar] = useState(false);
 
   //Función para consumir API y obtener todo el objeto {}
 
@@ -56,24 +61,37 @@ const ShowOrganizers = ({ adminObj }) => {
     setShowModal(true);
   };
 
-  const handleEliminarUsuario = async (userId) => {
-    //You must put async when you use await
-    const organizador = organizers.find(
-      (organizer) => organizer.id_organizador === userId
+  const recuperar_organizador = async (id_organizador) => {
+    await axios.post(
+      `http://127.0.0.1:8000/recuperar_organizador/${id_organizador}/`,
+      show_alerta("El organizador ha sido recuperado correctamente", "success")
     );
-    if (organizador) {
-      //Solicitud para el borrado lógico
-      await axios.post(
-        `http://127.0.0.1:8000/borrado_logico_organizador/${userId}/`
-      );
-      //Acutalizar lista de organizadores despues del borrado lógico
-      setOrganizers((prevOrganizadores) =>
-        prevOrganizadores.filter((o) => o.id_organizador !== userId)
-      );
-    }
+    setOrganizers((prevOrganizadores) =>
+      prevOrganizadores.filter(
+        (prevOrganizador) => prevOrganizador.id_organizador !== id_organizador
+      )
+    );
+  };
+
+  const handleEliminarUsuario = async (userId) => {
+    //Solicitud para el borrado lógico
+    await axios.post(
+      `http://127.0.0.1:8000/borrado_logico_organizador/${userId}/`,
+      show_alerta("El organizador ha sido dado de baja", "success")
+    );
+    //Acutalizar lista de organizadores despues del borrado lógico
+    setOrganizers((prevOrganizadores) =>
+      prevOrganizadores.filter((o) => o.id_organizador !== userId)
+    );
+  };
+
+  const handleRecuperar = async () => {
+    setShowModalRecuperar(true);
   };
 
   const validar = async (op) => {
+    // Expresión regular para validar el formato de correo electrónico
+    const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     var parametros;
 
     const urlEditar = `http://127.0.0.1:8000/api/v1/organizer/${id}/`;
@@ -90,13 +108,36 @@ const ShowOrganizers = ({ adminObj }) => {
       show_alerta("Escribe la contrasenia", "warning");
     } else {
       if (op === 1) {
+        if (organizers.some((organizer) => ci === organizer.ci)) {
+          //Some devuelve true o false
+          show_alerta("La cédula del organizador ya existe", "warning");
+        } else if (
+          organizers.some((organizer) => correo === organizer.correo)
+        ) {
+          show_alerta("El correo del organizador ya existe", "warning");
+        } else if (ci.length > 10 || ci.length < 10) {
+          show_alerta("La cédula debe tener 10 dígitos", "warning");
+          return;
+        } else if (
+          organizers.some((organizer) => correo === organizer.correo)
+        ) {
+          show_alerta("El correo del organizador ya existe", "warning");
+          return;
+        } else if (!regexCorreo.test(correo)) {
+          show_alerta(
+            "El formato del correo electrónico no es válido",
+            "warning"
+          );
+          return;
+        }
+
         parametros = {
           nombre: nombre.trim(),
           apellido: apellido.trim(),
           ci: ci.trim(),
           correo: correo.trim(),
           contrasenia: contrasenia.trim(),
-          id_admin,
+          id_admin: adminObj.id_admin,
         };
         //metodo = "POST";
         axios
@@ -130,6 +171,7 @@ const ShowOrganizers = ({ adminObj }) => {
               "El organizador ha sido actualizado exitosamente",
               "success"
             );
+            setShowModal(false);
           })
           .catch((error) => {
             console.error("Error al realizar la solicitud PUT:", error);
@@ -170,7 +212,9 @@ const ShowOrganizers = ({ adminObj }) => {
         >
           Insertar nuevo organizador
         </button>
-        <button className="btn btn-success">Recuperar Organizador</button>
+        <Button className="btn btn-success" onClick={handleRecuperar}>
+          Recuperar Organizador
+        </Button>
         <br></br>
         <Table className="table">
           <thead>
@@ -180,7 +224,6 @@ const ShowOrganizers = ({ adminObj }) => {
               <th>Apellido</th>
               <th>CI</th>
               <th>Correo</th>
-              <th>Contrasenia</th>
               <th>Id_admin</th>
             </tr>
           </thead>
@@ -195,25 +238,24 @@ const ShowOrganizers = ({ adminObj }) => {
                   <td>{organizer.apellido}</td>
                   <td>{organizer.ci}</td>
                   <td>{organizer.correo}</td>
-                  <td>{organizer.contrasenia}</td>
                   <td>{organizer.id_admin}</td>
                   <td>
-                    <button
+                    <Button
                       onClick={() =>
                         handleEditarUsuario(organizer.id_organizador)
                       }
                       className="btn btn-warning"
                     >
                       Editar
-                    </button>{" "}
-                    <button
+                    </Button>{" "}
+                    <Button
                       className="btn btn-danger"
                       onClick={() =>
                         handleEliminarUsuario(organizer.id_organizador)
                       }
                     >
                       Dar de baja
-                    </button>
+                    </Button>
                   </td>
                 </tr>
               ))}
@@ -224,22 +266,11 @@ const ShowOrganizers = ({ adminObj }) => {
       <Modal isOpen={showModal}>
         <ModalHeader>
           <div>
-            <h3>Editar Registro</h3>
+            <h3>Editar Organizador</h3>
           </div>
         </ModalHeader>
 
         <ModalBody>
-          <FormGroup>
-            <label>Id:</label>
-            <input
-              className="form-control"
-              readOnly
-              type="text"
-              name="id_organizador" //e es nuestro evento o lo que ingresa el usuario, con target apuntamos al valor ingresado por el usuario y se actualiza el objeto gracias al método set
-              value={id}
-            />
-          </FormGroup>
-
           <FormGroup>
             <label>Nombre:</label>
             <input
@@ -294,16 +325,6 @@ const ShowOrganizers = ({ adminObj }) => {
               value={contrasenia}
             />
           </FormGroup>
-
-          <FormGroup>
-            <label>ID_admin:</label>
-            <input
-              className="form-control"
-              name="id_admin"
-              type="text"
-              value={id_admin}
-            />
-          </FormGroup>
         </ModalBody>
 
         <ModalFooter>
@@ -326,16 +347,6 @@ const ShowOrganizers = ({ adminObj }) => {
         </ModalHeader>
 
         <ModalBody>
-          <FormGroup>
-            <label>Id:</label>
-            <input
-              className="form-control"
-              readOnly
-              type="text"
-              name="id_organizador" //e es nuestro evento o lo que ingresa el usuario, con target apuntamos al valor ingresado por el usuario y se actualiza el objeto gracias al método set
-            />
-          </FormGroup>
-
           <FormGroup>
             <label>Nombre:</label>
             <input
@@ -385,29 +396,77 @@ const ShowOrganizers = ({ adminObj }) => {
               onChange={(e) => setContrasenia(e.target.value)}
             />
           </FormGroup>
-
-          <FormGroup>
-            <label>ID_admin:</label>
-            <input
-              className="form-control"
-              name="id_admin"
-              type="text"
-              onChange={(e) => setId_admin(e.target.value)}
-            />
-          </FormGroup>
         </ModalBody>
 
         <ModalFooter>
           <Button color="primary" onClick={() => validar(1)}>
             Insertar
           </Button>
-          <Button
-            className="btn btn-danger"
-            onClick={() => setShowModalInsert(false)}
-          >
+          <Button color="danger" onClick={() => setShowModalInsert(false)}>
             Cancelar
           </Button>
         </ModalFooter>
+      </Modal>
+
+      {/*------------------------------------- */}
+
+      <Modal isOpen={showModalRecuperar} size="lg">
+        <ModalHeader>
+          <div>
+            <h3>Recuperar Organizador</h3>
+            <Button
+              type="button"
+              className="close" // Agregar la clase "float-right" para alinear a la derecha
+              aria-label="close"
+              style={botonDerechaStyles}
+              onClick={() => setShowModalRecuperar(false)}
+            >
+              <span aria-hidden="true">&times;</span>
+            </Button>
+          </div>
+        </ModalHeader>
+
+        <Container>
+          <Table>
+            <thead>
+              <tr>
+                <th>ID organizador</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>CI</th>
+                <th>Correo</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {organizers
+                .filter((organizer) => organizer.eliminado === true)
+                .filter(
+                  (organizer) =>
+                    organizer.id_organizador === adminObj.id_organizador
+                )
+                .map((organizer) => (
+                  <tr key={organizer.id_organizador}>
+                    <td>{organizer.id_organizador}</td>
+                    <td>{organizer.nombre}</td>
+                    <td>{organizer.apellido}</td>
+                    <td>{organizer.ci}</td>
+                    <td>{organizer.correo}</td>
+                    <td>
+                      <button
+                        className="btn btn-success"
+                        onClick={() =>
+                          recuperar_organizador(organizer.id_organizador)
+                        }
+                      >
+                        Recuperar
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </Table>
+        </Container>
       </Modal>
     </>
   );
