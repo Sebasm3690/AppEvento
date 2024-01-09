@@ -23,7 +23,8 @@
 - **Sprint 3 - Fecha de Inicio: 11/12/2023 - Fecha de Fin: 17/12/2023 - Estado: REALIZADO**
 - **Sprint 4 - Fecha de Inicio: 18/12/2023 - Fecha de Fin: 24/12/2023 - Estado: REALIZADO**
 - **Sprint 5 - Fecha de Inicio: 25/12/2023 - Fecha de Fin: 31/12/2023 - Estado: REALIZADO**
-- **Sprint 6 - Fecha de Inicio: 01/01/2024 - Fecha de Fin: 07/01/2024 - Estado: PLANIFICADO**
+- **Sprint 6 - Fecha de Inicio: 01/01/2024 - Fecha de Fin: 07/01/2024 - Estado: REALIZADO**
+- **Sprint 7 - Fecha de Inicio: 08/01/2024 - Fecha de Fin: 14/01/2024 - Estado: PLANIFICADO**
 
 ### Enlace al Sprint Backlog:
 - [`Spring Backlog`](https://liveespochedu-my.sharepoint.com/:x:/g/personal/francisco_alvarez_espoch_edu_ec/Ee6udVe8hCJOri22fGPu3hgBkFqoGL-UxFdKtQTAmOOX_Q?e=NlzIac)
