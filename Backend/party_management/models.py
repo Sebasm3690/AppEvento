@@ -171,7 +171,7 @@ class Asistente(AbstractUser):
 class OrdenCompra(models.Model):
     num_orden = models.AutoField(primary_key=True)
     id_asistente = models.ForeignKey("Asistente", on_delete=models.CASCADE)
-    fecha = models.DateTimeField(auto_now_add=True)
+    fecha = models.DateField(auto_now_add=True)
     valor_total = models.FloatField()
 
     def __str__(self):

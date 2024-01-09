@@ -619,6 +619,18 @@ const CrudEvents = ({ organizerObj }) => {
     setContienesFiltrados(contieneOrdenCompra);
   };
 
+  var ver_asistente = (ordenCompra) => {
+    setShowModalAsistente(true);
+    if (Array.isArray(asistentes)) {
+      var asistenteNumOrden = asistentes.find(
+        (asistente) => asistente.id_asistente === ordenCompra.id_asistente
+      );
+      setAsistentes(asistenteNumOrden);
+    } else {
+      console.error("La variable 'asistentes' no es un array.");
+    }
+  };
+
   return (
     <>
       <Container className="meetup-item">
@@ -1273,7 +1285,8 @@ const CrudEvents = ({ organizerObj }) => {
                 <th>Número de orden</th>
                 <th>Fecha</th>
                 <th>Valor total</th>
-                <th>ID Asistente</th>
+                <th>IVA</th>
+                <th>RUC</th>
                 {/*<th>Imágen</th>*/}
               </tr>
             </thead>
@@ -1283,7 +1296,8 @@ const CrudEvents = ({ organizerObj }) => {
                   <td>{ordenCompra.num_orden}</td>
                   <td>{ordenCompra.fecha}</td>
                   <td>{ordenCompra.valor_total + "$"}</td>
-                  <td>{ordenCompra.id_asistente}</td>
+                  <td>{iva + "%"}</td>
+                  <td>{ice + "%"}</td>
 
                   {/*}<td>
                     {" "}
@@ -1302,11 +1316,11 @@ const CrudEvents = ({ organizerObj }) => {
                       className="btn btn-info"
                       onClick={() => mostrar_contiene(ordenCompra.num_orden)}
                     >
-                      Ver mas info
+                      Ver boleto
                     </Button>{" "}
                     <Button
                       className="btn btn-success"
-                      //onClick={() => ver_asistente(ordenCompra.num_orden)}
+                      onClick={() => ver_asistente(ordenCompra)}
                     >
                       Ver asistente
                     </Button>
@@ -1324,7 +1338,7 @@ const CrudEvents = ({ organizerObj }) => {
       <Modal isOpen={showModalContiene}>
         <ModalHeader>
           <div>
-            <h3>Ordenes de compra</h3>
+            <h3>Boleto comprado</h3>
             <Button
               type="button"
               className="close"
@@ -1356,6 +1370,79 @@ const CrudEvents = ({ organizerObj }) => {
             </tbody>
           </Table>
         </Container>
+      </Modal>
+
+      {/*Ventana modal asistente*/}
+
+      <Modal isOpen={showModalAsistente}>
+        <ModalHeader>
+          <div>
+            <h3>Asistente</h3>
+          </div>
+        </ModalHeader>
+
+        <ModalBody>
+          <FormGroup>
+            <label>Id:</label>
+            <input
+              className="form-control"
+              readOnly
+              type="text"
+              name="id_asistente" //e es nuestro evento o lo que ingresa el usuario, con target apuntamos al valor ingresado por el usuario y se actualiza el objeto gracias al método set
+              value={asistentes.id_asistente}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <label>Nombre:</label>
+            <input
+              className="form-control"
+              readOnly
+              name="nombre_asistente"
+              type="text"
+              value={asistentes.nombre}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <label>Apellido:</label>
+            <input
+              className="form-control"
+              readOnly
+              name="apellido"
+              type="text"
+              value={asistentes.apellido}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <label>Correo:</label>
+            <input
+              className="form-control"
+              readOnly
+              name="correo"
+              type="text"
+              value={asistentes.email}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <label>CI:</label>
+            <input
+              className="form-control"
+              readOnly
+              name="ubicacion"
+              type="text"
+              value={asistentes.ci}
+            />
+          </FormGroup>
+        </ModalBody>
+
+        <ModalFooter>
+          <Button color="danger" onClick={() => setShowModalAsistente(false)}>
+            Cancelar
+          </Button>
+        </ModalFooter>
       </Modal>
     </>
   );
