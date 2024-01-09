@@ -100,7 +100,6 @@ const EditarPerfil = () => {
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        {/* ... (mismo código) */}
       </nav>
 
       <div className="container mt-5">
