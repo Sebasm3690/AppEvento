@@ -11,6 +11,7 @@ import AsistenteRegistro from "./components/registroAsistente";
 
 import LoginOrganizador from "./components/LoginOrganizador";
 import Organizador from "./components/organizador";
+import Mapa from "./components/Organizer/Ubicación";
 import Inicio from "./components/inicio";
 import NavBar from "./components/navbar";
 import EditarPerfil from "./components/Asistente/editarPerfil"
@@ -21,6 +22,10 @@ import EventosList from "./components/EventoList";
 import EventoDetail from "./components/DetallesEven";
 import CompraR from "./components/CompraP";
 import BoletosList from "./components/pedido";
+
+import TuComponente from "./components/pruebafetchstock";
+import ComprasAsistente from "./components/historialAs";
+import VerQR from "./components/MostrarQR";
 
 function App() {
   return (
@@ -50,9 +55,15 @@ function App() {
           path="/loginorg/"
           element={<LoginOrganizador></LoginOrganizador>}
         ></Route>
+
         <Route
           path="/organizador/"
           element={<Organizador></Organizador>}
+        ></Route>
+
+        <Route
+          path="/mapa/"
+          element={<Mapa></Mapa>}
         ></Route>
 
         <Route path="/payfinal/" element={<Payjs></Payjs>}></Route>
@@ -60,6 +71,11 @@ function App() {
         <Route path="/meventos/eventonum/:id" element={<EventoDetail></EventoDetail>}></Route>
         <Route path="/comprarEv/" element={<CompraR></CompraR>}></Route>
         <Route path="/verboletos/" element={<BoletosList></BoletosList>}></Route>
+
+        <Route path="/stockboletos/" element={<TuComponente></TuComponente>}></Route>
+        <Route path="/historialas/" element={<ComprasAsistente></ComprasAsistente>}></Route>
+        <Route path="/observarqr/" element={<VerQR></VerQR>}></Route>
+
       </Routes>
     </BrowserRouter>
   );

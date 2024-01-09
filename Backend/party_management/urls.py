@@ -19,12 +19,14 @@ router.register(r'OrdenCompra', views.OrdenViewSet)
 router.register(r'Asistente', views.AsisViewSet)
 router.register(r'boleto', views.TicketView)
 router.register(r'contiene', views.ContieneViewSet)
+router.register(r'contieneqr', views.ContieneQRViewSet)
 
 urlpatterns = [
     path("api/v1/", include(router.urls)),  #/api/v1/
     path("docs/", include_docs_urls(title="Parties API")),
-    path("borrado_logico/<int:id_organizador>/",views.BorradoLogicoOrganizer.as_view(),name="borrado_logico"),
-    
+    path("borrado_logico_organizador/<int:id_organizador>/",views.BorradoLogicoOrganizer.as_view(),name="borrado_logico:organizador"),
+    path("borrado_logico_evento/<int:id_evento>/",views.BorradoLogicoOEvent.as_view(),name="borrado_logico_evento"),
+
     path("api/login/", LoginViewAdm.as_view(), name='login'),
     path('api/logout/', LogoutViewAdm.as_view(), name='logout'),
     path('api/userv/', UserViewAdm.as_view(), name='admview'),
@@ -41,6 +43,14 @@ urlpatterns = [
     path('api/vereven/', EventoMuestra.as_view(), name='evenmuestra'),
     path('api/lista/evendet/<int:id_evento>/', EventoDetail.as_view(), name='evendet'),
     path('api/crear-orden/', OrdenCompraView.as_view(), name='crearord'),
-    path('api/contiene/agregar/', ContieneCreateAPIView.as_view(), name='agregarcont')
+    path('api/contiene/agregar/', ContieneCreateAPIView.as_view(), name='agregarcont'),
+    path('obtener_stock/<int:id_boleto>/', ObtenerStockBoleto.as_view(), name='obtenerbol'),
+    path('actualizar_stock/<int:id_boleto>/', ActualizarStockView.as_view(), name='actualizar_stock'),
+    
+    path('api/actuv/<int:id_boleto>/', ActualizarVende.as_view(), name='actualizar_vende'),
+    path('api/verstockv/<int:id_boleto>/', ObtenerStockVende.as_view(), name='obtener_vende'),
+    path('historial-compras/<int:id_asistente>/', HistorialComprasUsuarioAPIView.as_view(), name='historial-compras-usuario'),
+    path('api/asistenteid/', UserId.as_view(), name='evenmuestra'),
+    
+    path('compra', PurchaseEmailView.as_view(), name='compra'),
 ]
-

@@ -63,7 +63,9 @@ const ShowOrganizers = ({ adminObj }) => {
     );
     if (organizador) {
       //Solicitud para el borrado lógico
-      await axios.post(`http://127.0.0.1:8000/borrado_logico/${userId}/`);
+      await axios.post(
+        `http://127.0.0.1:8000/borrado_logico_organizador/${userId}/`
+      );
       //Acutalizar lista de organizadores despues del borrado lógico
       setOrganizers((prevOrganizadores) =>
         prevOrganizadores.filter((o) => o.id_organizador !== userId)
@@ -168,6 +170,7 @@ const ShowOrganizers = ({ adminObj }) => {
         >
           Insertar nuevo organizador
         </button>
+        <button className="btn btn-success">Recuperar Organizador</button>
         <br></br>
         <Table className="table">
           <thead>

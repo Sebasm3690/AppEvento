@@ -92,7 +92,7 @@ WSGI_APPLICATION = 'party_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'AppEventos',
+        'NAME': 'AppEventos2',
         'USER': 'postgres',
         'PASSWORD': '2607',
         'HOST': 'localhost',  
@@ -160,3 +160,12 @@ AUTH_USER_MODEL = 'party_management.Asistente'
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALOW_ALL = True
+CORS_ALLOW_ALL_ORIGINS = True
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587  
+EMAIL_HOST_USER = 'connectparty3@gmail.com'
+EMAIL_HOST_PASSWORD = 'dxouozbwfiviwscj'
