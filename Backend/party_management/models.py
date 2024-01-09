@@ -113,7 +113,7 @@ class Organizador(models.Model):
 
 class Vende(models.Model):
     id_vende = models.AutoField(primary_key=True)
-    id_boleto = models.ForeignKey("Boleto", on_delete=models.CASCADE, related_name='vende_boleto')
+    id_boleto = models.ForeignKey("Boleto",on_delete=models.CASCADE, related_name='vende_boleto')
     id_organizador = models.ForeignKey("Organizador", on_delete=models.CASCADE, related_name='vende_organizador')
     iva = models.FloatField()
     descuento = models.FloatField()
@@ -160,7 +160,6 @@ class Asistente(AbstractUser):
     password = models.CharField(max_length=50)
     ci = models.CharField(max_length=10,unique=True)
     confirmed = models.BooleanField(default=False) 
-    
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     
@@ -182,7 +181,7 @@ class OrdenCompra(models.Model):
 class Contiene(models.Model):
     id_contiene = models.AutoField(primary_key=True)
     id_boleto = models.ForeignKey("Boleto", on_delete=models.CASCADE)
-    boleto_cdg = models.CharField(default='', max_length=50)  # Asegúrate de que este campo sea opcional
+    boleto_cdg = models.CharField(default='', max_length=50, unique=True)  # Asegúrate de que este campo sea opcional
     num_orden = models.ForeignKey("OrdenCompra", on_delete=models.CASCADE)
     cantidad_total = models.IntegerField()
 

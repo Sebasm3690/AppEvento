@@ -4,16 +4,24 @@ import axios from 'axios';
 
 const CompraR = () => {
     const [error, setError] = useState(null);
+    const [userData, setUserData] = useState(null);
     const params = new URLSearchParams(window.location.search);
     const description = params.get('description').split("/")[0];
     const value = params.get('value').split("/")[0];
     const id = params.get('id').split("/")[0];
     const currentDate = new Date().toLocaleDateString();
     const navigate = useNavigate();
-
     const [currentStock, setCurrentStock] = useState(null);
 
     useEffect(() => {
+        axios.get('http://localhost:8000/api/asistente', { withCredentials: true })
+            .then(response => {
+                setUserData(response.data);
+            })
+            .catch(error => {
+                console.error('Error al obtener datos del asistente:', error);
+            });
+
         const fetchStock = async () => {
             try {
                 const response = await fetch(`http://127.0.0.1:8000/api/verstockv/${id}/`);
@@ -27,13 +35,12 @@ const CompraR = () => {
         fetchStock();
     }, [id]);
 
-    const generateQRCode = async (id) => {
+    const enviarCorreo = async (idContiene) => {
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/api/api/v1/contieneqr/${id}/`); // Ajusta la URL según tu configuración
-            console.log(response.data); // Solo para depuración
-            return response.data; // Puedes devolver la respuesta o manejarla de acuerdo a tus necesidades.
+            const response = await axios.post(`http://127.0.0.1:8000/asistentes/${userData.id_asistente}/contiene/${idContiene}/enviar_correo/`);
+            return response.data;
         } catch (error) {
-            console.error('Error al generar el código QR:', error);
+            console.error('Error al enviar el correo:', error);
             throw error;
         }
     };
@@ -54,8 +61,8 @@ const CompraR = () => {
             });
 
             const data1 = await response1.json();
-
             const updatedStock = currentStock - parseInt(description, 10);
+
             const response3 = await fetch(`http://127.0.0.1:8000/api/actuv/${id}/`, {
                 method: 'PUT',
                 headers: {
@@ -70,45 +77,33 @@ const CompraR = () => {
             const data3 = await response3.json();
 
             if (data3.status === 'success') {
-                alert("Compra realizada correctamente! Se le enviara su entrada al correo electronico registrado");
-
-                // Llamar a la función para generar el código QR
+                alert("Compra realizada correctamente! Se le enviará su entrada al correo electrónico registrado");
+                
                 try {
-                    const qrCodeData = await generateQRCode(id);
-                    console.log('Código QR generado:', qrCodeData);
-                    // Aquí puedes guardar el código QR en el estado o mostrarlo al usuario.
+                    const response2 = await fetch('http://127.0.0.1:8000/api/contiene/agregar/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        credentials: 'include',
+                        body: JSON.stringify({
+                            id_boleto: id,
+                            num_orden: data1.num_orden,
+                            cantidad_total: description,
+                        }),
+                    });
+
+                    const data2 = await response2.json();
+                    await enviarCorreo(data2.id_contiene);
+                    
                 } catch (error) {
-                    console.error('Error al generar el código QR:', error);
+                    console.error('Error al enviar el correo:', error);
                 }
 
                 navigate('/asistente/');
             }
 
-            if (data1.num_orden) {
-                console.log('Orden de compra creada con éxito.');
-
-                const response2 = await fetch('http://127.0.0.1:8000/api/contiene/agregar/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify({
-                        id_boleto: id,
-                        num_orden: data1.num_orden,
-                        cantidad_total: description,
-                    }),
-                });
-
-                const data2 = await response2.json();
-
-                if (data2.status === 'success') {
-                    console.log('API ContieneCreateAPIView consumida con éxito.');
-                }
-            } 
-
         } catch (error) {
-            console.error('Error:', error);
             setError('Error al realizar la compra');
         }
     };
@@ -131,5 +126,3 @@ const CompraR = () => {
 };
 
 export default CompraR;
-
-

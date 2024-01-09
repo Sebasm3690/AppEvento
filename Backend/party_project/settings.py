@@ -92,7 +92,7 @@ WSGI_APPLICATION = 'party_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'AppEventos5',
+        'NAME': 'AppEventos6',
         'USER': 'postgres',
         'PASSWORD': 'awayouname11',
         'HOST': 'localhost',  
@@ -160,12 +160,12 @@ AUTH_USER_MODEL = 'party_management.Asistente'
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALOW_ALL = True
-CORS_ALLOW_ALL_ORIGINS = True
 
+# settings.py
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_PORT = 587  
-EMAIL_HOST_USER = 'connectparty3@gmail.com'
-EMAIL_HOST_PASSWORD = 'dxouozbwfiviwscj'
+EMAIL_HOST_USER = 'partyconnect069@gmail.com'  # Tu dirección de correo electrónico de Gmail
+EMAIL_HOST_PASSWORD = 'clfbgachlrurtoed '  # Tu contraseña de Gmail

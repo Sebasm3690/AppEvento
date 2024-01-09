@@ -26,7 +26,10 @@ function Login() {
 
       if (data.jwt) {
         localStorage.setItem('jwt', data.jwt);
-        window.location.href = '/asistente'; 
+        window.location.href = '/asistente';
+      } else if (data.error === 'Correo no confirmado') {
+        // Muestra una alerta si el correo no está confirmado
+        alert('Su correo no se ha confirmado, verifiquelo de nuevo');
       } else {
         throw new Error('Credenciales incorrectas');
       }

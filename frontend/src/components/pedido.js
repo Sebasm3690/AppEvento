@@ -157,6 +157,7 @@ function BoletosList() {
                   min="1"
                   max={nuevBoletos[index]}
                   onChange={(e) => {
+                    const cantidad = parseInt(e.target.value, 10);
                     setCantidad(e.target.value, 10);
                     setBoletos((prevBoletos) =>
                       prevBoletos.map((b) =>
