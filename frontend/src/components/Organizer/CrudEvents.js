@@ -111,14 +111,12 @@ const CrudEvents = ({ organizerObj }) => {
     setShowModalBoleto(true);
     const boletosEvento = boletos.find((boleto) => boleto.id_evento === id); //Se muestran solo los boletos que corresponden a dicho evento
     if (boletosEvento) {
-      alert("Si se encontró");
+      //alert("Si se encontró");
       setIdBoleto(boletosEvento.id_boleto);
       setStock(boletosEvento.stock);
       setTipoBoleto(boletosEvento.tipoBoleto);
       setPrecio(boletosEvento.precio);
       setShowModalBoleto(true);
-    } else {
-      alert("No se encontró");
     }
   };
 
@@ -268,8 +266,8 @@ const CrudEvents = ({ organizerObj }) => {
     // Convertir el objeto a una cadena JSON
 
     // Mostrar un alert con la información del objeto
-    const boletosJson = JSON.stringify(boletos, null, 2);
-    alert(boletosJson);
+    //const boletosJson = JSON.stringify(boletos, null, 2);
+    //alert(boletosJson);
     var parametrosVenta;
 
     parametrosVenta = {
@@ -465,20 +463,12 @@ const CrudEvents = ({ organizerObj }) => {
 
   const validar = async (op) => {
     var parametros;
+    const fechaActual = new Date();
+    const fechaEvento = new Date(fecha);
     const urlEditar = `http://127.0.0.1:8000/api/v1/event/${id}/`;
     //var metodo;
     if (nombre.trim() === "") {
       show_alerta("Escribe el nombre del evento", "warning");
-    } else if (
-      events
-        .filter((event) => event.eliminado === false)
-        .some((event) => event.nombre_evento === nombre)
-    ) {
-      show_alerta(
-        "Ya existe un evento con el nombre del evento ingresado",
-        "warning"
-      );
-      return;
     } else if (fecha === "") {
       show_alerta("Escribe la fecha del evento", "warning");
     } else if (!hora || hora.trim().length === 0) {
@@ -499,12 +489,13 @@ const CrudEvents = ({ organizerObj }) => {
       //show_alerta("Agrega una imágen al evento", "warning");
     } else if (id_organizador === "") {
       show_alerta("Escribe el id del organizador", "warning");
+    } else if (fechaEvento.getTime() <= fechaActual.getTime()) {
+      //alert(1);
+      show_alerta("La fecha debe ser mayor a la fecha actual", "warning");
+      return;
     }
 
     if (op === 1) {
-      const fechaActual = new Date();
-      const fechaEvento = new Date(fecha);
-
       if (
         events
           .filter((event) => event.eliminado === false)
@@ -512,9 +503,15 @@ const CrudEvents = ({ organizerObj }) => {
       ) {
         show_alerta("Ya existe un evento con esa misma ubicación", "warning");
         return;
-      } else if (fechaEvento.getTime() <= fechaActual.getTime()) {
-        alert(1);
-        show_alerta("La fecha debe ser mayor a la fecha actual", "warning");
+      } else if (
+        events
+          .filter((event) => event.eliminado === false)
+          .some((event) => event.nombre_evento === nombre)
+      ) {
+        show_alerta(
+          "Ya existe un evento con el nombre del evento ingresado",
+          "warning"
+        );
         return;
       }
 
@@ -654,7 +651,8 @@ const CrudEvents = ({ organizerObj }) => {
           className="btn btn-success"
           onClick={() => setShowModalRecuperar(true)}
         >
-          Recuperar evento
+          {/*Recuperar evento*/}
+          Ver histórico
         </button>
 
         <br></br>
@@ -680,6 +678,7 @@ const CrudEvents = ({ organizerObj }) => {
                 (event) => event.id_organizador === organizerObj.id_organizador
               )
               .filter((event) => event.eliminado === false)
+              //.filter((event) => new Date() > new Date(event.fecha))
               .map((event) => (
                 <tr key={event.id_evento}>
                   <td>{event.id_evento}</td>
@@ -1188,7 +1187,7 @@ const CrudEvents = ({ organizerObj }) => {
       <Modal isOpen={showModalRecuperar} size="lg" style={estiloModal}>
         <ModalHeader>
           <div>
-            <h3>Recuperar Evento</h3>
+            <h3>Eventos historico</h3>
             <Button
               type="button"
               className="close" // Agregar la clase "float-right" para alinear a la derecha
@@ -1222,6 +1221,7 @@ const CrudEvents = ({ organizerObj }) => {
                     event.id_organizador === organizerObj.id_organizador
                 )
                 .filter((event) => event.eliminado === true)
+                //.filter((event) => new Date() < new Date(event.fecha))
                 .map((event) => (
                   <tr key={event.id_evento}>
                     <td>{event.id_evento}</td>
@@ -1246,11 +1246,17 @@ const CrudEvents = ({ organizerObj }) => {
 
                     <td>
                       {/*{" "}*/}
-                      <Button
+                      {/*<Button
                         className="btn btn-success"
                         onClick={() => recuperar_evento(event.id_evento)}
                       >
                         Recuperar Evento
+                  </Button>*/}
+                      <Button
+                        className="btn btn-info"
+                        onClick={() => mostrarOrdenCompra(event.id_evento)}
+                      >
+                        Ver Orden de compra
                       </Button>
                       <br></br>
                     </td>
