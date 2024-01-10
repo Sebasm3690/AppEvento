@@ -111,7 +111,17 @@ const ShowOrganizers = ({ adminObj }) => {
         if (organizers.some((organizer) => ci === organizer.ci)) {
           //Some devuelve true o false
           show_alerta("La cédula del organizador ya existe", "warning");
-        } else if (
+        } /*else if (
+          organizers
+            .filter((organizer) => organizer.eliminado === false)
+            .some((organizer) => organizer.nombre === nombre)
+        ) {
+          show_alerta(
+            "Ya existe un organizador con el nombre del organizador ingresado",
+            "warning"
+          );
+          return;
+        }*/ else if (
           organizers.some((organizer) => correo === organizer.correo)
         ) {
           show_alerta("El correo del organizador ya existe", "warning");
@@ -441,10 +451,7 @@ const ShowOrganizers = ({ adminObj }) => {
             <tbody>
               {organizers
                 .filter((organizer) => organizer.eliminado === true)
-                .filter(
-                  (organizer) =>
-                    organizer.id_organizador === adminObj.id_organizador
-                )
+                .filter((organizer) => organizer.id_admin === adminObj.id_admin)
                 .map((organizer) => (
                   <tr key={organizer.id_organizador}>
                     <td>{organizer.id_organizador}</td>
