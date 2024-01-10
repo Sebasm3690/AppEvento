@@ -25,7 +25,7 @@ from django.core.mail import EmailMessage
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.http import JsonResponse
-
+#resend.api_key = os.environ["RESEND_API_KEY"]
 
 # Create your views here.
 class OrganizerView(viewsets.ModelViewSet):
@@ -50,7 +50,28 @@ class BorradoLogicoOrganizer(APIView):
         organizador.eliminado = True
         organizador.save()
         return Response({'mensaje':'Borrado lógico exitoso'}, status=status.HTTP_200_OK)
-    
+
+class recuperarOrganizer(APIView):
+    def post(self,request,id_organizador):
+        organizador = get_object_or_404(Organizador,pk=id_organizador)
+        organizador.eliminado = False
+        organizador.save()
+        return Response({"Mensaje":"Recuperación de organizador exitosa"},status=status.HTTP_200_OK)
+
+class recuperarEvento(APIView):
+    def post(self,request,id_evento):
+        evento = get_object_or_404(Evento,pk=id_evento)
+        evento.eliminado = False
+        evento.save()
+        return Response({"Mensaje":"Recuperación de evento exitosa"},status=status.HTTP_200_OK)
+
+class BorradoLogicoOEvent(APIView):
+    def post(self,request,id_evento):
+        evento = get_object_or_404(Evento, pk=id_evento)
+        evento.eliminado = True
+        evento.save()
+        return Response({'mensaje':'Borrado lógico exitoso'}, status=status.HTTP_200_OK)
+
 class VendeViewSet(viewsets.ModelViewSet):
     queryset = Vende.objects.all()
     serializer_class = VendeSerializer
@@ -321,7 +342,7 @@ class LogoutViewOrg(APIView):
         }
 
         return response
-
+    
 class EventoMuestra(generics.ListAPIView):
     queryset = Evento.objects.all()
     serializer_class = EventSerializer
@@ -397,6 +418,7 @@ class ActualizarStockView(APIView):
             return Response({'status': 'success'}, status=status.HTTP_200_OK)
         except Boleto.DoesNotExist:
             return Response({'status': 'error', 'message': 'Boleto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
 
 class ObtenerStockVende(APIView):
     def get(self, request, id_boleto):
@@ -481,7 +503,7 @@ class UserId(APIView):
             'user_data': serializer.data,
             'email': user.email
         })
-    
+
 @csrf_exempt
 def enviar_correo(request, id_asistente, id_contiene):
     try:

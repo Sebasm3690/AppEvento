@@ -24,8 +24,11 @@ router.register(r'contieneqr', views.ContieneQRViewSet)
 urlpatterns = [
     path("api/v1/", include(router.urls)),  #/api/v1/
     path("docs/", include_docs_urls(title="Parties API")),
-    path("borrado_logico/<int:id_organizador>/",views.BorradoLogicoOrganizer.as_view(),name="borrado_logico"),
-    
+    path("borrado_logico_organizador/<int:id_organizador>/",views.BorradoLogicoOrganizer.as_view(),name="borrado_logico:organizador"),
+    path("borrado_logico_evento/<int:id_evento>/",views.BorradoLogicoOEvent.as_view(),name="borrado_logico_evento"),
+    path("recuperar_organizador/<int:id_organizador>/",views.recuperarOrganizer.as_view(),name="recuperar_organizador"),
+    path("recuperar_evento/<int:id_evento>/",views.recuperarEvento.as_view(),name="recuperar_evento"),
+
     path("api/login/", LoginViewAdm.as_view(), name='login'),
     path('api/logout/', LogoutViewAdm.as_view(), name='logout'),
     path('api/userv/', UserViewAdm.as_view(), name='admview'),
@@ -45,10 +48,12 @@ urlpatterns = [
     path('api/contiene/agregar/', ContieneCreateAPIView.as_view(), name='agregarcont'),
     path('obtener_stock/<int:id_boleto>/', ObtenerStockBoleto.as_view(), name='obtenerbol'),
     path('actualizar_stock/<int:id_boleto>/', ActualizarStockView.as_view(), name='actualizar_stock'),
+    
     path('api/actuv/<int:id_boleto>/', ActualizarVende.as_view(), name='actualizar_vende'),
     path('api/verstockv/<int:id_boleto>/', ObtenerStockVende.as_view(), name='obtener_vende'),
     path('historial-compras/<int:id_asistente>/', HistorialComprasUsuarioAPIView.as_view(), name='historial-compras-usuario'),
     path('api/asistenteid/', UserId.as_view(), name='evenmuestra'),
+    
     path('asistentes/<int:id_asistente>/contiene/<int:id_contiene>/enviar_correo/', views.enviar_correo, name='enviar_correo'),
     path('confirmar/<str:token>/', confirmar_correo, name='confirmar_correo'),
 ]
