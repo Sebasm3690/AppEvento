@@ -1292,7 +1292,7 @@ const CrudEvents = ({ organizerObj }) => {
                 <th>Fecha</th>
                 <th>Valor total</th>
                 <th>IVA</th>
-                <th>RUC</th>
+                <th>ICE</th>
                 {/*<th>Imágen</th>*/}
               </tr>
             </thead>
