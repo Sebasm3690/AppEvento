@@ -104,7 +104,7 @@ class Organizador(models.Model):
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
     ci = models.CharField(max_length=10,unique=True)
-    correo = models.CharField(max_length=25,unique=True)
+    correo = models.CharField(max_length=150,unique=True)
     contrasenia = models.CharField(max_length=15)
     eliminado = models.BooleanField(default=False)
     def __str__(self):

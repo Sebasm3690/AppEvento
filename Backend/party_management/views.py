@@ -25,6 +25,8 @@ from django.core.mail import EmailMessage
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.http import JsonResponse
+from django.core.exceptions import ValidationError
+import re
 #resend.api_key = os.environ["RESEND_API_KEY"]
 
 # Create your views here.
@@ -156,6 +158,18 @@ class RegisterViewAs(APIView):
     def post(self, request):
         serializer = AsisSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        cedula = request.data.get('ci', None)
+        password = request.data.get('password', '')
+
+        #Validar clave
+        try:
+            is_password_strong(password)
+        except ValidationError as e:
+            return Response({'error': str(e)}, status=400)
+
+        #Validar Cedula
+        if not cedula or not validar_cedula(cedula):
+            return Response({'error': 'Cedula invalida'}, status=400)
 
         # Guardar el usuario sin confirmar
         user = serializer.save(confirmed=False)  # Asumiendo que tienes un campo 'confirmed' en tu modelo Asistente
@@ -536,3 +550,42 @@ def enviar_correo(request, id_asistente, id_contiene):
             return HttpResponse(f'Error al enviar el correo a {asistente.email}: {e}')
 
     return HttpResponse('Endpoint para enviar correo. Realiza una solicitud POST para enviar un correo.')
+
+def validar_cedula(cedula):
+    if not cedula.isdigit():
+        return False  # La cédula debe contener solo dígitos
+    
+    if len(cedula) != 10:
+        return False  # La cédula debe tener 10 dígitos
+    
+    coeficientes = [2, 1, 2, 1, 2, 1, 2, 1, 2]
+    suma = 0
+    
+    for i in range(9):
+        resultado = int(cedula[i]) * coeficientes[i]
+        if resultado > 9:
+            resultado -= 9
+        suma += resultado
+    
+    verificador = (10 - (suma % 10)) % 10
+    
+    return verificador == int(cedula[9])
+
+def is_password_strong(password):
+    """
+    Verifica si una contraseña es fuerte según ciertos criterios.
+    """
+    if not re.search(r'[A-Z]', password):
+        raise ValidationError('La contraseña debe contener al menos una letra mayúscula.')
+    
+    if not re.search(r'[a-z]', password):
+        raise ValidationError('La contraseña debe contener al menos una letra minúscula.')
+    
+    if not re.search(r'[0-9]', password):
+        raise ValidationError('La contraseña debe contener al menos un número.')
+    
+    if not re.search(r'[!@#$%^&*()_+{}[\]:;<>,.?/~`]', password):
+        raise ValidationError('La contraseña debe contener al menos un carácter especial.')
+    
+    if len(password) < 8:
+        raise ValidationError('La contraseña debe tener al menos 8 caracteres.')
