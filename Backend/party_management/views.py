@@ -39,7 +39,7 @@ class OrganizerView(viewsets.ModelViewSet):
         cedula = request.data.get('ci')
 
         if validar_cedular_repetida(cedula)['existe']:
-            return Response({'error': 'La cedula ya fue registrada por un organizador o asistente'})
+            return Response({'error': 'La cedula ya fue registrada por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
 
         if validar_correo(correo)['existe']:
             return Response({'error': 'El correo ya fue registrado por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)

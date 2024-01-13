@@ -179,7 +179,12 @@ const ShowOrganizers = ({ adminObj }) => {
             );
           })
           .catch((error) => {
-            console.error("Error al realizar la solicitud POST:", error);
+            if(error.response && error.response.data && error.response.data.error){
+              show_alerta(error.response.data.error, "error");
+            }else{
+              console.error("Error al realizar la solicitud POST:", error);
+              show_alerta("Error al agregar el organizador", "error");
+            }
           });
       } else {
         parametros = {
