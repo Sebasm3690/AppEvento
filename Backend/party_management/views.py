@@ -59,7 +59,7 @@ class AdminView(viewsets.ModelViewSet):
         cedula = request.data.get('ci')
 
         if not validar_cedula(cedula):
-            return Response({'error': 'La cedula proporcionada no es valida'})
+            return Response({'error': 'La cedula proporcionada no es valida'}, status=status.HTTP_400_BAD_REQUEST)
 
         if validar_cedular_repetida(cedula)['existe']:
             return Response({'error': 'La cedula ya fue registrada por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
