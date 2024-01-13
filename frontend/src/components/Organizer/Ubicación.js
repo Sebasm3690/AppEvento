@@ -79,7 +79,7 @@ const MapaDirecciones = () => {
       <div className="container">
         <div className="row">
           <div className="col-md-12">
-            <h1 style={{ textAlign: 'center' }}>Ingrese su dirección</h1>
+            <h1 style={{ textAlign: 'center' }}>Dirección de la Ubicación del Evento</h1>
             <form className="form-inline" onSubmit={handleSubmit} style={{ textAlign: 'center' }}>
               <div className="form-group">
                 <input

@@ -11,10 +11,10 @@ import AsistenteRegistro from "./components/registroAsistente";
 
 import LoginOrganizador from "./components/LoginOrganizador";
 import Organizador from "./components/organizador";
-import Mapa from "./components/Organizer/Ubicación";
 import Inicio from "./components/inicio";
 import NavBar from "./components/navbar";
-import EditarPerfil from "./components/Asistente/editarPerfil"
+import EditarPerfil from "./components/Asistente/editarPerfil";
+import Mapa from "./components/Organizer/Ubicación";
 
 import Payjs from "./paypalf";
 import React from "react";
@@ -30,7 +30,7 @@ import VerQR from "./components/MostrarQR";
 function App() {
   return (
     <BrowserRouter>
-    {/*<NavBar /> */}
+      {/*<NavBar /> */}
       <Routes>
         {/* <Route path="/" element={<CrudEvents></CrudEvents>}></Route>*/}
         <Route path="/" element={<Inicio></Inicio>}></Route>
@@ -55,7 +55,6 @@ function App() {
           path="/loginorg/"
           element={<LoginOrganizador></LoginOrganizador>}
         ></Route>
-
         <Route
           path="/organizador/"
           element={<Organizador></Organizador>}
@@ -68,14 +67,25 @@ function App() {
 
         <Route path="/payfinal/" element={<Payjs></Payjs>}></Route>
         <Route path="/meventos/" element={<EventosList></EventosList>}></Route>
-        <Route path="/meventos/eventonum/:id" element={<EventoDetail></EventoDetail>}></Route>
+        <Route
+          path="/meventos/eventonum/:id"
+          element={<EventoDetail></EventoDetail>}
+        ></Route>
         <Route path="/comprarEv/" element={<CompraR></CompraR>}></Route>
-        <Route path="/verboletos/" element={<BoletosList></BoletosList>}></Route>
+        <Route
+          path="/verboletos/:id"
+          element={<BoletosList></BoletosList>}
+        ></Route>
 
-        <Route path="/stockboletos/" element={<TuComponente></TuComponente>}></Route>
-        <Route path="/historialas/" element={<ComprasAsistente></ComprasAsistente>}></Route>
+        <Route
+          path="/stockboletos/"
+          element={<TuComponente></TuComponente>}
+        ></Route>
+        <Route
+          path="/historialas/"
+          element={<ComprasAsistente></ComprasAsistente>}
+        ></Route>
         <Route path="/observarqr/" element={<VerQR></VerQR>}></Route>
-
       </Routes>
     </BrowserRouter>
   );

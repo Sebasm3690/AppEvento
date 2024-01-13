@@ -19,9 +19,12 @@ from django.utils import timezone
 import qrcode
 from io import BytesIO
 from django.http import HttpResponse
-import os
-import resend
-
+from django.core.mail import send_mail
+from django.views.decorators.csrf import csrf_exempt
+from django.core.mail import EmailMessage
+from django.http import HttpResponseBadRequest, HttpResponseRedirect
+from django.shortcuts import redirect
+from django.http import JsonResponse
 #resend.api_key = os.environ["RESEND_API_KEY"]
 
 # Create your views here.
@@ -47,7 +50,21 @@ class BorradoLogicoOrganizer(APIView):
         organizador.eliminado = True
         organizador.save()
         return Response({'mensaje':'Borrado lógico exitoso'}, status=status.HTTP_200_OK)
-    
+
+class recuperarOrganizer(APIView):
+    def post(self,request,id_organizador):
+        organizador = get_object_or_404(Organizador,pk=id_organizador)
+        organizador.eliminado = False
+        organizador.save()
+        return Response({"Mensaje":"Recuperación de organizador exitosa"},status=status.HTTP_200_OK)
+
+class recuperarEvento(APIView):
+    def post(self,request,id_evento):
+        evento = get_object_or_404(Evento,pk=id_evento)
+        evento.eliminado = False
+        evento.save()
+        return Response({"Mensaje":"Recuperación de evento exitosa"},status=status.HTTP_200_OK)
+
 class BorradoLogicoOEvent(APIView):
     def post(self,request,id_evento):
         evento = get_object_or_404(Evento, pk=id_evento)
@@ -135,65 +152,72 @@ class LogoutViewAdm(APIView):
 
         return response
 
-class RegisterViewAs(APIView) :
+class RegisterViewAs(APIView):
     def post(self, request):
         serializer = AsisSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-        #return Response(serializer.data)
-        
-        nombre_usuario = serializer.data.get('nombre', 'Usuario Desconocido')
-        apellido_usuario = serializer.data.get('apellido', 'Usuario Desconocido')
 
-        params = {
-            "from": "Acme <onboarding@resend.dev>",
-            "to": ["frank1995alvcr@gmail.com"],
-            "subject": f"Bienvenido a PartyConnect, {nombre_usuario}!",
-            "html": f"""
-                <html>
-                <head>
-                    <style>
-                        body {{
-                            font-family: 'Arial', sans-serif;
-                            background-color: #f4f4f4;
-                            color: #333;
-                            padding: 20px;
-                        }}
-                        .welcome-container {{
-                            max-width: 600px;
-                            margin: 0 auto;
-                            background-color: #fff;
-                            padding: 20px;
-                            border-radius: 8px;
-                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                        }}
-                        h1 {{
-                            color: #007bff;
-                        }}
-                        p {{
-                            font-size: 16px;
-                        }}
-                    </style>
-                </head>
-                <body>
-                    <div class="welcome-container">
-                        <h1>Bienvenido a PartyConnect, {nombre_usuario} {apellido_usuario}!</h1>
-                        <p>
-                            Gracias por unirte a nuestra aplicación. Estamos emocionados de tenerte con nosotros.
-                            Esperamos que disfrutes de todas las increíbles características que PartyConnect tiene para ofrecer.
-                        </p>
-                        <p>¡Que te diviertas!</p>
-                        <p>¡Buena Buzz!</p>
-                    </div>
-                </body>
-                </html>
-            """,
+        # Guardar el usuario sin confirmar
+        user = serializer.save(confirmed=False)  # Asumiendo que tienes un campo 'confirmed' en tu modelo Asistente
+
+        # Generar el token JWT para el usuario registrado
+        payload = {
+            'id': user.id_asistente,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+            'iat': datetime.datetime.utcnow()
         }
-       
-        email = resend.Emails.send(params)
-        print(email) 
-        return Response(serializer.data)
+
+        token = jwt.encode(payload, 'tu_clave_secreta', algorithm='HS256')  # Cambia 'tu_clave_secreta' por una clave segura
+
+        # Enviar correo de confirmación con el token
+        subject = 'Confirmación de registro'
+        message = f'Haga clic en el siguiente enlace para confirmar su correo: http://127.0.0.1:8000/confirmar/{token}'
+        from_email = 'partyconnect069@gmail.com'  # Usa la misma dirección de correo configurada en settings.py
+        to_email = [user.email]  # Asumiendo que tu modelo Asistente tiene un campo 'email'
         
+        send_mail(subject, message, from_email, to_email)
+
+        # Configurar la respuesta con el token
+        response = Response()
+        response.set_cookie(key='jwt', value=token, httponly=True)  # Opcional: usa cookies si lo prefieres
+        response.data = {
+            'jwt': token,
+            'message': 'Registro exitoso. Por favor, confirme su correo electrónico.'
+        }
+
+        return response
+
+def confirmar_correo(request, token):
+    try:
+        # Decodificar el token JWT para obtener el ID del usuario
+        payload = jwt.decode(token, 'tu_clave_secreta', algorithms=['HS256'])
+        user_id = payload['id']
+        
+        # Obtener el usuario de la base de datos
+        user = Asistente.objects.get(id_asistente=user_id)
+        
+        # Marcar el correo como confirmado
+        user.confirmed = True
+        user.save()
+
+        user.confirmation_token = None
+        user.save()
+
+        # Enviar correo de confirmación al usuario
+        subject = 'Confirmación de correo electrónico exitosa'
+        message = 'Estimado/a {},\n\nSu correo electrónico ha sido confirmado exitosamente.'.format(user.nombre)
+        from_email = 'partyconnect069@gmail.com'  # Cambia esto al correo desde el cual deseas enviar el mensaje
+        to_email = [user.email]
+
+        send_mail(subject, message, from_email, to_email)
+
+        # Devolver una respuesta con un mensaje de éxito
+        return JsonResponse({'message': 'Correo confirmado exitosamente. Se ha enviado una confirmación.'})
+
+    except (jwt.ExpiredSignatureError, jwt.DecodeError, Asistente.DoesNotExist) as e:
+        # En caso de error, devolver un mensaje adecuado
+        return JsonResponse({'error': 'Token inválido o usuario no encontrado.'}, status=400)
+    
 class LoginViewAs(APIView):
     def post(self, request):
         email = request.data['email']
@@ -201,6 +225,9 @@ class LoginViewAs(APIView):
 
         user = Asistente.objects.filter(email=email, password=password).first()
 
+        if user and not user.confirmed:
+            raise AuthenticationFailed('Por favor, confirma tu correo electrónico antes de iniciar sesión.')
+        
         if user is None:
             raise AuthenticationFailed('Usuario no Encontrado o Contraseña Incorrecta')
 
@@ -434,7 +461,6 @@ class ContieneQRViewSet(viewsets.ModelViewSet):
         img = qr.make_image(fill='black', back_color='white')
         buffer = BytesIO()
         img.save(buffer, format="PNG")
-        
         return HttpResponse(buffer.getvalue(), content_type="image/png")
 
     def retrieve(self, request, *args, **kwargs):
@@ -473,63 +499,39 @@ class UserId(APIView):
 
         return Response({
             'id_asistente': id_asistente,
-            'user_data': serializer.data
+            'user_data': serializer.data,
+            'email': user.email
         })
-        
-class PurchaseEmailView(APIView):
-    def post(self, request):
-        nombre_evento = request.data.get('nombre_evento', 'Evento Desconocido')
-        cantidad = request.data.get('cantidad', 1)
-        total = request.data.get('total', 0.0)
-        fecha_evento = request.data.get('fecha_evento', 'Fecha Desconocida')
 
-        params = {
-            "from": "Acme <onboarding@resend.dev>",
-            "to": ["frank1995alvcr@gmail.com"],
-            "subject": f"¡Confirmación de Boletos para {nombre_evento}!",
-            "html": f"""
-                <html>
-                <head>
-                    <style>
-                        body {{
-                            font-family: 'Arial', sans-serif;
-                            background-color: #ffbb33; /* Amarillo PartyConnect */
-                            color: #333;
-                            padding: 20px;
-                        }}
-                        .confirmation-container {{
-                            max-width: 600px;
-                            margin: 0 auto;
-                            background-color: #fff;
-                            padding: 20px;
-                            border-radius: 8px;
-                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                        }}
-                        h1 {{
-                            color: #e60073; /* Rosa PartyConnect */
-                        }}
-                        p {{
-                            font-size: 16px;
-                        }}
-                    </style>
-                </head>
-                <body>
-                    <div class="confirmation-container">
-                        <h1>¡Gracias por tu compra!</h1>
-                        <p>Confirmamos la compra de boletos para el evento {nombre_evento}:</p>
-                        <ul>
-                            <li>Nombre del Evento: {nombre_evento}</li>
-                            <li>Cantidad de Boletos: {cantidad}</li>
-                            <li>Total Pagado: ${total}</li>
-                            <li>Fecha del Evento: {fecha_evento}</li>
-                        </ul>
-                        <p>¡Esperamos que tengas una experiencia increíble en {nombre_evento}!</p>
-                    </div>
-                </body>
-                </html>
-            """,
-        }
+@csrf_exempt
+def enviar_correo(request, id_asistente, id_contiene):
+    try:
+        asistente = Asistente.objects.get(id_asistente=id_asistente)
+    except Asistente.DoesNotExist:
+        return HttpResponse('El asistente no existe.', status=404)
 
-        email = resend.Emails.send(params)
-        print(email) 
-        return Response({"message": "Correo de compra enviado"})
+    try:
+        # Obtén el boleto (Contiene) específico para este asistente
+        contiene = Contiene.objects.get(id_contiene=id_contiene, num_orden__id_asistente=id_asistente)
+    except Contiene.DoesNotExist:
+        return HttpResponse('No se encontró el boleto específico para este asistente.', status=400)
+
+    if request.method == 'POST':
+        # Genera el código QR para el boleto específico
+        qr_image = ContieneQRViewSet().generate_qr_code(contiene)
+
+        subject = f'{asistente.nombre}, aquí está tu boleto'
+        message = f'Hola {asistente.nombre}, gracias por realizar la compra. Adjunto encontrarás tu boleto específico.'
+        from_email = 'partyconnect069@gmail.com'
+        to_email = [asistente.email]
+
+        try:
+            # Crea un objeto EmailMessage y adjunta el código QR
+            email = EmailMessage(subject, message, from_email, to_email)
+            email.attach(f'boleto_qr_{contiene.id_contiene}.png', qr_image.getvalue(), 'image/png')
+            email.send()
+            return HttpResponse(f'Correo enviado con éxito a {asistente.email}.')
+        except Exception as e:
+            return HttpResponse(f'Error al enviar el correo a {asistente.email}: {e}')
+
+    return HttpResponse('Endpoint para enviar correo. Realiza una solicitud POST para enviar un correo.')

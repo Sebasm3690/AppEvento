@@ -1,4 +1,3 @@
-// Registro.js
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
@@ -12,7 +11,9 @@ const Registro = () => {
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/register', data);
       console.log(response.data);
-      navigate('/loginas');
+      alert('Gracias por tu registro, confirma tu correo para continuar');
+      navigate("/loginAs/")
+      // Aquí puedes añadir una redirección o cualquier otra lógica necesaria después del registro exitoso
     } catch (error) {
       setError('email', {
         type: 'manual',
