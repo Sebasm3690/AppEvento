@@ -160,6 +160,12 @@ class RegisterViewAs(APIView):
         serializer.is_valid(raise_exception=True)
         cedula = request.data.get('ci', None)
         password = request.data.get('password', '')
+        correo = request.data.get('email', None)
+
+        #Validar correo
+        if correo:
+            if validar_correo(correo).get('existe'):
+                return Response({'error': 'El correo ya se encuentra registrado por un Organizador o Asistente'}, status=400)
 
         #Validar clave
         try:
@@ -589,3 +595,11 @@ def is_password_strong(password):
     
     if len(password) < 8:
         raise ValidationError('La contraseña debe tener al menos 8 caracteres.')
+    
+def validar_correo(correo):
+    # Verificar si el correo ya existe en cualquiera de los modelos
+    if Asistente.objects.filter(email=correo).exists() or \
+       Organizador.objects.filter(correo=correo).exists():
+        return {'existe': True}
+    else:
+        return {'existe': False}
