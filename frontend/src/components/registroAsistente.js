@@ -35,7 +35,7 @@ const Registro = () => {
   const onSubmit = async (data) => {
     // Validar la cédula
     const isValidCedula = validarCedula(data.ci);
-
+  
     if (!isValidCedula) {
       setError('ci', {
         type: 'manual',
@@ -43,17 +43,24 @@ const Registro = () => {
       });
       return;
     }
-
+  
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/register', data);
       console.log(response.data);
       alert('Gracias por tu registro, confirma tu correo para continuar');
       navigate("/loginAs/");
     } catch (error) {
-      setError('email', {
-        type: 'manual',
-        message: 'Error al registrar, verifica tus datos',
-      });
+      if (error.response && error.response.data && error.response.data.error) {
+        setError('email', {
+          type: 'manual',
+          message: error.response.data.error,
+        });
+      } else {
+        setError('email', {
+          type: 'manual',
+          message: 'Error al registrar, verifica tus datos',
+        });
+      }
     }
   };
 
