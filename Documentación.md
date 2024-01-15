@@ -34,7 +34,9 @@
 
 - [`Enlace al Diagrama de Procesos`](https://liveespochedu-my.sharepoint.com/:b:/g/personal/francisco_alvarez_espoch_edu_ec/Ebu9vpF4EipLh8KVNCLHgIcB-zLeNLuUORWWNY5BYAZtWA?e=uMXyBL)
 
-#
+### Enlace de descarga del Diseño del Proyecto:
+- [`Link de Descarga`](https://liveespochedu-my.sharepoint.com/:u:/g/personal/francisco_alvarez_espoch_edu_ec/EXAkpfjXl8FBlOriGBpBw6UBlfHgWs7yLp7nmRSt6DfJvg?e=3PvpFO)
+
 
 ## DESARROLLADO EN:
 
