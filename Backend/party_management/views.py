@@ -24,9 +24,25 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import EmailMessage
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import redirect
+from django.http import Http404
 from django.http import JsonResponse
 #resend.api_key = os.environ["RESEND_API_KEY"]
 
+class UploadImageView(APIView):
+    def post(self, request, *args, **kwargs):
+        try:
+            evento = Evento.objects.get(pk=self.kwargs['id_evento'])
+        except Evento.DoesNotExist:
+            return Response({"error": "Evento no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = EventSerializer(evento, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 # Create your views here.
 class OrganizerView(viewsets.ModelViewSet):
     serializer_class = OrganizerSerializer

@@ -10,6 +10,13 @@ const EditarPerfil = () => {
     password: '',
     ci: '',
   });
+  const [tempFormData, setTempFormData] = useState({
+    nombre: '',
+    apellido: '',
+    email: '',
+    ci: '',
+    password: '',
+  });
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
@@ -29,14 +36,20 @@ const EditarPerfil = () => {
 
       if (response.status === 200) {
         const data = await response.json();
-        console.log('Datos del asistente:', data);
         setAsistenteData(data);
         setFormData({
-          nombre: data.nombre,
-          apellido: data.apellido,
-          email: data.email,
-          ci: data.ci,
-          password: data.password,
+          nombre: data.nombre || '',
+          apellido: data.apellido || '',
+          email: data.email || '',
+          ci: data.ci || '',
+          password: data.password || '',
+        });
+        setTempFormData({
+          nombre: data.nombre || '',
+          apellido: data.apellido || '',
+          email: data.email || '',
+          ci: data.ci || '',
+          password: data.password || '',
         });
       } else {
         throw new Error('Error al obtener datos del asistente');
@@ -71,10 +84,17 @@ const EditarPerfil = () => {
 
   const handleCancelEdit = () => {
     setIsEditing(false);
+    // Restore the main state with temporary changes when canceling the edit
+    setFormData(tempFormData);
   };
 
   const handleSaveEdit = async () => {
     try {
+      if (!formData.password) {
+        show_alerta("Ingrese la Contraseña para Actualizar", "warning");
+        return;
+      }
+
       await fetchData();
       if (!asistenteData) {
         console.error('No se han cargado los datos del asistente. Imposible guardar cambios.');
@@ -82,11 +102,6 @@ const EditarPerfil = () => {
       }
 
       const idToUse = asistenteData.id_asistente || asistenteData.id;
-
-      if (!formData.password) {
-        show_alerta("Ingrese la Contraseña", "warning");
-        return;
-      }
 
       const requestBody = {
         nombre: formData.nombre,
@@ -107,7 +122,7 @@ const EditarPerfil = () => {
 
       if (response.status === 200) {
         setIsEditing(false);
-        await fetchData();
+        await fetchData(); 
         show_alerta("Datos de Asistente Actualizados Exitosamente", "success");
       } else {
         const errorResponse = await response.json();
@@ -121,8 +136,14 @@ const EditarPerfil = () => {
   };
 
   const handleChange = (e) => {
+    // Update the main state while editing
     setFormData({
       ...formData,
+      [e.target.name]: e.target.value,
+    });
+    // Update the temporary state for cancellation
+    setTempFormData({
+      ...tempFormData,
       [e.target.name]: e.target.value,
     });
   };
@@ -168,8 +189,7 @@ const EditarPerfil = () => {
                 <div>
                   <p className="mb-3">Editando Perfil de {asistenteData.nombre} {asistenteData.apellido}.</p>
                   <form>
-
-                  <div className="mb-3">
+                    <div className="mb-3">
                       <label htmlFor="ci" className="form-label">Cédula</label>
                       <input
                         type="text"
@@ -228,9 +248,9 @@ const EditarPerfil = () => {
                         onChange={handleChange}
                       />
                     </div>
-
                   </form>
                   <button className="btn btn-primary" onClick={handleSaveEdit}>Guardar</button>
+                  <span className="mx-2"></span>
                   <button className="btn btn-secondary" onClick={handleCancelEdit}>Cancelar</button>
                 </div>
               ) : (

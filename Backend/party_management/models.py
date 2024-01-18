@@ -147,7 +147,8 @@ class Evento(models.Model):
     tipo = models.CharField(max_length=10)
     limite = models.IntegerField()
     eliminado = models.BooleanField(default=False)
-    #image = models.ImageField(upload_to="images/") #It'll go into a subfolder of our uploads folder named images #UPLOAD IMAGE #2
+    imagen = models.ImageField(upload_to="images/", blank=True, null=True)
+
     def __str__(self):
         return f"{self.id_evento} {self.id_organizador} {self.nombre_evento} {self.fecha} {self.hora} {self.ubicacion} {self.descripcion} {self.tipo} {self.limite}"
 

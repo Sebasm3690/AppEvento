@@ -82,6 +82,16 @@ const CrudEvents = ({ organizerObj }) => {
   const [showModalOrdenCompra, setShowModalOrdenCompra] = useState(false);
   const [showModalAsistente, setShowModalAsistente] = useState(false);
   const [showModalContiene, setShowModalContiene] = useState(false);
+
+  /*Imagen*/
+  const [imagen, setImagen] = useState(null);
+  const [eventImages, setEventImages] = useState({});
+
+  useEffect(() => {
+    const storedEventImages = JSON.parse(localStorage.getItem('eventImages')) || {};
+    setEventImages(storedEventImages);
+  }, []);
+
   //Función para consumir API y obtener todo el objeto {}
 
   useEffect(() => {
@@ -203,26 +213,53 @@ const CrudEvents = ({ organizerObj }) => {
     }
   };
 
-  /*Imágen*/
+  /*Imágen Actualizar*/
 
-  /*const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append("image", file);
+  const handleImageChange = (e) => {
+    setImagen(e.target.files[0]);
+  };
 
-      axios
-        .post("http://127.0.0.1:8000/api/v1/upload/", formData)
-        .then((response) => {
-          console.log("Respuesta del servidor:", response.data);
-          setImage(response.data.url); // Asume que el servidor devuelve la URL de la imagen
-        })
-        .catch((error) => {
-          console.error("Error al cargar la imagen:", error);
-        });
+  const isValidImage = (file) => {
+    if (!file) {
+      return false;
     }
-  };*/
 
+    const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
+    return allowedTypes.includes(file.type);
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+  
+    if (!isValidImage(imagen)) {
+      show_alerta("Por favor, seleccione una imagen PNG o JPG.", "warning");
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append('imagen', imagen);
+  
+    try {
+      const response = await axios.patch(`http://127.0.0.1:8000/api/api/v1/event/${id}/`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+  
+      const updatedEventImages = {
+        ...eventImages,
+        [id]: response.data.imagen,
+      };
+  
+      setEventImages(updatedEventImages);
+      localStorage.setItem('eventImages', JSON.stringify(updatedEventImages));
+      show_alerta("Imagen Actualizada Exitosamente", "success");
+  
+    } catch (error) {
+      console.error('Error al enviar la imagen:', error);
+    }
+  };  
+  
   const validarBoletoEditar = async (op) => {
     const urlEditar = `http://127.0.0.1:8000/api/v1/ticket/${idBoleto}/`;
     var parametrosBoleto;
@@ -670,7 +707,7 @@ const CrudEvents = ({ organizerObj }) => {
               <th>Descripción</th>
               <th>Tipo</th>
               <th>Limite</th>
-              {/*<th>Imágen</th>*/}
+              <th>Imágen</th>
               <th>id_organizador</th>
               <th>Opciones</th>
             </tr>
@@ -691,6 +728,16 @@ const CrudEvents = ({ organizerObj }) => {
                   <td>{event.descripcion}</td>
                   <td>{event.tipo}</td>
                   <td>{event.limite}</td>
+
+                  <td>
+                    {eventImages[event.id_evento] && (
+                      <img
+                        src={eventImages[event.id_evento]}
+                        alt={`Imagen para el evento ${event.id_evento}`}
+                        style={{ maxWidth: "100px" }}
+                      />
+                    )}
+                  </td>
 
                   {/*}<td>
                     {" "}
@@ -839,16 +886,16 @@ const CrudEvents = ({ organizerObj }) => {
             />
           </FormGroup>
 
-          {/*<FormGroup>
-            <label>Imágen:</label>
-            <input
-              className="form-control"
-              name="image"
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-            />
-      </FormGroup>*/}
+          <FormGroup>
+            <label>Imagen:</label><br></br>
+            <input 
+            className="form-control"
+            name="imagen"
+            type="file" 
+            accept="image/*"
+            onChange={handleImageChange} />
+          </FormGroup>
+          <Button onClick={handleFormSubmit}>Guardar</Button>
 
           <FormGroup>
             <label>Id_organizador:</label>
@@ -921,9 +968,11 @@ const CrudEvents = ({ organizerObj }) => {
               type="text"
               onChange={(e) => setUbicacion(e.target.value)}
             />
+            <div className="my-2">
               <Link to="/mapa/">
                 <Button className="btn btn-primary">Ver Mapa</Button>
               </Link>
+            </div>
           </FormGroup>
 
           <FormGroup>
@@ -955,17 +1004,6 @@ const CrudEvents = ({ organizerObj }) => {
               onChange={(e) => setLimite(e.target.value)}
             />
           </FormGroup>
-
-          {/*<FormGroup>
-            <label>Imágen:</label>
-            <input
-              className="form-control"
-              name="image"
-              type="file"
-              accept="image/"
-              onChange={handleImageUpload}
-            />
-    </FormGroup>*/}
         </ModalBody>
 
         <ModalFooter>
