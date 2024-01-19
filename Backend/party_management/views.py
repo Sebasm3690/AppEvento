@@ -24,7 +24,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import EmailMessage
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import redirect
-from django.http import Http404
 from django.http import JsonResponse
 #resend.api_key = os.environ["RESEND_API_KEY"]
 

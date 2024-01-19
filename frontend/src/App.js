@@ -14,7 +14,6 @@ import Organizador from "./components/organizador";
 import Inicio from "./components/inicio";
 import NavBar from "./components/navbar";
 
-import Img from "./components/Organizer/Imagenes";
 import EditarPerfil from "./components/Asistente/editarPerfil";
 import Mapa from "./components/Organizer/Ubicación";
 
@@ -43,8 +42,6 @@ function App() {
         ></Route>
 
         <Route path="/loginadm/" element={<LoginAdm></LoginAdm>}></Route>
-
-        <Route path="/img/" element={<Img></Img>}></Route>
 
         <Route path="/dashboardadm/" element={<Dashboard></Dashboard>}></Route>
 
