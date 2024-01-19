@@ -1,7 +1,7 @@
 // src/EventosList.js
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 function EventosList() {
   const [eventos, setEventos] = useState([]);
@@ -10,10 +10,10 @@ function EventosList() {
     // Función para obtener los eventos desde tu API
     const fetchEventos = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/vereven/');
+        const response = await axios.get("http://localhost:8000/api/vereven/");
         setEventos(response.data);
       } catch (error) {
-        console.error('Error al obtener eventos:', error);
+        console.error("Error al obtener eventos:", error);
       }
     };
 
@@ -23,23 +23,40 @@ function EventosList() {
 
   return (
     <div>
-      <h1>Listado de Eventos</h1>
-      <ul>
+      <h1 style={{ textAlign: "center" }}>Listado de Eventos</h1>
+      <div
+        style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
+      >
         {eventos
           .filter((evento) => evento.eliminado !== true)
           .map((evento) => (
-            <li key={evento.id_evento}>
-              <h2>{evento.nombre_evento}</h2>
-              <p><strong>Fecha:</strong> {new Date(evento.fecha).toLocaleDateString()}</p>
-              <p><strong>Hora:</strong> {evento.hora}</p>
-              <p><strong>Ubicación:</strong> {evento.ubicacion}</p>
-              <p><strong>Descripción:</strong> {evento.descripcion}</p>
-              <p><strong>Tipo:</strong> {evento.tipo}</p>
-              <p><strong>Limite:</strong> {evento.limite}</p>
-              <Link to={`/meventos/eventonum/${evento.id_evento}`}>Ver detalles</Link>
-            </li>
+            <div
+              key={evento.id_evento}
+              style={{ width: "20%", margin: "10px" }}
+            >
+              <div className="card">
+                <img
+                  src= {evento.imagen}
+                  className="card-img-top"
+                  alt="..."
+                />
+                <div className="card-body">
+                  <h5 className="card-title">{evento.nombre_evento}</h5>
+                  <p className="card-text">{evento.descripcion}</p>
+                  <p className="card-text">
+                    <small className="text-muted">{evento.fecha}</small>
+                  </p>
+                  <Link
+                    to={`/meventos/eventonum/${evento.id_evento}`}
+                    className="btn btn-primary"
+                  >
+                    Ver más detalles
+                  </Link>
+                </div>
+              </div>
+            </div>
           ))}
-      </ul>
+      </div>
     </div>
   );
 }

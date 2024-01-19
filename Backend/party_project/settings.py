@@ -158,14 +158,16 @@ CORS_ALLOWED_ORIGINS = [
 #MEDIA_ROOT = BASE_DIR / 'uploads'    #This is the folder where we wanna sabe our files, in this case our images -> The files will go into our uploads folder in our overall project folder
 #MEDIA_URL =   "/files/"              #Path that should be used by the browser to then request my files -> The path wich the browser can send requests to 
 
+# settings.py
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 AUTH_USER_MODEL = 'party_management.Asistente'
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALOW_ALL = True
 
 # settings.py
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'

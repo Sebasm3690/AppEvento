@@ -117,7 +117,6 @@ class Vende(models.Model):
     id_organizador = models.ForeignKey("Organizador", on_delete=models.CASCADE, related_name='vende_organizador')
     iva = models.FloatField()
     descuento = models.FloatField()
-    ice = models.FloatField()
     stock_actual = models.IntegerField(default=0)
     precio_actual = models.FloatField()
 
@@ -167,6 +166,8 @@ class Asistente(AbstractUser):
     #I don't have to run migrations again because I just added a method (I don't change the structure or the fields of my class)
     def __str__(self):
         return f"{self.id_asistente} {self.nombre} {self.apellido} {self.email} {self.ci}" #With this you can show the elements of the class in a better way
+
+
 class OrdenCompra(models.Model):
     num_orden = models.AutoField(primary_key=True)
     id_asistente = models.ForeignKey("Asistente", on_delete=models.CASCADE)
@@ -208,7 +209,7 @@ class Boleto(models.Model):
     id_evento = models.ForeignKey("Evento", on_delete=models.CASCADE)
     stock = models.IntegerField()
     tipoBoleto = models.CharField(max_length=15)
-    precio = models.FloatField()
+    precio = models.DecimalField(max_digits=10, decimal_places=2)
     def __str__(self):
         return f"{self.id_boleto}{self.stock}{self.tipoBoleto}{self.precio}"
     #->Add another field (Alter)

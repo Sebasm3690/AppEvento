@@ -13,9 +13,7 @@ import LoginOrganizador from "./components/LoginOrganizador";
 import Organizador from "./components/organizador";
 import Inicio from "./components/inicio";
 import NavBar from "./components/navbar";
-
 import EditarPerfil from "./components/Asistente/editarPerfil";
-import Mapa from "./components/Organizer/Ubicación";
 
 import Payjs from "./paypalf";
 import React from "react";
@@ -27,6 +25,8 @@ import BoletosList from "./components/pedido";
 import TuComponente from "./components/pruebafetchstock";
 import ComprasAsistente from "./components/historialAs";
 import VerQR from "./components/MostrarQR";
+
+import Maps from "./components/Organizer/Ubicación";
 
 function App() {
   return (
@@ -45,6 +45,8 @@ function App() {
 
         <Route path="/dashboardadm/" element={<Dashboard></Dashboard>}></Route>
 
+        <Route path="/mapa/" element={<Maps></Maps>}></Route>
+
         <Route path="/loginas/" element={<LoginAs></LoginAs>}></Route>
         <Route path="/asistente/" element={<Asistente></Asistente>}></Route>
         <Route
@@ -60,11 +62,6 @@ function App() {
         <Route
           path="/organizador/"
           element={<Organizador></Organizador>}
-        ></Route>
-
-        <Route
-          path="/mapa/"
-          element={<Mapa></Mapa>}
         ></Route>
 
         <Route path="/payfinal/" element={<Payjs></Payjs>}></Route>

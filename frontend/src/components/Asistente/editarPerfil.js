@@ -59,7 +59,6 @@ const EditarPerfil = () => {
       window.location.href = '/loginas';
     }
   };
-
   const handleLogout = async () => {
     try {
       const response = await fetch('http://localhost:8000/api/logoutAs', {
