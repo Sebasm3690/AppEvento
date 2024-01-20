@@ -78,7 +78,7 @@ const Asistente = () => {
     altText: evento.nombre_evento,
     caption: evento.descripcion, // Puedes cambiar esto según tus necesidades
     key: evento.id_evento,
-    src: "https://picsum.photos/id/123/1200/600",
+    src: evento.imagen,
   }));
 
   return (

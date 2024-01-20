@@ -58,4 +58,7 @@ urlpatterns = [
     
     path('asistentes/<int:id_asistente>/contiene/<int:id_contiene>/enviar_correo/', views.enviar_correo, name='enviar_correo'),
     path('confirmar/<str:token>/', confirmar_correo, name='confirmar_correo'),
+
+    path('api/v1/event/<int:id_evento>/upload-image/', UploadImageView.as_view(), name='upload_image'),
+
 ]
