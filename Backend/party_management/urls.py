@@ -28,6 +28,8 @@ urlpatterns = [
     path("borrado_logico_evento/<int:id_evento>/",views.BorradoLogicoOEvent.as_view(),name="borrado_logico_evento"),
     path("recuperar_organizador/<int:id_organizador>/",views.recuperarOrganizer.as_view(),name="recuperar_organizador"),
     path("recuperar_evento/<int:id_evento>/",views.recuperarEvento.as_view(),name="recuperar_evento"),
+    path("Update_iva_ice/",views.Update_iva_ice.as_view(),name="Update_iva_ice"),
+    path("vendeBoleto/",views.VendeBoleto.as_view(),name="vendeBoleto"),
 
     path("api/login/", LoginViewAdm.as_view(), name='login'),
     path('api/logout/', LogoutViewAdm.as_view(), name='logout'),
@@ -57,4 +59,7 @@ urlpatterns = [
     path('asistentes/<int:id_asistente>/contiene/<int:id_contiene>/enviar_correo/', views.enviar_correo, name='enviar_correo'),
     path('confirmar/<str:token>/', confirmar_correo, name='confirmar_correo'),
     path('validar-correo/', views.validar_correo, name='validar_correo'),
+
+    path('api/v1/event/<int:id_evento>/upload-image/', UploadImageView.as_view(), name='upload_image'),
+
 ]

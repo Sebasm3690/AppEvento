@@ -11,8 +11,23 @@ import {
   ModalFooter,
 } from "reactstrap";
 import { show_alerta } from "../../functions";
+//import "./indexAdmin.css";
 
-const ShowOrganizers = ({ adminObj }) => {
+export default function ShowOrganizers({ adminObj }) {
+  return (
+    <div>
+      <Header />
+      <CrudOrganizers adminObj={adminObj} />;
+      <Footer />
+    </div>
+  );
+}
+
+function Header() {
+  return <h1>🌍Far away🌅</h1>;
+}
+
+const CrudOrganizers = ({ adminObj }) => {
   const botonDerechaStyles = {
     marginLeft: "auto",
   };
@@ -177,6 +192,7 @@ const ShowOrganizers = ({ adminObj }) => {
               "El organizador ha sido agregado exitosamente",
               "success"
             );
+            setOrganizers((organizers) => [...organizers, response.data]);
           })
           .catch((error) => {
             if(error.response && error.response.data && error.response.data.error){
@@ -503,4 +519,10 @@ const ShowOrganizers = ({ adminObj }) => {
   );
 };
 
-export default ShowOrganizers;
+function Footer() {
+  return (
+    <footer className="stats">
+      <em>🏝️ You have X items on your List, and you already packed X (X%)</em>
+    </footer>
+  );
+}
