@@ -29,6 +29,24 @@ import json
 from decimal import Decimal
 #resend.api_key = os.environ["RESEND_API_KEY"]
 
+class UploadImageView(APIView):
+    def post(self, request, id_evento):
+        try:
+            event = Evento.objects.get(id_evento=id)
+        except Evento.DoesNotExist:
+            return Response({'error': 'Evento no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+        image = request.FILES.get('imagen')
+
+        if not image:
+            return Response({'error': 'No se proporcionó una imagen'}, status=status.HTTP_400_BAD_REQUEST)
+
+        event.imagen = image
+        event.save()
+
+        serializer = EventSerializer(event)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 # Create your views here.
 class OrganizerView(viewsets.ModelViewSet):
     serializer_class = OrganizerSerializer

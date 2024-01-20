@@ -71,7 +71,7 @@ class Migration(migrations.Migration):
             name='OrdenCompra',
             fields=[
                 ('num_orden', models.AutoField(primary_key=True, serialize=False)),
-                ('fecha', models.DateField(auto_now_add=True)),
+                ('fecha', models.DateTimeField(auto_now_add=True)),
                 ('valor_total', models.FloatField()),
                 ('id_asistente', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
