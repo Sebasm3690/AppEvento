@@ -2,6 +2,10 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import NavBar from "./navbar";
+import Footer from "./footer";
+import { FaUser, FaEnvelope, FaLock, FaIdCard } from 'react-icons/fa';
+import "./styles/formRegistro.css";
 
 // Función para validar la cédula
 function validarCedula(cedula) {
@@ -65,44 +69,60 @@ const Registro = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <div className="col-md-6 offset-md-3">
-        <h2>Registro</h2>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-3">
-            <label>Nombre:</label>
-            <input {...register('nombre', { required: 'Campo requerido' })} className="form-control" />
-            {errors.nombre && <p className="text-danger">{errors.nombre.message}</p>}
-          </div>
-          <div className="mb-3">
-            <label>Apellido:</label>
-            <input {...register('apellido', { required: 'Campo requerido' })} className="form-control" />
-            {errors.apellido && <p className="text-danger">{errors.apellido.message}</p>}
-          </div>
-          <div className="mb-3">
-            <label>Email:</label>
-            <input {...register('email', { required: 'Campo requerido', pattern: { value: /^\S+@\S+$/i, message: 'Correo electrónico inválido' } })} className="form-control" />
-            {errors.email && <p className="text-danger">{errors.email.message}</p>}
-          </div>
-          <div className="mb-3">
-            <label>Password:</label>
-            <input type="password" {...register('password', { required: 'Campo requerido' })} className="form-control" />
-            {errors.password && <p className="text-danger">{errors.password.message}</p>}
-          </div>
-          <div className="mb-3">
-            <label>CI:</label>
-            <input {...register('ci', { 
-              required: 'Campo requerido',
-              validate: value => validarCedula(value) || 'Número de cédula inválido' 
-            })} className="form-control" />
-            {errors.ci && <p className="text-danger">{errors.ci.message}</p>}
-          </div>
-          <button type="submit" className="btn btn-primary">Registrarse</button>
-        </form>
+    <div>
+      <NavBar />
+      <div className="container mt-5">
+        <div className="col-md-6 offset-md-3">
+          <center>
+            <h1>REGISTRO</h1> <br></br>
+          </center>
+          <form onSubmit={handleSubmit(onSubmit)} className="custom-form">
+            <div className="mb-3">
+              <label>
+                <FaUser />
+                <input {...register('nombre', { required: 'Campo requerido' })} className="form-control" placeholder="Nombre"/>
+              </label>
+              {errors.nombre && <p className="text-danger">{errors.nombre.message}</p>}
+            </div>
+            <div className="mb-3">
+              <label>
+                <FaUser />
+                <input {...register('apellido', { required: 'Campo requerido' })} className="form-control" placeholder="Apellido" />
+              </label>
+              {errors.apellido && <p className="text-danger">{errors.apellido.message}</p>}
+            </div>
+            <div className="mb-3">
+              <label>
+                <FaEnvelope />
+                <input {...register('email', { required: 'Campo requerido', pattern: { value: /^\S+@\S+$/i, message: 'Correo electrónico inválido' } })} className="form-control" placeholder="Email"/>
+              </label>
+              {errors.email && <p className="text-danger">{errors.email.message}</p>}
+            </div>
+            <div className="mb-3">
+              <label>
+                <FaLock />
+                <input type="password" {...register('password', { required: 'Campo requerido' })} className="form-control" placeholder="Contraseña"/>
+              </label>
+              {errors.password && <p className="text-danger">{errors.password.message}</p>}
+            </div>
+            <div className="mb-3">
+              <label>
+                <FaIdCard />
+                <input {...register('ci', { 
+                  required: 'Campo requerido',
+                  validate: value => validarCedula(value) || 'Número de cédula inválido' 
+                })} className="form-control" placeholder="CI"/>
+              </label>
+              {errors.ci && <p className="text-danger">{errors.ci.message} </p>}
+            </div>
+            <button type="submit" className="btn btn-primary">REGISTRARSE</button>
+          </form>
+
+        </div>
       </div>
+      <Footer />
     </div>
   );
 };
 
 export default Registro;
-

@@ -1,11 +1,14 @@
 // Login.js
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import NavBar from "./navbar";
+import Footer from "./footer";
 
 const LoginOrganizador = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const loginUser = async () => {
     try {
@@ -38,13 +41,14 @@ const LoginOrganizador = () => {
 
   return (
     <div>
-       <NavBar />
+      <NavBar />
       <div className="container mt-5">
         <div className="col-md-6 offset-md-3">
-          <h1>Organizadores</h1> <br></br>
-          <h2>Iniciar Sesión</h2>
-          <form>
-            <div className="mb-3">
+          <center>
+            <h1>ORGANIZADOR</h1> <br></br>
+          </center>
+          <form className="custom-form">
+            <div className="form-group">
               <input
                 type="text"
                 className="form-control"
@@ -53,7 +57,7 @@ const LoginOrganizador = () => {
                 onChange={(e) => setUsername(e.target.value)}
               />
             </div>
-            <div className="mb-3">
+            <div className="form-group">
               <input
                 type="password"
                 className="form-control"
@@ -62,17 +66,28 @@ const LoginOrganizador = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {error && <p className="error-message">{error}</p>}
             <button
               type="button"
-              className="btn btn-primary mb-3"
+              className="btn btn-primary btn-block"
               onClick={loginUser}
             >
-              Iniciar sesión
+              INICIAR SESIÓN
             </button>
+            <p className="form-info">
+                ¿Eres Administrador?{' '}
+              <button
+                type="button"
+                className="btn btn-link btn-reset"
+                onClick={() => navigate('/loginadm')}
+              >
+                Ingresa Aquí
+              </button>
+            </p>
           </form>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

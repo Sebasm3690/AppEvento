@@ -28,6 +28,8 @@ import VerQR from "./components/MostrarQR";
 
 import Maps from "./components/Organizer/Ubicación";
 import ConfirmationPage from "./components/confirmado_correo";
+import EventoHP from "./components/eventosHP"
+import QS from "./components/otros/quienes-somos"
 
 function App() {
   return (
@@ -90,7 +92,17 @@ function App() {
           path="/correo-confirmado"
           element={<ConfirmationPage />}
         ></Route>
+       <Route
+            path="/eventosHP/"
+            element={<EventoHP></EventoHP>}
+        ></Route>
+        <Route
+            path="/quienes-somos/"
+            element={<QS></QS>}
+        ></Route>
+
       </Routes>
+
     </BrowserRouter>
   );
 }
