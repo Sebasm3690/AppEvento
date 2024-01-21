@@ -101,64 +101,10 @@ class Migration(migrations.Migration):
                 ('id_admin', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='party_management.administrador')),
             ],
         ),
-<<<<<<< HEAD
-        migrations.CreateModel(
-            name='OrdenCompra',
-            fields=[
-                ('num_orden', models.AutoField(primary_key=True, serialize=False)),
-                ('fecha', models.DateField(auto_now_add=True)),
-                ('valor_total', models.FloatField()),
-                ('id_asistente', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-            ],
-            options={
-                'unique_together': {('id_boleto', 'num_orden')},
-            },
-        ),
-        migrations.CreateModel(
-            name='Boleto',
-            fields=[
-                ('id_evento', models.AutoField(primary_key=True, serialize=False)),
-                ('nombre_evento', models.CharField(max_length=50)),
-                ('fecha', models.DateField()),
-                ('hora', models.TimeField()),
-                ('ubicacion', models.CharField(max_length=50)),
-                ('descripcion', models.CharField(max_length=100)),
-                ('tipo', models.CharField(max_length=10)),
-                ('limite', models.IntegerField()),
-                ('eliminado', models.BooleanField(default=False)),
-                ('id_organizador', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='party_management.organizador')),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Boleto',
-            fields=[
-                ('id_boleto', models.AutoField(primary_key=True, serialize=False)),
-                ('stock', models.IntegerField()),
-                ('tipoBoleto', models.CharField(max_length=15)),
-                ('precio', models.FloatField()),
-                ('id_evento', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='party_management.evento')),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Vende',
-            fields=[
-                ('id_vende', models.AutoField(primary_key=True, serialize=False)),
-                ('iva', models.FloatField()),
-                ('descuento', models.FloatField()),
-                ('ice', models.FloatField()),
-                ('stock_actual', models.IntegerField(default=0)),
-                ('id_boleto', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='vende_boleto', to='party_management.boleto')),
-                ('id_organizador', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='vende_organizador', to='party_management.organizador')),
-            ],
-            options={
-                'unique_together': {('id_boleto', 'id_organizador')},
-            },
-=======
         migrations.AddField(
             model_name='evento',
             name='id_organizador',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='party_management.organizador'),
->>>>>>> 796fecb5a858f0fb8bc3bd6ad0ddc808ec3904fe
         ),
         migrations.CreateModel(
             name='Contiene',
