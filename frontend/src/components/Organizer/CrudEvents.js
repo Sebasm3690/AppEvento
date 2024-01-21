@@ -705,8 +705,7 @@ const CrudEvents = ({ organizerObj }) => {
                       <span style={{ margin: '0 3px' }}></span>
                       DAR DE BAJA
                     </button> 
-                    <span style={{ margin: '0 10px' }}></span>
-                    <br></br>
+                    <span style={{ margin: '0 1px' }}></span>
 
                     <button
                       type="button"

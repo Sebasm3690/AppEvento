@@ -1,58 +1,91 @@
 .custom-form {
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
-  padding: 30px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #fff;
+  padding: 40px;
+  border: 2px solid #3498db;
+  border-radius: 10px;
+  background-color: #ecf0f1;
   text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Añadimos una suave sombra */
 }
 
 .form-title {
-  font-size: 24px;
-  color: #333;
+  font-size: 32px; /* Hacemos el título aún más grande */
+  color: #2c3e50;
   margin-bottom: 20px;
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .form-control {
   width: 100%;
   padding: 15px;
   font-size: 16px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  box-sizing: border-box; /* Añadido para mejorar el box model */
+  border: 2px solid #bdc3c7;
+  border-radius: 6px;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+.form-control:focus {
+  border-color: #3498db;
+}
+
+.btn-primary,
+.btn-register {
+  display: inline-block;
+  margin: 10px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  border: 2px solid #3498db;
+  border-radius: 6px;
+  padding: 12px 24px;
+  font-size: 18px;
 }
 
 .btn-primary {
-  background-color: #2980b9;
+  background-color: #3498db;
   color: #fff;
-  font-size: 18px;
-  cursor: pointer;
-  padding: 15px;
-  border: none;
-  border-radius: 4px;
 }
 
 .btn-primary:hover {
-  background-color: #265982;
+  background-color: #2980b9;
 }
 
 .btn-register {
-  color: #2980b9;
-  text-decoration: underline;
-  cursor: pointer;
+  color: #3498db;
 }
 
 .btn-register:hover {
-  color: #265982;
+  color: #2980b9;
 }
 
 .form-info {
   text-align: center;
   margin-top: 20px;
-  color: #777;
+  color: #7f8c8d;
+}
+
+/* Estilo para hacer el formulario responsivo en dispositivos móviles */
+@media screen and (max-width: 600px) {
+  .custom-form {
+    padding: 20px;
+  }
+
+  .form-title {
+    font-size: 28px;
+  }
+
+  .form-control {
+    padding: 12px;
+  }
+
+  .btn-primary,
+  .btn-register {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
 }
