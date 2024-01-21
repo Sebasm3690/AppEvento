@@ -603,9 +603,9 @@ const CrudEvents = ({ organizerObj }) => {
             className="btn btn-primary"
             onClick={() => setShowModalInsert(true)}
           >
-            Agregar evento nuevo
+            NUEVO EVENTO
           </button>
-
+          <span style={{ margin: '0 40px' }}></span>
           {events.some(
             (evento) =>
               evento.eliminado === false &&
@@ -615,16 +615,16 @@ const CrudEvents = ({ organizerObj }) => {
               className="btn btn-info"
               onClick={() => setShowModalImpuestosIngresar(true)}
             >
-              Agregar impuestos
+              AGREGAR IMPUESTOS
             </button>
           )}
-
+          <span style={{ margin: '0 40px' }}></span>
           <button
             className="btn btn-success"
             onClick={() => setShowModalRecuperar(true)}
           >
             {/*Recuperar evento*/}
-            Ver histórico
+            HISTÓRICO
           </button>
         </div>
 
@@ -636,13 +636,12 @@ const CrudEvents = ({ organizerObj }) => {
               <th>Nombre</th>
               <th>Fecha</th>
               <th>Hora</th>
-              <th>Ubicacion</th>
+              <th>Ubicación</th>
               <th>Descripción</th>
               <th>Tipo</th>
-              <th>Limite</th>
+              <th>Límite</th>
               <th>Imagen</th>
-
-              <th>Opciones</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -687,20 +686,28 @@ const CrudEvents = ({ organizerObj }) => {
                       onClick={() => handleEditarEvento(event.id_evento)}
                       className="btn btn-warning"
                     >
-                      Ver evento
-                    </button>{" "}
+                      <img src={"https://cdn-icons-png.flaticon.com/512/1827/1827933.png"} alt="Editar" width={'25px'} />
+                      <span style={{ margin: '0 3px' }}></span>
+                      EDITAR EVENTO
+                    </button>
+                    <span style={{ margin: '0 10px' }}></span>
                     <button
                       className="btn btn-danger"
                       onClick={() => handleEliminarEvento(event.id_evento)}
                     >
-                      Dar de baja
-                    </button>{" "}
+                      <img src={"https://cdn-icons-png.flaticon.com/512/3221/3221845.png"} alt="Editar" width={'25px'} />
+                      <span style={{ margin: '0 3px' }}></span>
+                      DAR DE BAJA
+                    </button>
+                    <span style={{ margin: '0 10px' }}></span>
                     <button
                       type="button"
                       class="btn btn-primary"
                       onClick={() => mostrarOrdenCompra(event.id_evento)}
                     >
-                      Ver orden Compra <span class="badge bg-secondary"></span>
+                      <img src={"https://cdn-icons-png.flaticon.com/512/46/46155.png"} alt="Editar" width={'25px'} />
+                      <span style={{ margin: '0 3px' }}></span>
+                      ORDEN COMPRA<span class="badge bg-secondary"></span>
                     </button>
                   </td>
                 </tr>
@@ -732,7 +739,7 @@ const CrudEvents = ({ organizerObj }) => {
 
         <ModalBody>
           <FormGroup>
-            <label>Id:</label>
+            <label>ID:</label>
             <input
               className="form-control"
               readOnly
@@ -776,7 +783,7 @@ const CrudEvents = ({ organizerObj }) => {
           </FormGroup>
 
           <FormGroup>
-            <label>Ubicacion:</label>
+            <label>Ubicación:</label>
             <input
               className="form-control"
               name="ubicacion"
@@ -787,7 +794,7 @@ const CrudEvents = ({ organizerObj }) => {
           </FormGroup>
 
           <FormGroup>
-            <label>tipo:</label>
+            <label>Tipo:</label>
             <input
               className="form-control"
               name="tipo"
@@ -798,7 +805,7 @@ const CrudEvents = ({ organizerObj }) => {
           </FormGroup>
 
           <FormGroup>
-            <label>Descripcion:</label>
+            <label>Descripción:</label>
             <input
               className="form-control"
               name="descripcion"
@@ -809,7 +816,7 @@ const CrudEvents = ({ organizerObj }) => {
           </FormGroup>
 
           <FormGroup>
-            <label>limite:</label>
+            <label>Límite:</label>
             <input
               className="form-control"
               name="limite"
@@ -831,7 +838,7 @@ const CrudEvents = ({ organizerObj }) => {
           <Button onClick={handleFormSubmit}>Guardar</Button>
 
           <FormGroup>
-            <label>Id_organizador:</label>
+            <label>Id Organizador:</label>
             <input
               className="form-control"
               readOnly
@@ -879,7 +886,7 @@ const CrudEvents = ({ organizerObj }) => {
           }}
         >
           <div>
-            <h3>Insertar Evento</h3>
+            <h3>INSERTAR EVENTO</h3>
           </div>
         </ModalHeader>
 
@@ -915,7 +922,7 @@ const CrudEvents = ({ organizerObj }) => {
           </FormGroup>
 
           <FormGroup>
-            <label>Ubicacion:</label>
+            <label>Ubicación:</label>
             <input
               className="form-control"
               name="ubicacion"
@@ -930,7 +937,7 @@ const CrudEvents = ({ organizerObj }) => {
           </FormGroup>
 
           <FormGroup>
-            <label>Descripcion:</label>
+            <label>Descripción:</label>
             <input
               className="form-control"
               name="descripcion"
@@ -950,7 +957,7 @@ const CrudEvents = ({ organizerObj }) => {
           </FormGroup>
 
           <FormGroup>
-            <label>limite:</label>
+            <label>Límite:</label>
             <input
               className="form-control"
               name="limite"
@@ -992,7 +999,7 @@ const CrudEvents = ({ organizerObj }) => {
       <Modal isOpen={showModalBoleto}>
         <ModalHeader>
           <div>
-            <h3>Editar Boleto</h3>
+            <h3>EDITAR BOLETO</h3>
           </div>
         </ModalHeader>
 
@@ -1010,7 +1017,7 @@ const CrudEvents = ({ organizerObj }) => {
 
         <ModalBody>
           <FormGroup>
-            <label>Id:</label>
+            <label>ID:</label>
             <input
               className="form-control"
               readOnly
@@ -1031,6 +1038,7 @@ const CrudEvents = ({ organizerObj }) => {
             />
           </FormGroup>
           <FormGroup>
+            <label>Tipo:</label>
             <select
               className="form-control"
               name="tipo"
@@ -1053,7 +1061,7 @@ const CrudEvents = ({ organizerObj }) => {
             />
           </FormGroup>
           <FormGroup>
-            <label>Id_evento:</label>
+            <label>ID Evento:</label>
             <input
               className="form-control"
               name="hora"
@@ -1100,7 +1108,7 @@ const CrudEvents = ({ organizerObj }) => {
               alignItems: "center",
             }}
           >
-            <h3>Ingresar Boleto</h3>
+            <h3>INGRESAR BOLETO</h3>
           </div>
         </ModalHeader>
 
@@ -1127,7 +1135,7 @@ const CrudEvents = ({ organizerObj }) => {
             />
           </FormGroup>
           <FormGroup>
-            <label>Tipo boleto</label>
+            <label>Tipo:</label>
             <select
               className="form-control"
               name="tipo"
@@ -1149,7 +1157,7 @@ const CrudEvents = ({ organizerObj }) => {
           </FormGroup>
 
           <FormGroup>
-            <label>Id_evento:</label>
+            <label>ID Evento:</label>
             <input
               className="form-control"
               name="number"
@@ -1195,13 +1203,13 @@ const CrudEvents = ({ organizerObj }) => {
       <Modal isOpen={showModalImpuestosIngresar}>
         <ModalHeader>
           <div>
-            <h3>Ingresar Impuestos</h3>
+            <h3>INGRESAR IMPUESTOS</h3>
           </div>
         </ModalHeader>
 
         <ModalBody>
           <FormGroup>
-            <label>Iva:</label>
+            <label>IVA:</label>
             <input
               className="form-control"
               name="iva"
@@ -1229,7 +1237,7 @@ const CrudEvents = ({ organizerObj }) => {
       <Modal isOpen={showModalRecuperar} size="lg" style={estiloModal}>
         <ModalHeader>
           <div>
-            <h3>Eventos historico</h3>
+            <h3>HISTÓRICO</h3>
             <Button
               type="button"
               className="close" // Agregar la clase "float-right" para alinear a la derecha
@@ -1245,14 +1253,14 @@ const CrudEvents = ({ organizerObj }) => {
           <Table className="table">
             <thead>
               <tr>
-                <th>Id_evento</th>
+                <th>ID Evento</th>
                 <th>Nombre</th>
                 <th>Fecha</th>
                 <th>Hora</th>
-                <th>Ubicacion</th>
+                <th>Ubicación</th>
                 <th>Descripción</th>
                 <th>Tipo</th>
-                <th>Limite</th>
+                <th>Límite</th>
                 {/*<th>Imágen</th>*/}
               </tr>
             </thead>
@@ -1314,7 +1322,7 @@ const CrudEvents = ({ organizerObj }) => {
       <Modal isOpen={showModalOrdenCompra} size="lg" style={estiloModal}>
         <ModalHeader>
           <div>
-            <h3>Ordenes de compra</h3>
+            <h3>ORDEN DE COMPRA</h3>
             <Button
               type="button"
               className="close"
@@ -1330,9 +1338,9 @@ const CrudEvents = ({ organizerObj }) => {
           <Table className="table">
             <thead>
               <tr>
-                <th>Número de orden</th>
+                <th>Número de Orden</th>
                 <th>Fecha</th>
-                <th>Valor total</th>
+                <th>Valor Total</th>
                 <th>IVA</th>
                 {/*<th>Imágen</th>*/}
               </tr>

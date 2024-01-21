@@ -16,9 +16,7 @@ import { show_alerta } from "../../functions";
 export default function ShowOrganizers({ adminObj }) {
   return (
     <div>
-      <Header />
       <CrudOrganizers adminObj={adminObj} />;
-      <Footer />
     </div>
   );
 }
@@ -260,21 +258,25 @@ const CrudOrganizers = ({ adminObj }) => {
           className="btn btn-primary"
           onClick={() => setShowModalInsert(true)}
         >
-          Insertar nuevo organizador
-        </button>
+          INSERTAR ORGANIZADOR
+        </button> 
+        <span style={{ margin: '0 40px' }}></span>
         <Button className="btn btn-success" onClick={handleRecuperar}>
-          Recuperar Organizador
+          RECUPERAR ORGANIZADOR
         </Button>
+        <br></br>
+        <br></br>
         <br></br>
         <Table className="table">
           <thead>
             <tr>
-              <th>Id_organizador</th>
+              <th>ID</th>
               <th>Nombre</th>
               <th>Apellido</th>
-              <th>CI</th>
+              <th>Cédula de Identidad</th>
               <th>Correo</th>
-              <th>Id_admin</th>
+              <th>ID Admin</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -296,15 +298,20 @@ const CrudOrganizers = ({ adminObj }) => {
                       }
                       className="btn btn-warning"
                     >
-                      Editar
-                    </Button>{" "}
+                      <img src={"https://cdn-icons-png.flaticon.com/512/8188/8188360.png"} alt="Editar" width={'25px'} />
+                      <span style={{ margin: '0 3px' }}></span>
+                      EDITAR
+                    </Button>
+                    <span style={{ margin: '0 10px' }}></span>
                     <Button
                       className="btn btn-danger"
                       onClick={() =>
                         handleEliminarUsuario(organizer.id_organizador)
                       }
                     >
-                      Dar de baja
+                      <img src="https://cdn-icons-png.flaticon.com/512/2340/2340337.png" alt="Editar" width={'25px'}/>
+                      <span style={{ margin: '0 3px' }}></span>
+                      DAR DE BAJA
                     </Button>
                   </td>
                 </tr>
@@ -316,7 +323,7 @@ const CrudOrganizers = ({ adminObj }) => {
       <Modal isOpen={showModal}>
         <ModalHeader>
           <div>
-            <h3>Editar Organizador</h3>
+            <h3>EDITAR ORGANIZADOR</h3>
           </div>
         </ModalHeader>
 
@@ -344,7 +351,7 @@ const CrudOrganizers = ({ adminObj }) => {
           </FormGroup>
 
           <FormGroup>
-            <label>CI:</label>
+            <label>Cédula de Identidad:</label>
             <input
               className="form-control"
               name="ci"
@@ -379,10 +386,10 @@ const CrudOrganizers = ({ adminObj }) => {
 
         <ModalFooter>
           <Button color="primary" onClick={() => validar(2)}>
-            Editar
+            EDITAR
           </Button>
           <Button color="danger" onClick={() => setShowModal(false)}>
-            Cancelar
+            CANCELAR
           </Button>
         </ModalFooter>
       </Modal>
@@ -392,7 +399,7 @@ const CrudOrganizers = ({ adminObj }) => {
       <Modal isOpen={showModalInsert}>
         <ModalHeader>
           <div>
-            <h3>Insertar Organizador</h3>
+            <h3>REGISTRO</h3>
           </div>
         </ModalHeader>
 
@@ -418,7 +425,7 @@ const CrudOrganizers = ({ adminObj }) => {
           </FormGroup>
 
           <FormGroup>
-            <label>CI:</label>
+            <label>Cédula de Identidad:</label>
             <input
               className="form-control"
               name="ci"
@@ -450,10 +457,10 @@ const CrudOrganizers = ({ adminObj }) => {
 
         <ModalFooter>
           <Button color="primary" onClick={() => validar(1)}>
-            Insertar
+            REGISTRAR
           </Button>
           <Button color="danger" onClick={() => setShowModalInsert(false)}>
-            Cancelar
+            CANCELAR
           </Button>
         </ModalFooter>
       </Modal>
@@ -463,7 +470,7 @@ const CrudOrganizers = ({ adminObj }) => {
       <Modal isOpen={showModalRecuperar} size="lg">
         <ModalHeader>
           <div>
-            <h3>Recuperar Organizador</h3>
+            <h3>RECUPERAR ORGANIZADORES</h3>
             <Button
               type="button"
               className="close" // Agregar la clase "float-right" para alinear a la derecha
@@ -480,10 +487,10 @@ const CrudOrganizers = ({ adminObj }) => {
           <Table>
             <thead>
               <tr>
-                <th>ID organizador</th>
+                <th>ID</th>
                 <th>Nombre</th>
                 <th>Apellido</th>
-                <th>CI</th>
+                <th>Cédula de Identidad</th>
                 <th>Correo</th>
               </tr>
             </thead>
@@ -518,11 +525,3 @@ const CrudOrganizers = ({ adminObj }) => {
     </>
   );
 };
-
-function Footer() {
-  return (
-    <footer className="stats">
-      <em>🏝️ You have X items on your List, and you already packed X (X%)</em>
-    </footer>
-  );
-}

@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
-import CrudEvents from "./Organizer/CrudEvents";
 import { Link } from "react-router-dom";
-import NavBarOrg from "./Organizer/navbarOrg";
-import Footer from "./footer";
+import "../styles/navbar.css";
 
-
-const Organizador = () => {
-  const [adminData, setAdminData] = useState(null);
+function NavBar() {
+    const [adminData, setAdminData] = useState(null);
 
   useEffect(() => {
     fetchAdminData();
@@ -51,22 +48,27 @@ const Organizador = () => {
       console.error("Error:", error);
     }
   };
-
-  return (
-    <div>
-      <NavBarOrg />
-      {/*console.log(JSON.stringify(adminData, null, 2))*/}
-
-      <div className="container mt-5">
-        {adminData ? (
-          <CrudEvents organizerObj={adminData}></CrudEvents>
-        ) : (
-          <p>Cargando datos del organizador...</p>
-        )}
-      </div>
-      <Footer />
-    </div>
-  );
-};
-
-export default Organizador;
+  
+    return (
+      <nav className="navbar">
+        <div className="navbar-left">
+          <Link to="/dashboardadm" className="navbar-brand">
+            PartyConnect
+          </Link>
+        </div>
+        <div className="navbar-left">
+          <Link to="/dashboardadm" className="navbar-brand">
+            Panel Organizador
+          </Link>
+        </div>
+        <div className="navbar-right">
+          <Link to="/loginas" className="navbar-link" onClick={handleLogout}>
+            CERRAR SESIÓN
+          </Link>
+        </div>
+      </nav>
+    );
+  }
+  
+  export default NavBar;
+  
