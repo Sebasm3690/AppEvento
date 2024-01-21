@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBar from "./navbar";
+import Footer from "./footer";
+import "./styles/form.css";
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -44,10 +46,11 @@ function Login() {
       <NavBar />
       <div className="container mt-5">
         <div className="col-md-6 offset-md-3">
-          <h1>Asistente</h1> <br></br>
-          <h2>Iniciar Sesión</h2>
-          <form>
-            <div className="mb-3">
+          <center>
+            <h1>¡BIENVENIDO!</h1> <br></br>
+          </center>
+          <form className="custom-form">
+            <div className="form-group">
               <input
                 type="text"
                 className="form-control"
@@ -56,7 +59,7 @@ function Login() {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div className="mb-3">
+            <div className="form-group">
               <input
                 type="password"
                 className="form-control"
@@ -65,24 +68,28 @@ function Login() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+            {error && <p className="text-danger">{error}</p>}
             <button
               type="button"
-              className="btn btn-primary mb-3"
+              className="btn btn-primary btn-block"
               onClick={handleLogin}
             >
-              Iniciar sesión
+              INICIAR SESIÓN
             </button>
-            <button
-              type="button"
-              className="btn btn-link"
-              onClick={() => navigate('/registroAsistente')}
-            >
-              Registrarse
-            </button>
+            <p className="form-info">
+              ¿Aún no tienes cuenta?{' '}
+              <button
+                type="button"
+                className="btn btn-link btn-register"
+                onClick={() => navigate('/registroAsistente')}
+              >
+                Regístrate aquí
+              </button>
+            </p>
           </form>
-          {error && <p className="text-danger">{error}</p>}
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

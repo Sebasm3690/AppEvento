@@ -1,7 +1,16 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  margin-top: 60px;
+}
+
 .inicio-container {
   background-color: #333;
   padding: 20px;
   border-radius: 5px;
+}
+
+.app-container {
+  margin-top: 60px; /* Ajusta según sea necesario */
 }
 
 .inicio-item {
@@ -49,4 +58,47 @@
 .bienvenida p {
   font-size: 1.2em;
   margin: 0;
+}
+
+.navbar {
+  background-color: #2980b9;
+  padding: 10px;
+}
+
+.navbar-left a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 24px;
+}
+
+.navbar-link {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 15px;
+  transition: color 0.3s;
+}
+
+.navbar-link:hover {
+  color: #000;
+}
+
+.eventos-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.content-container {
+  display: flex;
+  justify-content: space-around; /* O ajusta según tus preferencias */
+  width: 40%; /* Ajusta según sea necesario */
+}
+
+.info-container {
+  padding: 20px;
+  background-color: #f1f1f1;
+}
+
+.carrucel-container {
+  /* Ajusta según sea necesario */
 }

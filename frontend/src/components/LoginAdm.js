@@ -1,11 +1,14 @@
 // Login.js
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import NavBar from "./navbar";
+import Footer from "./footer";
 
 const LoginAdm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const loginUser = async () => {
     try {
@@ -41,10 +44,11 @@ const LoginAdm = () => {
         <NavBar />
       <div className="container mt-5">
         <div className="col-md-6 offset-md-3">
-          <h1>Administrador</h1> <br></br>
-          <h2>Iniciar Sesión</h2>
-          <form>
-            <div className="mb-3">
+          <center>
+            <h1>ADMINISTRADOR</h1> <br></br>
+          </center>
+          <form className="custom-form">
+            <div className="form-group">
               <input
                 type="text"
                 className="form-control"
@@ -53,7 +57,7 @@ const LoginAdm = () => {
                 onChange={(e) => setUsername(e.target.value)}
               />
             </div>
-            <div className="mb-3">
+            <div className="form-group">
               <input
                 type="password"
                 className="form-control"
@@ -62,17 +66,18 @@ const LoginAdm = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            {error && <p className="error-message">{error}</p>}
             <button
               type="button"
-              className="btn btn-primary mb-3"
+              className="btn btn-primary btn-block"
               onClick={loginUser}
             >
-              Iniciar sesión
+              INICIAR SESIÓN
             </button>
           </form>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
