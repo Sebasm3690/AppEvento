@@ -41,25 +41,6 @@ body {
   background-color: #0056b3; 
 }
 
-.bienvenida {
-  text-align: center;
-  background-color: #007bff; 
-  color: #fff; 
-  padding: 20px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-}
-
-.bienvenida h1 {
-  font-size: 2em;
-  margin-bottom: 10px;
-}
-
-.bienvenida p {
-  font-size: 1.2em;
-  margin: 0;
-}
-
 .navbar {
   background-color: #2980b9;
   padding: 10px;
@@ -97,8 +78,4 @@ body {
 .info-container {
   padding: 20px;
   background-color: #f1f1f1;
-}
-
-.carrucel-container {
-  /* Ajusta según sea necesario */
 }
