@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const ConfirmationPage = () => {
 
@@ -7,7 +8,7 @@ const ConfirmationPage = () => {
     <div>
     <h1>Correo confirmado exitosamente</h1>
     <p>¡Tu correo ha sido confirmado correctamente!</p>
-    {/* Otro contenido adicional si es necesario */}
+    <p>Ir a <Link to="/loginAs/">iniciar sesión</Link></p>
   </div>
   );
 };
