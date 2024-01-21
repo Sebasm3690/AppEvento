@@ -372,7 +372,7 @@ def confirmar_correo(request, token):
         send_mail(subject, '', from_email, to_email, html_message=html_content)
 
         # Devolver una respuesta con un mensaje de éxito
-        return JsonResponse({'message': 'Correo confirmado exitosamente. Se ha enviado una confirmación.'})
+        return redirect('http://localhost:3000/correo-confirmado')
 
     except (jwt.ExpiredSignatureError, jwt.DecodeError, Asistente.DoesNotExist) as e:
         # En caso de error, devolver un mensaje adecuado

@@ -87,7 +87,7 @@ function App() {
         ></Route>
         <Route path="/observarqr/" element={<VerQR></VerQR>}></Route>
         <Route
-          path="/confirmar/:token/"
+          path="/correo-confirmado"
           element={<ConfirmationPage />}
         ></Route>
       </Routes>
