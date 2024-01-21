@@ -52,12 +52,12 @@ function NavBar() {
     return (
       <nav className="navbar">
         <div className="navbar-left">
-          <Link to="/dashboardadm" className="navbar-brand">
+          <Link to="/organizador" className="navbar-brand">
             PartyConnect
           </Link>
         </div>
         <div className="navbar-left">
-          <Link to="/dashboardadm" className="navbar-brand">
+          <Link to="/organizador" className="navbar-brand">
             Panel Organizador
           </Link>
         </div>
