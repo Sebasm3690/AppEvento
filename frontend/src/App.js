@@ -1,4 +1,4 @@
-import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { Routes, Route, BrowserRouter, Router } from "react-router-dom";
 import ShowOrganizers from "./components/Admin/ShowOrganizers";
 import CrudEvents from "./components/Organizer/CrudEvents";
 
@@ -27,6 +27,7 @@ import ComprasAsistente from "./components/historialAs";
 import VerQR from "./components/MostrarQR";
 
 import Maps from "./components/Organizer/Ubicación";
+import ConfirmationPage from "./components/confirmado_correo";
 
 function App() {
   return (
@@ -85,6 +86,10 @@ function App() {
           element={<ComprasAsistente></ComprasAsistente>}
         ></Route>
         <Route path="/observarqr/" element={<VerQR></VerQR>}></Route>
+        <Route
+          path="/confirmar/:token/"
+          element={<ConfirmationPage />}
+        ></Route>
       </Routes>
     </BrowserRouter>
   );
