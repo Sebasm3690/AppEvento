@@ -640,7 +640,7 @@ const CrudEvents = ({ organizerObj }) => {
               <th>Descripción</th>
               <th>Tipo</th>
               <th>Limite</th>
-              <th>Imágen</th>
+              <th>Imagen</th>
 
               <th>Opciones</th>
             </tr>
