@@ -1,18 +1,22 @@
+/* Estilos generales */
 body {
   font-family: 'Roboto', sans-serif;
   margin-top: 60px;
 }
 
+/* Contenedor principal de la página de inicio */
 .inicio-container {
   background-color: #333;
   padding: 20px;
   border-radius: 5px;
 }
 
+/* Contenedor de la aplicación */
 .app-container {
   margin-top: 60px;
 }
 
+/* Elemento dentro del contenedor de inicio */
 .inicio-item {
   margin-bottom: 15px;
   display: flex;
@@ -23,59 +27,53 @@ body {
   border-radius: 5px;
 }
 
+/* Información de rol */
 .rol-info {
   flex-grow: 1;
 }
 
-.inicio-button {
-  text-decoration: none;
-  color: #fff; 
-  background-color: #007bff;
-  padding: 10px 15px;
-  border: 1px solid #007bff; 
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
-}
-
-.inicio-button:hover {
-  background-color: #0056b3; 
-}
-
-.navbar {
-  background-color: #2980b9;
-  padding: 10px;
-}
-
-.navbar-left a {
-  color: #fff;
-  text-decoration: none;
-  font-size: 24px;
-}
-
-.navbar-link {
-  color: #fff;
-  text-decoration: none;
-  margin: 0 15px;
-  transition: color 0.3s;
-}
-
-.navbar-link:hover {
-  color: #000;
-}
-
+/* Contenedor de eventos */
 .eventos-container {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
+/* Contenedor de contenido */
 .content-container {
   display: flex;
-  justify-content: space-around; /* O ajusta según tus preferencias */
-  width: 40%; /* Ajusta según sea necesario */
+  justify-content: space-around;
+  width: 40%;
 }
 
+/* Contenedor principal */
+.container {
+  display: flex;
+  flex-wrap:wrap;
+}
+
+/* Contenedor de información */
 .info-container {
+  flex: 1; /* Hace que ocupe el espacio disponible */
+  max-width: 600px; /* Tamaño máximo */
+  margin-right: 20px; /* Espacio entre contenedores */
+  margin-bottom: 20px; /* Espacio inferior */
   padding: 20px;
   background-color: #f1f1f1;
+}
+
+/* Contenedor del carrusel */
+.carrucel-container {
+  flex: 1; /* Hace que ocupe el espacio disponible */
+  max-width: calc(100% - 40px); /* Calculamos el ancho restante restando el tamaño del info-container y su margen */
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  .info-container,
+  .carrucel-container {
+    max-width: 100%;
+    margin-right: 0; 
+    margin-bottom: 10px; 
+  }
 }
