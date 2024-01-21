@@ -53,10 +53,44 @@ class UploadImageView(APIView):
 class OrganizerView(viewsets.ModelViewSet):
     serializer_class = OrganizerSerializer
     queryset = Organizador.objects.all()
-    
+
+    def create(self, request, *args, **kwargs):
+        correo = request.data.get('correo')  # Asegúrate de que 'correo' es el nombre correcto del campo en tu serializer
+        cedula = request.data.get('ci')
+
+        if validar_cedular_repetida(cedula)['existe']:
+            return Response({'error': 'La cedula ya fue registrada por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if validar_correo(correo)['existe']:
+            return Response({'error': 'El correo ya fue registrado por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            return super().create(request, *args, **kwargs)
+        except ValidationError as e:
+            return Response({'error': e.message_dict}, status=status.HTTP_400_BAD_REQUEST)
+
+
 class AdminView(viewsets.ModelViewSet):
     serializer_class = AdminSerializer
     queryset = Administrador.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        correo = request.data.get('correo')  # Asegúrate de que 'correo' es el nombre correcto del campo en tu serializer
+        cedula = request.data.get('ci')
+
+        if not validar_cedula(cedula):
+            return Response({'error': 'La cedula proporcionada no es valida'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if validar_cedular_repetida(cedula)['existe']:
+            return Response({'error': 'La cedula ya fue registrada por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if validar_correo(correo)['existe']:
+            return Response({'error': 'El correo ya fue registrado por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            return super().create(request, *args, **kwargs)
+        except ValidationError as e:
+            return Response({'error': e.message_dict}, status=status.HTTP_400_BAD_REQUEST)
 
 class EventView(viewsets.ModelViewSet):
     serializer_class = EventSerializer
