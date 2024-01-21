@@ -23,7 +23,8 @@
 }
 
 .navbar-link {
-  color: #fff;
+  color: #f2f2f2;
+  font-size: 20px;
   text-decoration: none;
   margin: 0 15px;
   padding: 10px 15px;
@@ -32,8 +33,9 @@
 }
 
 .navbar-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  /* background-color: rgba(255, 255, 255, 0.1); */
+  color: #333;
+  text-decoration: overline; 
 }
 
 .navbar-btn {
@@ -53,7 +55,7 @@
 
 @media (max-width: 768px) {
   .navbar {
-    padding: 10px 15px;
+    padding: 15px 20px;
   }
 
   .navbar-links {
@@ -82,4 +84,15 @@
 .navbar-left {
   margin-right: 20px;
   padding-left: 20px;
+}
+
+.navbar-left a {
+  color: #e0e0e0;
+  text-decoration: none;
+  font-size: 24px;
+}
+
+.navbar-left:hover {
+  color: #333;
+  text-decoration: overline; 
 }

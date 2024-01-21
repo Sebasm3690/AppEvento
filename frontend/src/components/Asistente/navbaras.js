@@ -1,15 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { UncontrolledCarousel } from "reactstrap";
-import EditarPerfil from "./Asistente/editarPerfil";
-import NavBarAsis from "./Asistente/navbaras";
-import Footer from "./footer";
-import "./styles/inicio.css";
+import "../styles/navbar.css";
 
-const Asistente = () => {
+function NavBar() {
   const [asistenteData, setAsistenteData] = useState(null);
   const [eventos, setEventos] = useState([]);
-  var arrayEnFormatoJson;
+
   useEffect(() => {
     fetchData();
     fetchDataEvent();
@@ -77,45 +73,30 @@ const Asistente = () => {
     }
   };
 
-  const carouselItems = eventos.map((evento) => ({
-    altText: evento.nombre_evento,
-    caption: evento.descripcion, // Puedes cambiar esto según tus necesidades
-    key: evento.id_evento,
-    src: evento.imagen,
-  }));
-
   return (
-    <div>
-      <NavBarAsis />  
-      <div className="container mt-5">
-        <div className="col-md-6 offset-md-3">
-          {asistenteData && (
-            <>
-              <p className="mb-3">
-                Bienvenido, {asistenteData.nombre} {asistenteData.apellido}.
-              </p>
-            </>
-          )}
-        </div>
+    <nav className="navbar">
+      <div className="navbar-left">
+        <Link to="/asistente" className="navbar-brand">
+          <img
+            src="https://i.imgur.com/19Mo8I4.png"
+            alt="PartyConnect"
+            style={{ width: '20%', height: 'auto' }}
+          />
+        </Link>
       </div>
-
-      <div className="container mt-5">
-        <div className="col-md-10 offset-md-1">
-          <UncontrolledCarousel
-            items={carouselItems}
-            interval={1500}
-            //style={{ maxWidth: "1000px", maxHeight: "100px" }}
-          ></UncontrolledCarousel>
-        </div>
-        <div>
-          <Link to={`/meventos/`}>Ver Eventos</Link>
-          <br></br>
-          <Link to={`/historialas/`}>Ver Compras</Link>
-        </div>
+      <div className="navbar-right">
+        <Link to="/editarperfil" className="navbar-link">
+          PERFIL
+        </Link>
+        <Link to="/historialas" className="navbar-link">
+          HISTORIAL DE COMPRAS
+        </Link>
+        <Link to="/loginas" className="navbar-link" onClick={handleLogout}>
+          CERRAR SESIÓN
+        </Link>
       </div>
-      <Footer />  
-    </div>
+    </nav>
   );
-};
+}
 
-export default Asistente;
+export default NavBar;

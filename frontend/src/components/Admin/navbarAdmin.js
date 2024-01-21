@@ -53,7 +53,11 @@ function NavBar() {
     <nav className="navbar">
       <div className="navbar-left">
         <Link to="/dashboardadm" className="navbar-brand">
-          PartyConnect
+          <img
+            src="https://i.imgur.com/19Mo8I4.png"
+            alt="PartyConnect"
+            style={{ width: '20%', height: 'auto' }}
+          />
         </Link>
       </div>
       <div className="navbar-left">
