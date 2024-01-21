@@ -45,7 +45,7 @@ function Inicio() {
     <div>
       <NavBar />  
       <div style={{ display: 'flex', marginLeft: '60px', marginTop: '80px' }}>
-        <div className="info-container" style={{ textAlign: "center", flex: 1 }}>
+        <div className="info-container" style={{ textAlign: "center", flex: 1, borderRadius: '50px'}}>
           <h1>¡Bienvenido a PartyConnect!</h1> <br></br>
           <p>En PartyConnect, estamos comprometidos a transformar la manera en que planificas, participas y disfrutas de eventos. Nuestra plataforma intuitiva te ofrece la libertad de explorar una amplia variedad de eventos emocionantes, desde fiestas y conciertos hasta conferencias y reuniones sociales. Conéctate con organizadores talentosos, descubre experiencias únicas y crea recuerdos duraderos.</p>
           <div>
@@ -55,7 +55,7 @@ function Inicio() {
     
         <div className="carrucel-container">
           {/* Carrusel de imágenes */}
-          <h1 style={{ textAlign: "center" }}>PRÓXIMOS EVENTOS</h1>
+          <h1 style={{ textAlign: "center", borderRadius: '50px'}}>PRÓXIMOS EVENTOS</h1>
           <div className="container mt-5">
             <div className="col-md-10 offset-md-1">
               <UncontrolledCarousel
