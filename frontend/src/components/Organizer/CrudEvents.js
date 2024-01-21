@@ -89,11 +89,6 @@ const CrudEvents = ({ organizerObj }) => {
   /*Imagen*/
   const [imagen, setImagen] = useState(null);
   const [eventImages, setEventImages] = useState({});
-
-  useEffect(() => {
-    const storedEventImages = JSON.parse(localStorage.getItem('eventImages')) || {};
-    setEventImages(storedEventImages);
-  }, []);
   //Función para consumir API y obtener todo el objeto {}
 
   useEffect(() => {
@@ -228,8 +223,44 @@ const CrudEvents = ({ organizerObj }) => {
 
    /*Imágen Actualizar*/
 
-  const handleImageChange = (e) => {
-    setImagen(e.target.files[0]);
+   useEffect(() => {
+    cargarEventos();
+  }, []);
+
+  const cargarEventos = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/api/v1/event/');
+      setEvents(response.data);
+    } catch (error) {
+      console.error('Error al cargar eventos:', error);
+    }
+  };
+
+  const handleImageChange = async (e, eventId) => {
+    const file = e.target.files[0];
+
+    if (!file || !isValidImage(file)) {
+      show_alerta("Por favor, seleccione una imagen PNG o JPG.", "warning");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('imagen', file);
+
+    try {
+      const response = await axios.patch(`http://127.0.0.1:8000/api/v1/event/${eventId}/`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
+        },
+      });
+
+      cargarEventos();
+      show_alerta("Imagen Actualizada Exitosamente", "success");
+
+    } catch (error) {
+      console.error('Error al enviar la imagen:', error);
+    }
   };
 
   const isValidImage = (file) => {
@@ -240,38 +271,6 @@ const CrudEvents = ({ organizerObj }) => {
     const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
     return allowedTypes.includes(file.type);
   };
-
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-  
-    if (!isValidImage(imagen)) {
-      show_alerta("Por favor, seleccione una imagen PNG o JPG.", "warning");
-      return;
-    }
-  
-    const formData = new FormData();
-    formData.append('imagen', imagen);
-  
-    try {
-      const response = await axios.patch(`http://127.0.0.1:8000/api/api/v1/event/${id}/`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-  
-      const updatedEventImages = {
-        ...eventImages,
-        [id]: response.data.imagen,
-      };
-  
-      setEventImages(updatedEventImages);
-      localStorage.setItem('eventImages', JSON.stringify(updatedEventImages));
-      show_alerta("Imagen Actualizada Exitosamente", "success");
-  
-    } catch (error) {
-      console.error('Error al enviar la imagen:', error);
-    }
-  };  
 
   const validarBoletoEditar = async (op) => {
     const urlEditar = `http://127.0.0.1:8000/api/v1/ticket/${idBoleto}/`;
@@ -662,14 +661,20 @@ const CrudEvents = ({ organizerObj }) => {
                   <td>{event.limite}</td>
 
                   <td>
-                    {eventImages[event.id_evento] && (
-                      <img
-                        src={eventImages[event.id_evento]}
-                        alt={`Imagen para el evento ${event.id_evento}`}
-                        style={{ maxWidth: "100px" }}
-                      />
-                    )}
-                  </td>
+                  <img
+                    key={event.imagen}
+                    src={event.imagen}
+                    alt={`Imagen para el evento ${event.id_evento}`}
+                    style={{ maxWidth: "100px" }}
+                  />
+                  <input
+                    className="form-control"
+                    name={`imagen-${event.id_evento}`}
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleImageChange(e, event.id_evento)}
+                  />
+                </td>
 
                   {/*}<td>
                     {" "}
@@ -681,6 +686,7 @@ const CrudEvents = ({ organizerObj }) => {
                       />
                     )}
                     </td>*/}
+
                   <td>
                     <button
                       onClick={() => handleEditarEvento(event.id_evento)}
@@ -826,16 +832,6 @@ const CrudEvents = ({ organizerObj }) => {
             />
           </FormGroup>
 
-          <FormGroup>
-              <label>Imagen:</label><br></br>
-              <input 
-              className="form-control"
-              name="imagen"
-              type="file" 
-              accept="image/*"
-              onChange={handleImageChange} />
-          </FormGroup>
-          <Button onClick={handleFormSubmit}>Guardar</Button>
 
           <FormGroup>
             <label>Id Organizador:</label>
