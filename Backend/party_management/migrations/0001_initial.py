@@ -71,13 +71,16 @@ class Migration(migrations.Migration):
             name='OrdenCompra',
             fields=[
                 ('num_orden', models.AutoField(primary_key=True, serialize=False)),
-                ('fecha', models.DateTimeField(auto_now_add=True)),
+                ('fecha', models.DateField(auto_now_add=True)),
                 ('valor_total', models.FloatField()),
                 ('id_asistente', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
+            options={
+                'unique_together': {('id_boleto', 'num_orden')},
+            },
         ),
         migrations.CreateModel(
-            name='Evento',
+            name='Boleto',
             fields=[
                 ('id_evento', models.AutoField(primary_key=True, serialize=False)),
                 ('nombre_evento', models.CharField(max_length=50)),

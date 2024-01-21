@@ -76,6 +76,23 @@ const CrudOrganizers = ({ adminObj }) => {
     setShowModal(true);
   };
 
+  const validarCedulaEcuatoriana = (cedula) => {
+    if (cedula.length !== 10) {
+      return false;
+    }
+    const digitos = cedula.substring(0, 9).split('').map(Number);
+    const digitoVerificador = parseInt(cedula.charAt(9), 10);
+    let suma = 0;
+    for (let i = 0; i < 9; i++) {
+      let multiplicador = (i % 2 === 0) ? 2 : 1;
+      let resultado = digitos[i] * multiplicador;
+      suma += (resultado > 9) ? resultado - 9 : resultado;
+    }
+    let modulo = suma % 10;
+    let resultadoEsperado = (modulo === 0) ? 0 : 10 - modulo;
+    return resultadoEsperado === digitoVerificador;
+  };
+
   const recuperar_organizador = async (id_organizador) => {
     await axios.post(
       `http://127.0.0.1:8000/recuperar_organizador/${id_organizador}/`,
@@ -115,6 +132,8 @@ const CrudOrganizers = ({ adminObj }) => {
       show_alerta("Escribe el nombre del organizador", "warning");
     } else if (apellido.trim() === "") {
       show_alerta("Escribe el apellido del organizador", "warning");
+    } else if (!validarCedulaEcuatoriana(ci.trim())){
+      show_alerta("La cedula del organizador no es valida", "warning")
     } else if (ci.trim() === "") {
       show_alerta("Escribe la cédula del organizador", "warning");
     } else if (correo.trim() === "") {
@@ -176,7 +195,12 @@ const CrudOrganizers = ({ adminObj }) => {
             setOrganizers((organizers) => [...organizers, response.data]);
           })
           .catch((error) => {
-            console.error("Error al realizar la solicitud POST:", error);
+            if(error.response && error.response.data && error.response.data.error){
+              show_alerta(error.response.data.error, "error");
+            }else{
+              console.error("Error al realizar la solicitud POST:", error);
+              show_alerta("Error al agregar el organizador", "error");
+            }
           });
       } else {
         parametros = {

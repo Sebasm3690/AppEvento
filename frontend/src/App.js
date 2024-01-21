@@ -28,6 +28,9 @@ import VerQR from "./components/MostrarQR";
 
 import Maps from "./components/Organizer/Ubicación";
 
+import EventoHP from "./components/eventosHP"
+import QS from "./components/otros/quienes-somos"
+
 function App() {
   return (
     <BrowserRouter>
@@ -85,7 +88,16 @@ function App() {
           element={<ComprasAsistente></ComprasAsistente>}
         ></Route>
         <Route path="/observarqr/" element={<VerQR></VerQR>}></Route>
+        <Route
+            path="/eventosHP/"
+            element={<EventoHP></EventoHP>}
+        ></Route>
+        <Route
+            path="/quienes-somos/"
+            element={<QS></QS>}
+        ></Route>
       </Routes>
+
     </BrowserRouter>
   );
 }
