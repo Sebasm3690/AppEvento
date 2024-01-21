@@ -94,9 +94,9 @@ WSGI_APPLICATION = 'party_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'AppEventos1',
-        'USER': 'frank',
-        'PASSWORD': '1234',
+        'NAME': 'Eventos2',
+        'USER': 'postgres',
+        'PASSWORD': '15963554',
         'HOST': 'localhost',  
         'PORT': '5432',
     }      
