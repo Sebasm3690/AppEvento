@@ -665,7 +665,7 @@ const CrudEvents = ({ organizerObj }) => {
                     key={event.imagen}
                     src={event.imagen}
                     alt={`Imagen para el evento ${event.id_evento}`}
-                    style={{ maxWidth: "100px" }}
+                    style={{ maxWidth: "80px" }}
                   />
                   <input
                     className="form-control"
@@ -704,8 +704,10 @@ const CrudEvents = ({ organizerObj }) => {
                       <img src={"https://cdn-icons-png.flaticon.com/512/3221/3221845.png"} alt="Editar" width={'25px'} />
                       <span style={{ margin: '0 3px' }}></span>
                       DAR DE BAJA
-                    </button>
+                    </button> 
                     <span style={{ margin: '0 10px' }}></span>
+                    <br></br>
+
                     <button
                       type="button"
                       class="btn btn-primary"
