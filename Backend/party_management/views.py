@@ -25,16 +25,72 @@ from django.core.mail import EmailMessage
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.http import JsonResponse
+from django.core.exceptions import ValidationError
+import re
+import json
+from decimal import Decimal
 #resend.api_key = os.environ["RESEND_API_KEY"]
+
+class UploadImageView(APIView):
+    def post(self, request, id_evento):
+        try:
+            event = Evento.objects.get(id_evento=id)
+        except Evento.DoesNotExist:
+            return Response({'error': 'Evento no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+        image = request.FILES.get('imagen')
+
+        if not image:
+            return Response({'error': 'No se proporcionó una imagen'}, status=status.HTTP_400_BAD_REQUEST)
+
+        event.imagen = image
+        event.save()
+
+        serializer = EventSerializer(event)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 # Create your views here.
 class OrganizerView(viewsets.ModelViewSet):
     serializer_class = OrganizerSerializer
     queryset = Organizador.objects.all()
-    
+
+    def create(self, request, *args, **kwargs):
+        correo = request.data.get('correo')  # Asegúrate de que 'correo' es el nombre correcto del campo en tu serializer
+        cedula = request.data.get('ci')
+
+        if validar_cedular_repetida(cedula)['existe']:
+            return Response({'error': 'La cedula ya fue registrada por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if validar_correo(correo)['existe']:
+            return Response({'error': 'El correo ya fue registrado por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            return super().create(request, *args, **kwargs)
+        except ValidationError as e:
+            return Response({'error': e.message_dict}, status=status.HTTP_400_BAD_REQUEST)
+
+
 class AdminView(viewsets.ModelViewSet):
     serializer_class = AdminSerializer
     queryset = Administrador.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        correo = request.data.get('correo')  # Asegúrate de que 'correo' es el nombre correcto del campo en tu serializer
+        cedula = request.data.get('ci')
+
+        if not validar_cedula(cedula):
+            return Response({'error': 'La cedula proporcionada no es valida'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if validar_cedular_repetida(cedula)['existe']:
+            return Response({'error': 'La cedula ya fue registrada por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if validar_correo(correo)['existe']:
+            return Response({'error': 'El correo ya fue registrado por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            return super().create(request, *args, **kwargs)
+        except ValidationError as e:
+            return Response({'error': e.message_dict}, status=status.HTTP_400_BAD_REQUEST)
 
 class EventView(viewsets.ModelViewSet):
     serializer_class = EventSerializer
@@ -65,13 +121,84 @@ class recuperarEvento(APIView):
         evento.save()
         return Response({"Mensaje":"Recuperación de evento exitosa"},status=status.HTTP_200_OK)
 
-class BorradoLogicoOEvent(APIView):
-    def post(self,request,id_evento):
-        evento = get_object_or_404(Evento, pk=id_evento)
-        evento.eliminado = True
-        evento.save()
-        return Response({'mensaje':'Borrado lógico exitoso'}, status=status.HTTP_200_OK)
+class BorradoLogicoOEvent(generics.UpdateAPIView):
+    queryset = Evento.objects.all()
+    serializer_class = EventSerializer
+    lookup_field = 'id_evento'
+    def update(self,request,id_evento):
+        instance = self.get_object() # Obtener la instancia del objeto basado en el identificador proporcionado en la URL
+        stock_boleto = Boleto.objects.filter(id_evento=instance.id_evento).first().stock
+        stock_vende = Vende.objects.filter(id_boleto__id_evento=instance.id_evento).first().stock_actual
 
+        if stock_boleto == stock_vende:
+            instance.eliminado = True
+            instance.save()
+            
+            return JsonResponse({"message": "El evento ha sido dado de baja"}, status=200)
+        else:
+            return JsonResponse({"message": " No se puede dar de baja el evento, ya que hay asistentes que compraron boletos para dicho evento"}, status=422)
+
+
+class VendeBoleto(generics.CreateAPIView):
+    queryset = Boleto.objects.all()
+    serializer_class = TicketSerializer
+    
+    def perform_create(self,serializer):
+        primer_vende = Vende.objects.first() #Obtener la primera instancia o columna vende
+        if primer_vende is not None:
+            iva = primer_vende.iva #Obtenemos el primer IVA
+            precio = serializer.validated_data.get("precio",0) #Obtenemos el precio del serializer, que en este caso va a ser un campo de los que fueron ingresados por el usuario y vienen desde React hasta acá  
+        else:
+            serializer.save()
+            return
+        if iva == 0:
+            serializer.save()
+            return Response({'status': 'success'}, status=status.HTTP_200_OK)       
+        else:
+            serializer.validated_data['precio'] = precio * Decimal(1+(iva/100)) #Actualizamos el serializer, ya que aun no tenemos guardado nuestro objeto serializer en la BD
+            serializer.save() 
+            return Response({'status': 'success'}, status=status.HTTP_200_OK)
+
+
+
+class Update_iva_ice(generics.UpdateAPIView):
+    serializer_class = VendeSerializer
+    def update(self,request): #El self es necesario
+        nuevo_iva = request.data.get("iva")
+
+        #Actualizar todos los objetos vende
+        Vende.objects.update(iva=nuevo_iva)
+
+        #Lógica calculo de los precios con impuesto
+        vendes = Vende.objects.all()
+        boletos = Boleto.objects.all()
+        for vende,boleto in zip(vendes,boletos): #Iterar sobre mas de un elemento
+            precio_iva = vende.precio_actual * (1+(nuevo_iva/100))
+            # Actualizar el campo precio en el objeto Boleto
+            boleto.precio = precio_iva
+            boleto.save()
+
+        #Respuesta
+        return Response({"message": "Impuestos actualizados correctamente"}, status=200)
+
+
+        #Desglosar los datos que vienen de React a Django con el método PUT
+        
+        #data = json.loads(request.body)
+        #nuevo_iva = data.get("iva")
+        #nuevo_ice = data.get("ice")
+        
+        #Realizar la actualización (multiple registros)
+
+        #Sirve si se quiere actualizar los campos de un solo registro
+
+        #vende = Vende.objects.get(id_vende=id)
+        #vende.iva = nuevo_iva
+        #vende.ice = nuevo_ice
+        #vende.save()
+
+
+        
 class VendeViewSet(viewsets.ModelViewSet):
     queryset = Vende.objects.all()
     serializer_class = VendeSerializer
@@ -156,6 +283,28 @@ class RegisterViewAs(APIView):
     def post(self, request):
         serializer = AsisSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        cedula = request.data.get('ci', None)
+        password = request.data.get('password', '')
+        correo = request.data.get('email', None)
+
+        if cedula:
+            if validar_cedular_repetida(cedula).get('existe'):
+                return Response({'error': 'La cedula ya fue registrada por un organizador o asistente'}, status=400)
+
+        #Validar correo
+        if correo:
+            if validar_correo(correo).get('existe'):
+                return Response({'error': 'El correo ya se encuentra registrado por un Organizador o Asistente'}, status=400)
+
+        #Validar clave
+        try:
+            is_password_strong(password)
+        except ValidationError as e:
+            return Response({'error': str(e)}, status=400)
+
+        #Validar Cedula
+        if not cedula or not validar_cedula(cedula):
+            return Response({'error': 'Cedula invalida'}, status=400)
 
         # Guardar el usuario sin confirmar
         user = serializer.save(confirmed=False)  # Asumiendo que tienes un campo 'confirmed' en tu modelo Asistente
@@ -354,7 +503,7 @@ class EventoDetail(generics.RetrieveAPIView):
 
     def get(self, request, *args, **kwargs):
         try:
-            return super().get(request, *args, **kwargs)
+            return super().get(request, *args, **kwargs) #Realiza la lógica y serializa el evento segun el argumento o id proporcionado
         except Evento.DoesNotExist:
             return Response({"detail": "El evento no existe."}, status=status.HTTP_404_NOT_FOUND)
 
@@ -408,6 +557,9 @@ class ObtenerStockBoleto(APIView):
         except Boleto.DoesNotExist:
             return Response({'error': 'Boleto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
+
+
+
 class ActualizarStockView(APIView):
     def put(self, request, id_boleto):
         try:
@@ -418,6 +570,8 @@ class ActualizarStockView(APIView):
             return Response({'status': 'success'}, status=status.HTTP_200_OK)
         except Boleto.DoesNotExist:
             return Response({'status': 'error', 'message': 'Boleto no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+
 
 
 class ObtenerStockVende(APIView):
@@ -536,3 +690,58 @@ def enviar_correo(request, id_asistente, id_contiene):
             return HttpResponse(f'Error al enviar el correo a {asistente.email}: {e}')
 
     return HttpResponse('Endpoint para enviar correo. Realiza una solicitud POST para enviar un correo.')
+
+def validar_cedula(cedula):
+    if not cedula.isdigit():
+        return False  # La cédula debe contener solo dígitos
+    
+    if len(cedula) != 10:
+        return False  # La cédula debe tener 10 dígitos
+    
+    coeficientes = [2, 1, 2, 1, 2, 1, 2, 1, 2]
+    suma = 0
+    
+    for i in range(9):
+        resultado = int(cedula[i]) * coeficientes[i]
+        if resultado > 9:
+            resultado -= 9
+        suma += resultado
+    
+    verificador = (10 - (suma % 10)) % 10
+    
+    return verificador == int(cedula[9])
+
+def is_password_strong(password):
+    """
+    Verifica si una contraseña es fuerte según ciertos criterios.
+    """
+    if not re.search(r'[A-Z]', password):
+        raise ValidationError('La contraseña debe contener al menos una letra mayúscula.')
+    
+    if not re.search(r'[a-z]', password):
+        raise ValidationError('La contraseña debe contener al menos una letra minúscula.')
+    
+    if not re.search(r'[0-9]', password):
+        raise ValidationError('La contraseña debe contener al menos un número.')
+    
+    if not re.search(r'[!@#$%^&*()_+{}[\]:;<>,.?/~`]', password):
+        raise ValidationError('La contraseña debe contener al menos un carácter especial.')
+    
+    if len(password) < 8:
+        raise ValidationError('La contraseña debe tener al menos 8 caracteres.')
+    
+def validar_correo(correo):
+    # Verificar si el correo ya existe en cualquiera de los modelos
+    if Asistente.objects.filter(email=correo).exists() or \
+       Organizador.objects.filter(correo=correo).exists():
+        return {'existe': True}
+    else:
+        return {'existe': False}
+
+def validar_cedular_repetida(cedula):
+    # Verificar si el correo ya existe en cualquiera de los modelos
+    if Asistente.objects.filter(ci=cedula).exists() or \
+       Organizador.objects.filter(ci=cedula).exists():
+        return {'existe': True}
+    else:
+        return {'existe': False}

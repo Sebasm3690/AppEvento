@@ -1,0 +1,57 @@
+.close {
+  /* Cambié 'right' a 'left' y ajusté el valor */
+  left: 16px;
+  top: 16px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 40px;
+  color: inherit;
+}
+
+.close:hover {
+  color: #7950f2;
+}
+
+.steps {
+  width: 600px;
+  background-color: #f7f7f7;
+  border-radius: 7px;
+  padding: 25px 100px;
+  margin: 100px auto;
+}
+
+.numbers {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px; /* Ajusta el espacio entre el botón cerrar y los círculos */
+}
+
+.numbers > div {
+  height: 40px;
+  aspect-ratio: 1;
+  background-color: #e7e7e7;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin: 0 30px; /* Ajusta el espacio horizontal entre los círculos */
+}
+
+.numbers .active {
+  background-color: #7950f2;
+  color: #fff;
+}
+
+.message {
+  text-align: center;
+  font-size: 20px;
+  margin: 40px 0;
+  font-weight: bold;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

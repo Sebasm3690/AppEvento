@@ -11,10 +11,12 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -92,7 +94,7 @@ WSGI_APPLICATION = 'party_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'AppEventos',
+        'NAME': 'AppEventos1',
         'USER': 'frank',
         'PASSWORD': '1234',
         'HOST': 'localhost',  
@@ -155,6 +157,10 @@ CORS_ALLOWED_ORIGINS = [
 
 #MEDIA_ROOT = BASE_DIR / 'uploads'    #This is the folder where we wanna sabe our files, in this case our images -> The files will go into our uploads folder in our overall project folder
 #MEDIA_URL =   "/files/"              #Path that should be used by the browser to then request my files -> The path wich the browser can send requests to 
+
+# settings.py
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 AUTH_USER_MODEL = 'party_management.Asistente'
 

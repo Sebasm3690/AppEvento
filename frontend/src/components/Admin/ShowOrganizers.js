@@ -11,8 +11,23 @@ import {
   ModalFooter,
 } from "reactstrap";
 import { show_alerta } from "../../functions";
+//import "./indexAdmin.css";
 
-const ShowOrganizers = ({ adminObj }) => {
+export default function ShowOrganizers({ adminObj }) {
+  return (
+    <div>
+      <Header />
+      <CrudOrganizers adminObj={adminObj} />;
+      <Footer />
+    </div>
+  );
+}
+
+function Header() {
+  return <h1>🌍Far away🌅</h1>;
+}
+
+const CrudOrganizers = ({ adminObj }) => {
   const botonDerechaStyles = {
     marginLeft: "auto",
   };
@@ -61,6 +76,23 @@ const ShowOrganizers = ({ adminObj }) => {
     setShowModal(true);
   };
 
+  const validarCedulaEcuatoriana = (cedula) => {
+    if (cedula.length !== 10) {
+      return false;
+    }
+    const digitos = cedula.substring(0, 9).split('').map(Number);
+    const digitoVerificador = parseInt(cedula.charAt(9), 10);
+    let suma = 0;
+    for (let i = 0; i < 9; i++) {
+      let multiplicador = (i % 2 === 0) ? 2 : 1;
+      let resultado = digitos[i] * multiplicador;
+      suma += (resultado > 9) ? resultado - 9 : resultado;
+    }
+    let modulo = suma % 10;
+    let resultadoEsperado = (modulo === 0) ? 0 : 10 - modulo;
+    return resultadoEsperado === digitoVerificador;
+  };
+
   const recuperar_organizador = async (id_organizador) => {
     await axios.post(
       `http://127.0.0.1:8000/recuperar_organizador/${id_organizador}/`,
@@ -100,6 +132,8 @@ const ShowOrganizers = ({ adminObj }) => {
       show_alerta("Escribe el nombre del organizador", "warning");
     } else if (apellido.trim() === "") {
       show_alerta("Escribe el apellido del organizador", "warning");
+    } else if (!validarCedulaEcuatoriana(ci.trim())){
+      show_alerta("La cedula del organizador no es valida", "warning")
     } else if (ci.trim() === "") {
       show_alerta("Escribe la cédula del organizador", "warning");
     } else if (correo.trim() === "") {
@@ -111,7 +145,17 @@ const ShowOrganizers = ({ adminObj }) => {
         if (organizers.some((organizer) => ci === organizer.ci)) {
           //Some devuelve true o false
           show_alerta("La cédula del organizador ya existe", "warning");
-        } else if (
+        } /*else if (
+          organizers
+            .filter((organizer) => organizer.eliminado === false)
+            .some((organizer) => organizer.nombre === nombre)
+        ) {
+          show_alerta(
+            "Ya existe un organizador con el nombre del organizador ingresado",
+            "warning"
+          );
+          return;
+        }*/ else if (
           organizers.some((organizer) => correo === organizer.correo)
         ) {
           show_alerta("El correo del organizador ya existe", "warning");
@@ -148,9 +192,15 @@ const ShowOrganizers = ({ adminObj }) => {
               "El organizador ha sido agregado exitosamente",
               "success"
             );
+            setOrganizers((organizers) => [...organizers, response.data]);
           })
           .catch((error) => {
-            console.error("Error al realizar la solicitud POST:", error);
+            if(error.response && error.response.data && error.response.data.error){
+              show_alerta(error.response.data.error, "error");
+            }else{
+              console.error("Error al realizar la solicitud POST:", error);
+              show_alerta("Error al agregar el organizador", "error");
+            }
           });
       } else {
         parametros = {
@@ -441,10 +491,7 @@ const ShowOrganizers = ({ adminObj }) => {
             <tbody>
               {organizers
                 .filter((organizer) => organizer.eliminado === true)
-                .filter(
-                  (organizer) =>
-                    organizer.id_organizador === adminObj.id_organizador
-                )
+                .filter((organizer) => organizer.id_admin === adminObj.id_admin)
                 .map((organizer) => (
                   <tr key={organizer.id_organizador}>
                     <td>{organizer.id_organizador}</td>
@@ -472,4 +519,10 @@ const ShowOrganizers = ({ adminObj }) => {
   );
 };
 
-export default ShowOrganizers;
+function Footer() {
+  return (
+    <footer className="stats">
+      <em>🏝️ You have X items on your List, and you already packed X (X%)</em>
+    </footer>
+  );
+}

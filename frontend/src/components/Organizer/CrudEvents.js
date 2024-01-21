@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from 'react-router-dom';
 import axios from "axios";
 import {
   Table,
@@ -12,7 +13,7 @@ import {
 } from "reactstrap";
 import { show_alerta } from "../../functions";
 
-import "../styles/organizerStyles.css";
+import "../Organizer/indexEvents.css";
 
 const CrudEvents = ({ organizerObj }) => {
   const estiloModal = {
@@ -49,7 +50,8 @@ const CrudEvents = ({ organizerObj }) => {
   const [ventas, setVentas] = useState([]);
   const [iva, setIva] = useState(0);
   const [descuento, setDescuento] = useState(0);
-  const [ice, setIce] = useState(0);
+  const [precio_actual, setPrecioActual] = useState(0);
+
   const [id_organizador, setIdOrganizador] = useState(
     organizerObj.id_organizador
   );
@@ -81,6 +83,17 @@ const CrudEvents = ({ organizerObj }) => {
   const [showModalOrdenCompra, setShowModalOrdenCompra] = useState(false);
   const [showModalAsistente, setShowModalAsistente] = useState(false);
   const [showModalContiene, setShowModalContiene] = useState(false);
+  const [step, setStep] = useState(1);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showConfirmModalBoleto, setShowConfirmModalBoleto] = useState(false);
+  /*Imagen*/
+  const [imagen, setImagen] = useState(null);
+  const [eventImages, setEventImages] = useState({});
+
+  useEffect(() => {
+    const storedEventImages = JSON.parse(localStorage.getItem('eventImages')) || {};
+    setEventImages(storedEventImages);
+  }, []);
   //Función para consumir API y obtener todo el objeto {}
 
   useEffect(() => {
@@ -103,22 +116,23 @@ const CrudEvents = ({ organizerObj }) => {
     setAsistentes(respuestaAsistente.data);
     if (respuestaVenta.data.length > 0) {
       setIva(respuestaVenta.data[0].iva);
-      setIce(respuestaVenta.data[0].ice);
     }
   };
 
   const handleEditarBoleto = () => {
     setShowModalBoleto(true);
     const boletosEvento = boletos.find((boleto) => boleto.id_evento === id); //Se muestran solo los boletos que corresponden a dicho evento
+    const vendeBoleto = ventas.find(
+      (venta) => venta.id_boleto === boletosEvento.id_boleto
+    );
+
     if (boletosEvento) {
-      alert("Si se encontró");
+      //alert("Si se encontró");
       setIdBoleto(boletosEvento.id_boleto);
       setStock(boletosEvento.stock);
       setTipoBoleto(boletosEvento.tipoBoleto);
-      setPrecio(boletosEvento.precio);
+      setPrecio(vendeBoleto.precio_actual);
       setShowModalBoleto(true);
-    } else {
-      alert("No se encontró");
     }
   };
 
@@ -167,38 +181,28 @@ const CrudEvents = ({ organizerObj }) => {
   };
 
   const handleEliminarEvento = async (eventId) => {
-    const evento = events.find((event) => event.id_evento === eventId);
-    if (!evento) {
-      console.error("Evento no encontrado");
-      return;
-    }
-
-    const boletoEvento = boletos.find(
-      (boleto) => boleto.id_evento === evento.id_evento
-    ); //Encontrar los boletos de dicho evento
-    if (!boletoEvento) {
-      console.error("Boleto no encontrado");
-      return;
-    }
-    const ventaEvento = ventas.find(
-      (venta) => venta.id_boleto === boletoEvento.id_boleto //Encontrar las ventas donde se realizaron dichos boletos
-    );
-
-    if (ventaEvento.stock_actual === boletoEvento.stock) {
-      //El stock actual debe ser igual al stock para que se permita elimninar el evento logicamente
-      //Solicitud para el borrado lógico
-      await axios.post(
+    try {
+      const response = await axios.put(
         `http://127.0.0.1:8000/borrado_logico_evento/${eventId}/`
       );
       //Acutalizar lista de eventos despues del borrado lógico
       setEvents((prevEvents) =>
         prevEvents.filter((prevEvent) => prevEvent.id_evento !== eventId)
       );
-    } else {
-      show_alerta(
-        "No se puede borrar el evento, ya que hay clientes que compraron boletos para dicho evento",
-        "warning"
-      );
+      if (response.status === 200) {
+        show_alerta(response.data.message, "success");
+      } else {
+        show_alerta(response.data.message, "warning");
+      }
+    } catch (error) {
+      if (error.response) {
+        show_alerta(
+          "No se puede borrar el evento ya que en el evento seleccionado ya se han comprado boletos",
+          "warning"
+        );
+      } else {
+        console.error("Error al intentar borrar el evento:", error);
+      }
     }
   };
 
@@ -221,6 +225,53 @@ const CrudEvents = ({ organizerObj }) => {
         });
     }
   };*/
+
+   /*Imágen Actualizar*/
+
+  const handleImageChange = (e) => {
+    setImagen(e.target.files[0]);
+  };
+
+  const isValidImage = (file) => {
+    if (!file) {
+      return false;
+    }
+
+    const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
+    return allowedTypes.includes(file.type);
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+  
+    if (!isValidImage(imagen)) {
+      show_alerta("Por favor, seleccione una imagen PNG o JPG.", "warning");
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append('imagen', imagen);
+  
+    try {
+      const response = await axios.patch(`http://127.0.0.1:8000/api/api/v1/event/${id}/`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+  
+      const updatedEventImages = {
+        ...eventImages,
+        [id]: response.data.imagen,
+      };
+  
+      setEventImages(updatedEventImages);
+      localStorage.setItem('eventImages', JSON.stringify(updatedEventImages));
+      show_alerta("Imagen Actualizada Exitosamente", "success");
+  
+    } catch (error) {
+      console.error('Error al enviar la imagen:', error);
+    }
+  };  
 
   const validarBoletoEditar = async (op) => {
     const urlEditar = `http://127.0.0.1:8000/api/v1/ticket/${idBoleto}/`;
@@ -268,15 +319,15 @@ const CrudEvents = ({ organizerObj }) => {
     // Convertir el objeto a una cadena JSON
 
     // Mostrar un alert con la información del objeto
-    const boletosJson = JSON.stringify(boletos, null, 2);
-    alert(boletosJson);
+    //const boletosJson = JSON.stringify(boletos, null, 2);
+    //alert(boletosJson);
     var parametrosVenta;
+    setPrecioActual(precio);
 
     parametrosVenta = {
       id_boleto: boletoNuevo.id_boleto,
       iva: iva,
       descuento: 0,
-      ice: ice,
       stock_actual: boletoNuevo.stock,
       precio_actual: precio, //El precio le toma del boleto con impuesto
       id_organizador: id_organizador,
@@ -287,17 +338,16 @@ const CrudEvents = ({ organizerObj }) => {
       .then((response) => {
         console.log("Respuesta del servidor:", response.data);
         show_alerta("Boleto listo para vender", "success");
+        setVentas((ventas) => [...ventas, response.data]);
       })
       .catch((error) => {
         console.error("Error al realizar la solicitud POST VENTA:", error);
       });
     setShowModalBoletoIngresar(false);
-    //validarBoletoImpuesto();
   };
 
   const validarBoletoIngresar = async () => {
     var parametrosBoleto;
-    //var precioImpuesto;
 
     if (stock > limite) {
       show_alerta(
@@ -321,8 +371,6 @@ const CrudEvents = ({ organizerObj }) => {
       },
     };
 
-    //precioImpuesto = calcularPrecioImpuesto(precio);
-
     parametrosBoleto = {
       stock: parseInt(stock),
       [apiConfig.boleto.tipo]: tipoBoleto.trim(),
@@ -330,26 +378,19 @@ const CrudEvents = ({ organizerObj }) => {
       id_evento: idEventoBoleto, //El valor se toma del response.data.id_evento del "const validar" en la opción 1 al insertar el evento
     };
 
-    // Convertir el objeto a una cadena JSON
-    //const parametrosString = JSON.stringify(parametrosBoleto, null, 2);
-
-    // Mostrar un alert con la información del objeto
-    //alert(parametrosString);
-
     axios
-      .post(url_boleto, parametrosBoleto)
+      .post(`http://127.0.0.1:8000/vendeBoleto/`, parametrosBoleto)
       .then((response) => {
-        //id_boleto_venta = response.data.id_boleto;
         console.log("Respuesta del servidor:", response.data);
         show_alerta("El boleto ha sido agregado exitosamente", "success");
-        //************************ */
-        //setBoletos((prevBoletos) => [...prevBoletos, parametrosString]);
+        setBoletos((boletos) => [...boletos, response.data]);
         handleIngresarVenta(response.data);
       })
       .catch((error) => {
         console.error("Error al realizar la solicitud POST:", error);
       });
     setShowModalBoletoIngresar(false);
+    setStep((s) => s - 1);
 
     // Configurar el temporizador
   };
@@ -357,103 +398,24 @@ const CrudEvents = ({ organizerObj }) => {
   /*********************************/
 
   const validarImpuestoEditar = async () => {
-    //var jsonString = JSON.stringify(preciosSI);
-    //alert(jsonString);
-
-    ventas.map((venta) =>
-      axios
-        .put(`http://127.0.0.1:8000/api/v1/vende/${venta.id_vende}/`, {
-          id_vende: venta.id_vende,
-          id_boleto: venta.id_boleto,
-          iva: iva,
-          descuento: venta.descuento,
-          ice: ice,
-          stock_actual: venta.stock_actual,
-          precio_actual: venta.precio_actual,
-          id_organizador: venta.id_organizador,
-        })
-        .then((response) => {
-          console.log("Respuesta del servidor:", response.data);
-          show_alerta(
-            "Los impuestos han sido agregados exitosamente",
-            "success"
-          );
-          setShowModalImpuestosIngresar(false);
-        })
-        .catch((error) => {
-          console.error(
-            `Error del servidor para la venta ${venta.id_boleto}:`,
-            error
-          );
-        })
-    );
-    setVentas({
-      ...ventas,
-      iva: iva,
-      ice: ice,
-    });
-    setIva(iva);
-    setIce(ice);
-    validarBoletoImpuesto();
-  };
-
-  /*const calcularPrecioImpuesto = (precio) => {
-    if (iva !== 0 || ice !== 0) {
-      // Realizar la operación boleto = boleto + 1/100
-      let precioICE = precio + (precio * ice) / 100;
-      // Realizar la operación boleto = boleto * 100
-      let precioIVA = (precio * iva) / 100;
-      // Precio total
-      let precioTotal = precioICE + precioIVA;
-      return precioTotal;
-    } else {
-      return precio;
-    }
-  };*/
-
-  const validarBoletoImpuesto = async () => {
-    const preciosSI = ventas.map((venta) => venta.precio_actual); //Precios de venta
     try {
-      const boletosActualizados = boletos.map(async (boleto, index) => {
-        // Realizar la operación boleto = boleto + 1/100
-        let precioICE = preciosSI[index] + (preciosSI[index] * ice) / 100;
-        // Realizar la operación boleto = boleto * 100
-        let precioIVA = (preciosSI[index] * iva) / 100;
-        // Precio total
-        let precioTotal = precioICE + precioIVA;
-
-        // Realizar la solicitud HTTP con Axios
-        await axios.put(
-          `http://127.0.0.1:8000/api/v1/ticket/${boleto.id_boleto}/`,
-          {
-            id_boleto: boleto.id_boleto,
-            stock: boleto.stock,
-            tipoBoleto: boleto.tipoBoleto,
-            precio: precioTotal, // Aquí se utiliza el nuevo valor de precio
-            id_evento: boleto.id_evento,
-          }
-        );
-
-        console.log(`Venta ${boleto.id_evento} actualizada con éxito.`);
-
-        // Devolver el boleto actualizado
-        return {
-          ...boleto,
-          precio: precioTotal,
-        };
-      });
-
-      // Esperar a que todas las solicitudes HTTP se completen
-      await Promise.all(boletosActualizados);
-
-      show_alerta("Los impuestos han sido agregados exitosamente", "success");
-      setShowModalImpuestosIngresar(false);
+      const response = await axios.put(
+        `http://127.0.0.1:8000/Update_iva_ice/`,
+        {
+          iva: iva,
+        }
+      );
+      show_alerta(
+        response.data?.message || "Error al actualizar los impuestos",
+        "success"
+      );
     } catch (error) {
-      console.error("Error al actualizar boletos:", error);
+      console.error("Error al actualizar impuestos:", error);
+      show_alerta("Error al actualizar los impuestos", "error");
     }
   };
 
-  const recuperar_evento = async (id_evento) => {
+  /*const recuperar_evento = async (id_evento) => {
     await axios.post(
       `http://127.0.0.1:8000/recuperar_evento/${id_evento}/`,
       show_alerta("El evento ha sido recuperado correctamente", "success")
@@ -461,24 +423,16 @@ const CrudEvents = ({ organizerObj }) => {
     setEvents((prevEvents) =>
       prevEvents.filter((prevEvent) => prevEvent.id_evento !== id_evento)
     );
-  };
+  };*/
 
   const validar = async (op) => {
     var parametros;
+    const fechaActual = new Date();
+    const fechaEvento = new Date(fecha);
     const urlEditar = `http://127.0.0.1:8000/api/v1/event/${id}/`;
     //var metodo;
     if (nombre.trim() === "") {
       show_alerta("Escribe el nombre del evento", "warning");
-    } else if (
-      events
-        .filter((event) => event.eliminado === false)
-        .some((event) => event.nombre_evento === nombre)
-    ) {
-      show_alerta(
-        "Ya existe un evento con el nombre del evento ingresado",
-        "warning"
-      );
-      return;
     } else if (fecha === "") {
       show_alerta("Escribe la fecha del evento", "warning");
     } else if (!hora || hora.trim().length === 0) {
@@ -499,12 +453,13 @@ const CrudEvents = ({ organizerObj }) => {
       //show_alerta("Agrega una imágen al evento", "warning");
     } else if (id_organizador === "") {
       show_alerta("Escribe el id del organizador", "warning");
+    } else if (fechaEvento.getTime() <= fechaActual.getTime()) {
+      //alert(1);
+      show_alerta("La fecha debe ser mayor a la fecha actual", "warning");
+      return;
     }
 
     if (op === 1) {
-      const fechaActual = new Date();
-      const fechaEvento = new Date(fecha);
-
       if (
         events
           .filter((event) => event.eliminado === false)
@@ -512,9 +467,15 @@ const CrudEvents = ({ organizerObj }) => {
       ) {
         show_alerta("Ya existe un evento con esa misma ubicación", "warning");
         return;
-      } else if (fechaEvento.getTime() <= fechaActual.getTime()) {
-        alert(1);
-        show_alerta("La fecha debe ser mayor a la fecha actual", "warning");
+      } else if (
+        events
+          .filter((event) => event.eliminado === false)
+          .some((event) => event.nombre_evento === nombre)
+      ) {
+        show_alerta(
+          "Ya existe un evento con el nombre del evento ingresado",
+          "warning"
+        );
         return;
       }
 
@@ -544,14 +505,12 @@ const CrudEvents = ({ organizerObj }) => {
           setIdEventoBoleto(response.data.id_evento);
           console.log("Respuesta del servidor:", response.data);
           show_alerta("El evento ha sido agregado exitosamente", "success");
+          setEvents((events) => [...events, response.data]);
           setShowModalInsert(false);
           setShowModalBoletoIngresar(true);
+          setStep((s) => s + 1);
         })
         .catch((error) => {
-          show_alerta(
-            "No pueden quedar campos vacíos, y el nombre del evento no puede repetirse",
-            "warning"
-          );
           console.error("Error al realizar la solicitud POST:", error);
         });
     } else {
@@ -588,6 +547,11 @@ const CrudEvents = ({ organizerObj }) => {
     setShowModalOrdenCompra(true);
     var boletoEvento = boletos.find((boleto) => boleto.id_evento === id_evento);
 
+    if (!boletoEvento) {
+      setOrdenCompraFiltradas([]);
+      return;
+    }
+
     const contieneBoletos = contienes.filter(
       (contiene) => contiene.id_boleto === boletoEvento.id_boleto
     );
@@ -619,37 +583,56 @@ const CrudEvents = ({ organizerObj }) => {
     setContienesFiltrados(contieneOrdenCompra);
   };
 
+  var ver_asistente = (ordenCompra) => {
+    setShowModalAsistente(true);
+    if (Array.isArray(asistentes)) {
+      var asistenteNumOrden = asistentes.find(
+        (asistente) => asistente.id_asistente === ordenCompra.id_asistente
+      );
+      setAsistentes(asistenteNumOrden);
+    } else {
+      console.error("La variable 'asistentes' no es un array.");
+    }
+  };
+
   return (
     <>
       <Container className="meetup-item">
-        <button
-          className="btn btn-primary"
-          onClick={() => setShowModalInsert(true)}
-        >
-          Agregar evento nuevo
-        </button>
-
-        {events.some((evento) => evento.eliminado === false) && (
+        <div>
           <button
-            className="btn btn-info"
-            onClick={() => setShowModalImpuestosIngresar(true)}
+            className="btn btn-primary"
+            onClick={() => setShowModalInsert(true)}
           >
-            Agregar impuestos
+            Agregar evento nuevo
           </button>
-        )}
 
-        <button
-          className="btn btn-success"
-          onClick={() => setShowModalRecuperar(true)}
-        >
-          Recuperar evento
-        </button>
+          {events.some(
+            (evento) =>
+              evento.eliminado === false &&
+              boletos.some((boleto) => evento.id_evento === boleto.id_evento)
+          ) && (
+            <button
+              className="btn btn-info"
+              onClick={() => setShowModalImpuestosIngresar(true)}
+            >
+              Agregar impuestos
+            </button>
+          )}
+
+          <button
+            className="btn btn-success"
+            onClick={() => setShowModalRecuperar(true)}
+          >
+            {/*Recuperar evento*/}
+            Ver histórico
+          </button>
+        </div>
 
         <br></br>
-        <Table className="table">
-          <thead>
+
+        <Table className="table table-borderless">
+          <thead className="">
             <tr>
-              <th>Id_evento</th>
               <th>Nombre</th>
               <th>Fecha</th>
               <th>Hora</th>
@@ -657,8 +640,8 @@ const CrudEvents = ({ organizerObj }) => {
               <th>Descripción</th>
               <th>Tipo</th>
               <th>Limite</th>
-              {/*<th>Imágen</th>*/}
-              <th>id_organizador</th>
+              <th>Imagen</th>
+
               <th>Opciones</th>
             </tr>
           </thead>
@@ -668,9 +651,9 @@ const CrudEvents = ({ organizerObj }) => {
                 (event) => event.id_organizador === organizerObj.id_organizador
               )
               .filter((event) => event.eliminado === false)
+              //.filter((event) => new Date() > new Date(event.fecha))
               .map((event) => (
                 <tr key={event.id_evento}>
-                  <td>{event.id_evento}</td>
                   <td>{event.nombre_evento}</td>
                   <td>{event.fecha}</td>
                   <td>{event.hora}</td>
@@ -678,6 +661,16 @@ const CrudEvents = ({ organizerObj }) => {
                   <td>{event.descripcion}</td>
                   <td>{event.tipo}</td>
                   <td>{event.limite}</td>
+
+                  <td>
+                    {eventImages[event.id_evento] && (
+                      <img
+                        src={eventImages[event.id_evento]}
+                        alt={`Imagen para el evento ${event.id_evento}`}
+                        style={{ maxWidth: "100px" }}
+                      />
+                    )}
+                  </td>
 
                   {/*}<td>
                     {" "}
@@ -689,13 +682,12 @@ const CrudEvents = ({ organizerObj }) => {
                       />
                     )}
                     </td>*/}
-                  <td>{event.id_organizador}</td>
                   <td>
                     <button
                       onClick={() => handleEditarEvento(event.id_evento)}
                       className="btn btn-warning"
                     >
-                      Editar
+                      Ver evento
                     </button>{" "}
                     <button
                       className="btn btn-danger"
@@ -704,10 +696,11 @@ const CrudEvents = ({ organizerObj }) => {
                       Dar de baja
                     </button>{" "}
                     <button
-                      className="btn btn-info"
+                      type="button"
+                      class="btn btn-primary"
                       onClick={() => mostrarOrdenCompra(event.id_evento)}
                     >
-                      Ver Orden de compra
+                      Ver orden Compra <span class="badge bg-secondary"></span>
                     </button>
                   </td>
                 </tr>
@@ -826,16 +819,16 @@ const CrudEvents = ({ organizerObj }) => {
             />
           </FormGroup>
 
-          {/*<FormGroup>
-            <label>Imágen:</label>
-            <input
+          <FormGroup>
+              <label>Imagen:</label><br></br>
+              <input 
               className="form-control"
-              name="image"
-              type="file"
+              name="imagen"
+              type="file" 
               accept="image/*"
-              onChange={handleImageUpload}
-            />
-      </FormGroup>*/}
+              onChange={handleImageChange} />
+          </FormGroup>
+          <Button onClick={handleFormSubmit}>Guardar</Button>
 
           <FormGroup>
             <label>Id_organizador:</label>
@@ -862,7 +855,29 @@ const CrudEvents = ({ organizerObj }) => {
       {/*-------------Insertar Evento---------------- */}
 
       <Modal isOpen={showModalInsert}>
-        <ModalHeader>
+        <div style={{ marginTop: "50px" }}>
+          <button
+            className="close"
+            style={{ position: "absolute", left: "16px", top: "16px" }}
+            onClick={() => setShowModalInsert(false)}
+          >
+            &times;
+          </button>
+
+          <div className="active"></div>
+          <div className="numbers">
+            <div className={step >= 1 ? "active" : ""}>1</div>
+            <div className={step >= 2 ? "active" : ""}>2</div>
+          </div>
+        </div>
+
+        <ModalHeader
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <div>
             <h3>Insertar Evento</h3>
           </div>
@@ -907,6 +922,11 @@ const CrudEvents = ({ organizerObj }) => {
               type="text"
               onChange={(e) => setUbicacion(e.target.value)}
             />
+            <div className="my-2">
+              <Link to="/mapa/">
+                <Button className="btn btn-primary">Ver Mapa</Button>
+              </Link>
+            </div>
           </FormGroup>
 
           <FormGroup>
@@ -952,14 +972,13 @@ const CrudEvents = ({ organizerObj }) => {
         </ModalBody>
 
         <ModalFooter>
-          <Button color="primary" onClick={() => validar(1)}>
-            Siguiente
-          </Button>
           <Button
-            className="btn btn-danger"
-            onClick={() => setShowModalInsert(false)}
+            className="buttons"
+            style={{ background: "#7950f2", color: "#fff" }}
+            color="primary"
+            onClick={() => setShowConfirmModal(true)}
           >
-            Cancelar
+            Siguiente
           </Button>
         </ModalFooter>
       </Modal>
@@ -1052,13 +1071,35 @@ const CrudEvents = ({ organizerObj }) => {
         </ModalFooter>
       </Modal>
 
-      {/*----------------Modal Boleto Ingresar-------------------*/}
+      {/*----------------Modal Ibgresar Boleto-------------------*/}
 
       {/*Ventana modal*/}
 
       <Modal isOpen={showModalBoletoIngresar}>
+        <div style={{ marginTop: "50px" }}>
+          <button
+            className="close"
+            style={{ position: "absolute", left: "16px", top: "16px" }}
+            onClick={() => setShowModalInsert(false)}
+          >
+            &times;
+          </button>
+
+          <div className="active"></div>
+          <div className="numbers">
+            <div className={step >= 1 ? "active" : ""}>1</div>
+            <div className={step >= 2 ? "active" : ""}>2</div>
+          </div>
+        </div>
+
         <ModalHeader>
-          <div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <h3>Ingresar Boleto</h3>
           </div>
         </ModalHeader>
@@ -1119,7 +1160,29 @@ const CrudEvents = ({ organizerObj }) => {
         </ModalBody>
 
         <ModalFooter>
-          <Button color="primary" onClick={() => validarBoletoIngresar()}>
+          <Button
+            className="buttons"
+            style={{
+              background: "#7950f2",
+              color: "#fff",
+              marginRight: "auto", // Esto empujará el botón hacia la izquierda
+            }}
+            color="primary"
+            onClick={() => {
+              setShowModal(true);
+              setShowModalBoletoIngresar(false);
+            }}
+          >
+            Atrás
+          </Button>
+          <Button
+            color="primary"
+            style={{
+              background: "#7950f2",
+              color: "#fff",
+            }}
+            onClick={() => setShowConfirmModalBoleto(true)}
+          >
             Finalizar
           </Button>
         </ModalFooter>
@@ -1143,18 +1206,8 @@ const CrudEvents = ({ organizerObj }) => {
               className="form-control"
               name="iva"
               type="money"
-              onChange={(e) => setIva(e.target.value)}
+              onChange={(e) => setIva(Number(e.target.value))}
               value={iva}
-            />
-          </FormGroup>
-          <FormGroup>
-            <label>ICE:</label>
-            <input
-              className="form-control"
-              name="ice"
-              type="money"
-              onChange={(e) => setIce(e.target.value)}
-              value={ice}
             />
           </FormGroup>
         </ModalBody>
@@ -1176,7 +1229,7 @@ const CrudEvents = ({ organizerObj }) => {
       <Modal isOpen={showModalRecuperar} size="lg" style={estiloModal}>
         <ModalHeader>
           <div>
-            <h3>Recuperar Evento</h3>
+            <h3>Eventos historico</h3>
             <Button
               type="button"
               className="close" // Agregar la clase "float-right" para alinear a la derecha
@@ -1210,6 +1263,7 @@ const CrudEvents = ({ organizerObj }) => {
                     event.id_organizador === organizerObj.id_organizador
                 )
                 .filter((event) => event.eliminado === true)
+                //.filter((event) => new Date() < new Date(event.fecha))
                 .map((event) => (
                   <tr key={event.id_evento}>
                     <td>{event.id_evento}</td>
@@ -1234,11 +1288,17 @@ const CrudEvents = ({ organizerObj }) => {
 
                     <td>
                       {/*{" "}*/}
-                      <Button
+                      {/*<Button
                         className="btn btn-success"
                         onClick={() => recuperar_evento(event.id_evento)}
                       >
                         Recuperar Evento
+                  </Button>*/}
+                      <Button
+                        className="btn btn-info"
+                        onClick={() => mostrarOrdenCompra(event.id_evento)}
+                      >
+                        Ver Orden de compra
                       </Button>
                       <br></br>
                     </td>
@@ -1273,7 +1333,7 @@ const CrudEvents = ({ organizerObj }) => {
                 <th>Número de orden</th>
                 <th>Fecha</th>
                 <th>Valor total</th>
-                <th>ID Asistente</th>
+                <th>IVA</th>
                 {/*<th>Imágen</th>*/}
               </tr>
             </thead>
@@ -1283,7 +1343,7 @@ const CrudEvents = ({ organizerObj }) => {
                   <td>{ordenCompra.num_orden}</td>
                   <td>{ordenCompra.fecha}</td>
                   <td>{ordenCompra.valor_total + "$"}</td>
-                  <td>{ordenCompra.id_asistente}</td>
+                  <td>{iva + "%"}</td>
 
                   {/*}<td>
                     {" "}
@@ -1302,11 +1362,11 @@ const CrudEvents = ({ organizerObj }) => {
                       className="btn btn-info"
                       onClick={() => mostrar_contiene(ordenCompra.num_orden)}
                     >
-                      Ver mas info
+                      Ver boleto
                     </Button>{" "}
                     <Button
                       className="btn btn-success"
-                      //onClick={() => ver_asistente(ordenCompra.num_orden)}
+                      onClick={() => ver_asistente(ordenCompra)}
                     >
                       Ver asistente
                     </Button>
@@ -1324,7 +1384,7 @@ const CrudEvents = ({ organizerObj }) => {
       <Modal isOpen={showModalContiene}>
         <ModalHeader>
           <div>
-            <h3>Ordenes de compra</h3>
+            <h3>Boleto comprado</h3>
             <Button
               type="button"
               className="close"
@@ -1356,6 +1416,135 @@ const CrudEvents = ({ organizerObj }) => {
             </tbody>
           </Table>
         </Container>
+      </Modal>
+
+      {/*Ventana modal asistente*/}
+
+      <Modal isOpen={showModalAsistente}>
+        <ModalHeader>
+          <div>
+            <h3>Asistente</h3>
+          </div>
+        </ModalHeader>
+
+        <ModalBody>
+          <FormGroup>
+            <label>Id:</label>
+            <input
+              className="form-control"
+              readOnly
+              type="text"
+              name="id_asistente" //e es nuestro evento o lo que ingresa el usuario, con target apuntamos al valor ingresado por el usuario y se actualiza el objeto gracias al método set
+              value={asistentes.id_asistente}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <label>Nombre:</label>
+            <input
+              className="form-control"
+              readOnly
+              name="nombre_asistente"
+              type="text"
+              value={asistentes.nombre}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <label>Apellido:</label>
+            <input
+              className="form-control"
+              readOnly
+              name="apellido"
+              type="text"
+              value={asistentes.apellido}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <label>Correo:</label>
+            <input
+              className="form-control"
+              readOnly
+              name="correo"
+              type="text"
+              value={asistentes.email}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <label>CI:</label>
+            <input
+              className="form-control"
+              readOnly
+              name="ubicacion"
+              type="text"
+              value={asistentes.ci}
+            />
+          </FormGroup>
+        </ModalBody>
+
+        <ModalFooter>
+          <Button color="danger" onClick={() => setShowModalAsistente(false)}>
+            Cancelar
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+      {/*-----------Ventana modal preguntar Insertar Evento-----------*/}
+
+      <Modal isOpen={showConfirmModal}>
+        <ModalHeader>
+          <h3>Confirmación</h3>
+        </ModalHeader>
+        <ModalBody>
+          <p>¿Estás seguro de ingresar estos valores?</p>
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            className="btn btn-success"
+            onClick={() => {
+              setShowConfirmModal(false);
+              validar(1);
+            }}
+          >
+            Sí
+          </Button>
+          <Button
+            className="btn btn-error"
+            onClick={() => setShowConfirmModal(false)}
+          >
+            No
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+      {/*-------Ventana modal preguntar insertar boleto -------*/}
+
+      <Modal isOpen={showConfirmModalBoleto}>
+        <ModalHeader>
+          <h3>Confirmación</h3>
+        </ModalHeader>
+        <ModalBody>
+          <p>¿Estás seguro de ingresar estos valores?</p>
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            className="btn btn-success"
+            onClick={() => {
+              setShowConfirmModalBoleto(false);
+              validarBoletoIngresar(2);
+            }}
+          >
+            Sí
+          </Button>
+          <Button
+            className="btn btn-error"
+            onClick={() => setShowConfirmModalBoleto(false)}
+          >
+            No
+          </Button>
+        </ModalFooter>
       </Modal>
     </>
   );

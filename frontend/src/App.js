@@ -26,6 +26,11 @@ import TuComponente from "./components/pruebafetchstock";
 import ComprasAsistente from "./components/historialAs";
 import VerQR from "./components/MostrarQR";
 
+import Maps from "./components/Organizer/Ubicación";
+
+import EventoHP from "./components/eventosHP"
+import QS from "./components/otros/quienes-somos"
+
 function App() {
   return (
     <BrowserRouter>
@@ -40,7 +45,10 @@ function App() {
         ></Route>
 
         <Route path="/loginadm/" element={<LoginAdm></LoginAdm>}></Route>
+
         <Route path="/dashboardadm/" element={<Dashboard></Dashboard>}></Route>
+
+        <Route path="/mapa/" element={<Maps></Maps>}></Route>
 
         <Route path="/loginas/" element={<LoginAs></LoginAs>}></Route>
         <Route path="/asistente/" element={<Asistente></Asistente>}></Route>
@@ -80,7 +88,16 @@ function App() {
           element={<ComprasAsistente></ComprasAsistente>}
         ></Route>
         <Route path="/observarqr/" element={<VerQR></VerQR>}></Route>
+        <Route
+            path="/eventosHP/"
+            element={<EventoHP></EventoHP>}
+        ></Route>
+        <Route
+            path="/quienes-somos/"
+            element={<QS></QS>}
+        ></Route>
       </Routes>
+
     </BrowserRouter>
   );
 }
