@@ -26,9 +26,13 @@ from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.core.exceptions import ValidationError
+from rest_framework.parsers import MultiPartParser, FormParser
 import re
 import json
 from decimal import Decimal
+from PIL import Image
+from io import BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
 #resend.api_key = os.environ["RESEND_API_KEY"]
 
 class UploadImageView(APIView):
@@ -57,10 +61,6 @@ class OrganizerView(viewsets.ModelViewSet):
 class AdminView(viewsets.ModelViewSet):
     serializer_class = AdminSerializer
     queryset = Administrador.objects.all()
-
-class EventView(viewsets.ModelViewSet):
-    serializer_class = EventSerializer
-    queryset = Evento.objects.all()
 
 class TicketView(viewsets.ModelViewSet):
     serializer_class = TicketSerializer
@@ -107,7 +107,28 @@ class AdminView(viewsets.ModelViewSet):
 class EventView(viewsets.ModelViewSet):
     serializer_class = EventSerializer
     queryset = Evento.objects.all()
+    parser_classes = [MultiPartParser, FormParser]
 
+    def perform_create(self, serializer):
+        # No es necesario obtener la ruta de la imagen aquí
+        evento = serializer.save()
+
+        # Procesar y redimensionar la imagen antes de guardarla
+        if evento.imagen:
+            self.process_and_save_image(evento)
+
+    def process_and_save_image(self, evento):
+        # Obtener la imagen desde el modelo
+        image = Image.open(evento.imagen.path)
+        output = BytesIO()
+        image.thumbnail((500, 500))  # Redimensionar la imagen
+        image.save(output, format='JPEG', quality=80)
+        output.seek(0)
+
+        # Guardar la imagen procesada en el modelo
+        evento.imagen.save(evento.imagen.name, InMemoryUploadedFile(
+            output, 'ImageField', "%s.jpg" % evento.imagen.name, 'image/jpeg', output.tell, None)
+        )
 class TicketView(viewsets.ModelViewSet):
     serializer_class = TicketSerializer
     queryset = Boleto.objects.all()
