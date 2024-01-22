@@ -25,18 +25,78 @@ from django.core.mail import EmailMessage
 from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.http import JsonResponse
+from django.core.exceptions import ValidationError
+import re
 import json
 from decimal import Decimal
+from django.template.loader import render_to_string
+from django.shortcuts import render
+from django.template.loader import get_template
+import base64
+
 #resend.api_key = os.environ["RESEND_API_KEY"]
+
+class UploadImageView(APIView):
+
+    def post(self, request, id_evento):
+        try:
+            event = Evento.objects.get(id_evento=id)
+        except Evento.DoesNotExist:
+            return Response({'error': 'Evento no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+        image = request.FILES.get('imagen')
+
+        if not image:
+            return Response({'error': 'No se proporcionó una imagen'}, status=status.HTTP_400_BAD_REQUEST)
+
+        event.imagen = image
+        event.save()
+
+        serializer = EventSerializer(event)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 # Create your views here.
 class OrganizerView(viewsets.ModelViewSet):
     serializer_class = OrganizerSerializer
     queryset = Organizador.objects.all()
-    
+
+    def create(self, request, *args, **kwargs):
+        correo = request.data.get('correo')  # Asegúrate de que 'correo' es el nombre correcto del campo en tu serializer
+        cedula = request.data.get('ci')
+
+        if validar_cedular_repetida(cedula)['existe']:
+            return Response({'error': 'La cedula ya fue registrada por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if validar_correo(correo)['existe']:
+            return Response({'error': 'El correo ya fue registrado por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            return super().create(request, *args, **kwargs)
+        except ValidationError as e:
+            return Response({'error': e.message_dict}, status=status.HTTP_400_BAD_REQUEST)
+
+
 class AdminView(viewsets.ModelViewSet):
     serializer_class = AdminSerializer
     queryset = Administrador.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        correo = request.data.get('correo')  # Asegúrate de que 'correo' es el nombre correcto del campo en tu serializer
+        cedula = request.data.get('ci')
+
+        if not validar_cedula(cedula):
+            return Response({'error': 'La cedula proporcionada no es valida'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if validar_cedular_repetida(cedula)['existe']:
+            return Response({'error': 'La cedula ya fue registrada por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if validar_correo(correo)['existe']:
+            return Response({'error': 'El correo ya fue registrado por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            return super().create(request, *args, **kwargs)
+        except ValidationError as e:
+            return Response({'error': e.message_dict}, status=status.HTTP_400_BAD_REQUEST)
 
 class EventView(viewsets.ModelViewSet):
     serializer_class = EventSerializer
@@ -229,9 +289,31 @@ class RegisterViewAs(APIView):
     def post(self, request):
         serializer = AsisSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        cedula = request.data.get('ci', None)
+        password = request.data.get('password', '')
+        correo = request.data.get('email', None)
+
+        if cedula:
+            if validar_cedular_repetida(cedula).get('existe'):
+                return Response({'error': 'La cedula ya fue registrada por un organizador o asistente'}, status=400)
+
+        # Validar correo
+        if correo:
+            if validar_correo(correo).get('existe'):
+                return Response({'error': 'El correo ya se encuentra registrado por un Organizador o Asistente'}, status=400)
+
+        # Validar clave
+        try:
+            is_password_strong(password)
+        except ValidationError as e:
+            return Response({'error': str(e)}, status=400)
+
+        # Validar Cedula
+        if not cedula or not validar_cedula(cedula):
+            return Response({'error': 'Cedula invalida'}, status=400)
 
         # Guardar el usuario sin confirmar
-        user = serializer.save(confirmed=False)  # Asumiendo que tienes un campo 'confirmed' en tu modelo Asistente
+        user = serializer.save(confirmed=False)
 
         # Generar el token JWT para el usuario registrado
         payload = {
@@ -240,19 +322,22 @@ class RegisterViewAs(APIView):
             'iat': datetime.datetime.utcnow()
         }
 
-        token = jwt.encode(payload, 'tu_clave_secreta', algorithm='HS256')  # Cambia 'tu_clave_secreta' por una clave segura
+        token = jwt.encode(payload, 'tu_clave_secreta', algorithm='HS256')
 
-        # Enviar correo de confirmación con el token
+        # Enviar correo de confirmación con el token y enlace de confirmación
         subject = 'Confirmación de registro'
-        message = f'Haga clic en el siguiente enlace para confirmar su correo: http://127.0.0.1:8000/confirmar/{token}'
-        from_email = 'partyconnect069@gmail.com'  # Usa la misma dirección de correo configurada en settings.py
-        to_email = [user.email]  # Asumiendo que tu modelo Asistente tiene un campo 'email'
-        
-        send_mail(subject, message, from_email, to_email)
+        confirmation_link = f'http://127.0.0.1:8000/confirmar/{token}'
+        context = {'usuario_nombre': user.nombre, 'confirmation_link': confirmation_link}
+        html_content = render(None, 'correo_registro.html', context).content.decode('utf-8')
+
+        from_email = 'partyconnect069@gmail.com'
+        to_email = [user.email]
+
+        send_mail(subject, '', from_email, to_email, html_message=html_content)
 
         # Configurar la respuesta con el token
         response = Response()
-        response.set_cookie(key='jwt', value=token, httponly=True)  # Opcional: usa cookies si lo prefieres
+        response.set_cookie(key='jwt', value=token, httponly=True)
         response.data = {
             'jwt': token,
             'message': 'Registro exitoso. Por favor, confirme su correo electrónico.'
@@ -276,16 +361,18 @@ def confirmar_correo(request, token):
         user.confirmation_token = None
         user.save()
 
-        # Enviar correo de confirmación al usuario
+        # Enviar correo de confirmación al usuario utilizando la plantilla
         subject = 'Confirmación de correo electrónico exitosa'
-        message = 'Estimado/a {},\n\nSu correo electrónico ha sido confirmado exitosamente.'.format(user.nombre)
+        context = {'usuario_nombre': user.nombre}
+        html_content = render(None, 'correo_confirmado.html', context).content.decode('utf-8')
+
         from_email = 'partyconnect069@gmail.com'  # Cambia esto al correo desde el cual deseas enviar el mensaje
         to_email = [user.email]
 
-        send_mail(subject, message, from_email, to_email)
+        send_mail(subject, '', from_email, to_email, html_message=html_content)
 
         # Devolver una respuesta con un mensaje de éxito
-        return JsonResponse({'message': 'Correo confirmado exitosamente. Se ha enviado una confirmación.'})
+        return redirect('http://localhost:3000/correo-confirmado')
 
     except (jwt.ExpiredSignatureError, jwt.DecodeError, Asistente.DoesNotExist) as e:
         # En caso de error, devolver un mensaje adecuado
@@ -590,27 +677,97 @@ def enviar_correo(request, id_asistente, id_contiene):
         return HttpResponse('El asistente no existe.', status=404)
 
     try:
-        # Obtén el boleto (Contiene) específico para este asistente
         contiene = Contiene.objects.get(id_contiene=id_contiene, num_orden__id_asistente=id_asistente)
     except Contiene.DoesNotExist:
         return HttpResponse('No se encontró el boleto específico para este asistente.', status=400)
 
     if request.method == 'POST':
-        # Genera el código QR para el boleto específico
-        qr_image = ContieneQRViewSet().generate_qr_code(contiene)
+        try:
+            qr_image = ContieneQRViewSet().generate_qr_code(contiene)
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return HttpResponse(f'Error al generar el código QR: {e}', status=500)
 
         subject = f'{asistente.nombre}, aquí está tu boleto'
-        message = f'Hola {asistente.nombre}, gracias por realizar la compra. Adjunto encontrarás tu boleto específico.'
-        from_email = 'partyconnect069@gmail.com'
-        to_email = [asistente.email]
+        qr_image_base64 = base64.b64encode(qr_image.getvalue()).decode('utf-8')
+
+        context = {
+            'asistente_nombre': asistente.nombre,
+            'mensaje': 'Gracias por realizar la compra. Adjunto encontrarás tu boleto específico.',
+            'qr_image_base64': qr_image_base64,
+        }
 
         try:
-            # Crea un objeto EmailMessage y adjunta el código QR
-            email = EmailMessage(subject, message, from_email, to_email)
+            html_content = render(None, 'correo_compra.html', context).content.decode('utf-8')
+
+            from_email = 'partyconnect069@gmail.com'
+            to_email = [asistente.email]
+
+            email = EmailMessage(subject, html_content, from_email, to_email)
+            email.content_subtype = 'html'
             email.attach(f'boleto_qr_{contiene.id_contiene}.png', qr_image.getvalue(), 'image/png')
             email.send()
+
             return HttpResponse(f'Correo enviado con éxito a {asistente.email}.')
         except Exception as e:
-            return HttpResponse(f'Error al enviar el correo a {asistente.email}: {e}')
+            import traceback
+            traceback.print_exc()
+            return HttpResponse(f'Error al enviar el correo a {asistente.email}: {e}', status=500)
 
     return HttpResponse('Endpoint para enviar correo. Realiza una solicitud POST para enviar un correo.')
+
+def validar_cedula(cedula):
+    if not cedula.isdigit():
+        return False  # La cédula debe contener solo dígitos
+    
+    if len(cedula) != 10:
+        return False  # La cédula debe tener 10 dígitos
+    
+    coeficientes = [2, 1, 2, 1, 2, 1, 2, 1, 2]
+    suma = 0
+    
+    for i in range(9):
+        resultado = int(cedula[i]) * coeficientes[i]
+        if resultado > 9:
+            resultado -= 9
+        suma += resultado
+    
+    verificador = (10 - (suma % 10)) % 10
+    
+    return verificador == int(cedula[9])
+
+def is_password_strong(password):
+    """
+    Verifica si una contraseña es fuerte según ciertos criterios.
+    """
+    if not re.search(r'[A-Z]', password):
+        raise ValidationError('La contraseña debe contener al menos una letra mayúscula.')
+    
+    if not re.search(r'[a-z]', password):
+        raise ValidationError('La contraseña debe contener al menos una letra minúscula.')
+    
+    if not re.search(r'[0-9]', password):
+        raise ValidationError('La contraseña debe contener al menos un número.')
+    
+    if not re.search(r'[!@#$%^&*()_+{}[\]:;<>,.?/~`]', password):
+        raise ValidationError('La contraseña debe contener al menos un carácter especial.')
+    
+    if len(password) < 8:
+        raise ValidationError('La contraseña debe tener al menos 8 caracteres.')
+    
+def validar_correo(correo):
+    # Verificar si el correo ya existe en cualquiera de los modelos
+    if Asistente.objects.filter(email=correo).exists() or \
+       Organizador.objects.filter(correo=correo).exists():
+        return {'existe': True}
+    else:
+        return {'existe': False}
+
+def validar_cedular_repetida(cedula):
+    # Verificar si el correo ya existe en cualquiera de los modelos
+    if Asistente.objects.filter(ci=cedula).exists() or \
+       Organizador.objects.filter(ci=cedula).exists():
+        return {'existe': True}
+    else:
+        return {'existe': False}

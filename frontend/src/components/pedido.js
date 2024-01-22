@@ -87,6 +87,12 @@ function BoletosList() {
 
   const handleRealizarPedido = async (cantidad) => {
     var boletosSeleccionados = boletos.find((boleto) => boleto.isChecked);
+    const boletosSeleccionados1 = boletos.filter((boleto) => boleto.isChecked);
+    if(boletosSeleccionados1.length === 0){
+      show_alerta("Debe seleccionar al menos un boleto para continuar", "warning");
+      return;
+    }
+
     if (cantidad > boletosSeleccionados.stock) {
       show_alerta(
         "La cantidad de boletos no puede ser mayor al stock",

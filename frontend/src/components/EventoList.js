@@ -61,7 +61,7 @@ function EventosList() {
             >
               <div className="card">
                 <img
-                  src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/party-night-banner-design-template-9c9d0ee04d93c1e567f473f6a683c61c_screen.jpg?ts=1610236562"
+                  src= {evento.imagen}
                   className="card-img-top"
                   alt="..."
                 />

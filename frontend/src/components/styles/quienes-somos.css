@@ -1,0 +1,60 @@
+.quienes-somos-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /*background-color: #f8f9fa;*/
+  padding: 80px;
+  text-align: center;
+}
+
+.quienes-somos-card {
+  max-width: 600px;
+  padding: 20px;
+  border: 2px solid #6d4040;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px; /* Agrega margen inferior para separar las tarjetas */
+}
+
+.quienes-somos-sections {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 60%;
+  align-items: flex-start; 
+}
+
+.quienes-somos-title {
+  font-size: 36px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.quienes-somos-content {
+  font-size: 18px;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.quienes-somos-desarrolladores {
+  margin-top: 40px;
+}
+
+.quienes-somos-subtitle {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.desarrolladores-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.desarrolladores-list li {
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 15px;
+}

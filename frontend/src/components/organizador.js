@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
 import CrudEvents from "./Organizer/CrudEvents";
+import { Link } from "react-router-dom";
+import NavBarOrg from "./Organizer/navbarOrg";
+import Footer from "./footer";
+
 
 const Organizador = () => {
   const [adminData, setAdminData] = useState(null);
@@ -50,34 +54,7 @@ const Organizador = () => {
 
   return (
     <div>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <div className="container-fluid">
-          <a className="navbar-brand" href="/organizador/">
-            Panel Organizadores
-          </a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <button className="btn btn-danger" onClick={handleLogout}>
-                  Cerrar sesión
-                </button>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-
+      <NavBarOrg />
       {/*console.log(JSON.stringify(adminData, null, 2))*/}
 
       <div className="container mt-5">
@@ -87,6 +64,7 @@ const Organizador = () => {
           <p>Cargando datos del organizador...</p>
         )}
       </div>
+      <Footer />
     </div>
   );
 };

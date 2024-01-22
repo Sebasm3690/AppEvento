@@ -5,30 +5,27 @@ import "./styles/navbar.css";
 
 function NavBar() {
   return (
-    <nav className="navbar-container">
-      <ul className="navbar-list">
-        <li className="navbar-item">
-          <Link to="/" className="navbar-link">
-            Inicio
+    <nav className="navbar">
+        <div className="navbar-left">
+          <Link to="/" className="navbar-brand">
+            <img src="https://i.imgur.com/19Mo8I4.png" alt="PartyConnect" style={{ width: '20%', height: 'auto' }} /> 
           </Link>
-        </li>
-        <li className="navbar-item">
-          <Link to="/loginadm" className="navbar-link">
-            Administrador
+        </div>
+        <div className="navbar-right">
+          <Link to="/eventosHP" className="navbar-link">
+            EVENTOS
           </Link>
-        </li>
-        <li className="navbar-item">
+          <Link to="/quienes-somos" className="navbar-link">
+            QUIÉNES SOMOS
+          </Link>
           <Link to="/loginorg" className="navbar-link">
-            Organizador
+            ORGANIZADORES
           </Link>
-        </li>
-        <li className="navbar-item">
           <Link to="/loginas" className="navbar-link">
-            Asistente
+            INICIA SESIÓN
           </Link>
-        </li>
-      </ul>
-    </nav>
+        </div>
+      </nav>
   );
 }
 

@@ -104,7 +104,7 @@ class Organizador(models.Model):
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
     ci = models.CharField(max_length=10,unique=True)
-    correo = models.CharField(max_length=25,unique=True)
+    correo = models.CharField(max_length=150,unique=True)
     contrasenia = models.CharField(max_length=15)
     eliminado = models.BooleanField(default=False)
     def __str__(self):
@@ -146,7 +146,8 @@ class Evento(models.Model):
     tipo = models.CharField(max_length=10)
     limite = models.IntegerField()
     eliminado = models.BooleanField(default=False)
-    #image = models.ImageField(upload_to="images/") #It'll go into a subfolder of our uploads folder named images #UPLOAD IMAGE #2
+    imagen = models.ImageField(upload_to="images/", blank=True, null=True)
+
     def __str__(self):
         return f"{self.id_evento} {self.id_organizador} {self.nombre_evento} {self.fecha} {self.hora} {self.ubicacion} {self.descripcion} {self.tipo} {self.limite}"
 
@@ -155,7 +156,7 @@ class Asistente(AbstractUser):
     username = None
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
-    email = models.CharField(max_length=25,unique=True)
+    email = models.CharField(max_length=150,unique=True)
     password = models.CharField(max_length=50)
     ci = models.CharField(max_length=10,unique=True)
     confirmed = models.BooleanField(default=False) 

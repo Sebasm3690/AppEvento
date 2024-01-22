@@ -1,28 +1,98 @@
-/* NavBar.css */
-.navbar-container {
-    background-color: #333;
-    padding: 10px;
+.navbar {
+  background-color: #2980b9;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+  color: #fff;
+  text-decoration: none;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.navbar-links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-link {
+  color: #f2f2f2;
+  font-size: 20px;
+  text-decoration: none;
+  margin: 0 15px;
+  padding: 10px 15px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.navbar-link:hover {
+  /* background-color: rgba(255, 255, 255, 0.1); */
+  color: #333;
+  text-decoration: overline; 
+}
+
+.navbar-btn {
+  background-color: transparent;
+  border: 1px solid #fff;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.navbar-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 15px 20px;
   }
-  
-  .navbar-list {
-    list-style-type: none;
-    padding: 0;
+
+  .navbar-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background-color: #2980b9;
+    z-index: 1;
+  }
+
+  .navbar-links.show {
     display: flex;
   }
-  
-  .navbar-item {
+
+  .navbar-link,
+  .navbar-btn {
+    width: 100%;
+    text-align: center;
     margin: 0;
   }
-  
-  .navbar-link {
-    text-decoration: none;
-    color: #fff;
-    padding: 10px;
-    margin: 0 10px;
-    transition: color 0.3s ease;
-  }
-  
-  .navbar-link:hover {
-    color: #007bff;
-  }
-  
+}
+
+.navbar-left {
+  margin-right: 20px;
+  padding-left: 20px;
+}
+
+.navbar-left a {
+  color: #e0e0e0;
+  text-decoration: none;
+  font-size: 24px;
+}
+
+.navbar-left:hover {
+  color: #333;
+  text-decoration: overline; 
+}
