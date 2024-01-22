@@ -261,7 +261,7 @@ const CrudOrganizers = ({ adminObj }) => {
           INSERTAR ORGANIZADOR
         </button> 
         <span style={{ margin: '0 40px' }}></span>
-        <Button className="btn btn-success" onClick={handleRecuperar}>
+        <Button style={{ backgroundColor: '#28a745', color: '#fff' }} className="btn btn-primary" onClick={handleRecuperar}>
           RECUPERAR ORGANIZADOR
         </Button>
         <br></br>
