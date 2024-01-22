@@ -26,6 +26,7 @@ const CrudEvents = ({ organizerObj }) => {
   const url_orden_compra = "http://127.0.0.1:8000/api/api/v1/OrdenCompra/";
   const url_asistente = "http://127.0.0.1:8000/api/api/v1/Asistente/";
   /*Evento */
+  const [opcion, setOpcion] = useState(1);
   const [events, setEvents] = useState([]);
   const [id, setId] = useState(0);
   const [nombre, setNombre] = useState("");
@@ -78,6 +79,7 @@ const CrudEvents = ({ organizerObj }) => {
   const [showModalBoletoIngresar, setShowModalBoletoIngresar] = useState(false);
   const [showModalImpuestosIngresar, setShowModalImpuestosIngresar] =
     useState(false);
+  const [showModalBoletoRegresar, setShowModalBoletoRegresar] = useState(false);
   const [showModalRecuperar, setShowModalRecuperar] = useState(false);
   const [showModalOrdenCompra, setShowModalOrdenCompra] = useState(false);
   const [showModalAsistente, setShowModalAsistente] = useState(false);
@@ -826,6 +828,7 @@ const CrudEvents = ({ organizerObj }) => {
               name="nombre_evento"
               type="text"
               onChange={(e) => setNombre(e.target.value)}
+              value={nombre}
             />
           </FormGroup>
 
@@ -836,6 +839,7 @@ const CrudEvents = ({ organizerObj }) => {
               name="fecha"
               type="date"
               onChange={(e) => setFecha(e.target.value)}
+              value={fecha}
             />
           </FormGroup>
 
@@ -846,6 +850,7 @@ const CrudEvents = ({ organizerObj }) => {
               name="hora"
               type="time"
               onChange={(e) => setHora(e.target.value)}
+              value={hora}
             />
           </FormGroup>
 
@@ -856,6 +861,7 @@ const CrudEvents = ({ organizerObj }) => {
               name="ubicacion"
               type="text"
               onChange={(e) => setUbicacion(e.target.value)}
+              value={ubicacion}
             />
           </FormGroup>
 
@@ -866,6 +872,7 @@ const CrudEvents = ({ organizerObj }) => {
               name="descripcion"
               type="text"
               onChange={(e) => setDescripcion(e.target.value)}
+              value={descripcion}
             />
           </FormGroup>
 
@@ -886,6 +893,7 @@ const CrudEvents = ({ organizerObj }) => {
               name="limite"
               type="number"
               onChange={(e) => setLimite(e.target.value)}
+              value={limite}
             />
           </FormGroup>
 
@@ -1099,8 +1107,10 @@ const CrudEvents = ({ organizerObj }) => {
             }}
             color="primary"
             onClick={() => {
-              setShowModal(true);
+              setShowModalInsert(true);
               setShowModalBoletoIngresar(false);
+              setStep((s) => s - 1);
+              setOpcion((o) => o + 1);
             }}
           >
             Atrás
@@ -1436,7 +1446,7 @@ const CrudEvents = ({ organizerObj }) => {
             className="btn btn-success"
             onClick={() => {
               setShowConfirmModal(false);
-              validar(1);
+              validar(opcion);
             }}
           >
             Sí
@@ -1452,7 +1462,7 @@ const CrudEvents = ({ organizerObj }) => {
 
       {/*-------Ventana modal preguntar insertar boleto -------*/}
 
-      <Modal isOpen={showConfirmModalBoleto}>
+      {/*<Modal isOpen={showConfirmModalBoleto}>
         <ModalHeader>
           <h3>Confirmación</h3>
         </ModalHeader>
@@ -1464,7 +1474,7 @@ const CrudEvents = ({ organizerObj }) => {
             className="btn btn-success"
             onClick={() => {
               setShowConfirmModalBoleto(false);
-              validarBoletoIngresar(2);
+              validarBoletoIngresar(1);
             }}
           >
             Sí
@@ -1476,7 +1486,7 @@ const CrudEvents = ({ organizerObj }) => {
             No
           </Button>
         </ModalFooter>
-      </Modal>
+          </Modal>*/}
     </>
   );
 };
