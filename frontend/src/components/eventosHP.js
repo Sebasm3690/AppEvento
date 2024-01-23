@@ -52,8 +52,9 @@ function Eventos() {
     <div>
       <NavBar />
       <>
-      <br></br>
-      <h1 style={{ textAlign: "center" }}>NUESTROS EVENTOS</h1>
+      <div style={{ padding: '50px 700px 20px 700px'}}>
+        <h1 style={{ padding: '10px 20px', borderRadius: '10px', backgroundColor: '#3498db', color: '#ffffff', textAlign: "center" }}>NUESTROS EVENTOS</h1>
+      </div>
       <div
         style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
       >

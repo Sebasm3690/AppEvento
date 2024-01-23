@@ -596,9 +596,10 @@ const CrudEvents = ({ organizerObj }) => {
 
   return (
     <>
-      <Container className="meetup-item">
-        <div>
+      <Container className="meetup-item" >
+        <div style={{ paddingBlockEnd: '50px'}}>
           <button
+            style={{ backgroundColor: '#2980b9', borderColor: '#2980b9', padding: '10px 20px', borderRadius: '8px' }}
             className="btn btn-primary"
             onClick={() => setShowModalInsert(true)}
           >
@@ -612,6 +613,7 @@ const CrudEvents = ({ organizerObj }) => {
           ) && (
             <button
               className="btn btn-info"
+              style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
               onClick={() => setShowModalImpuestosIngresar(true)}
             >
               AGREGAR IMPUESTOS
@@ -619,6 +621,7 @@ const CrudEvents = ({ organizerObj }) => {
           )}
           <span style={{ margin: '0 40px' }}></span>
           <button
+            style={{ backgroundColor: '#6aabb5', borderColor: '#6aabb5', padding: '10px 20px', borderRadius: '8px' }}
             className="btn btn-success"
             onClick={() => setShowModalRecuperar(true)}
           >
@@ -626,8 +629,6 @@ const CrudEvents = ({ organizerObj }) => {
             HISTÓRICO
           </button>
         </div>
-
-        <br></br>
 
         <Table className="table table-borderless">
           <thead className="">
@@ -661,20 +662,21 @@ const CrudEvents = ({ organizerObj }) => {
                   <td>{event.limite}</td>
 
                   <td>
-                  <img
-                    key={event.imagen}
-                    src={event.imagen}
-                    alt={`Imagen para el evento ${event.id_evento}`}
-                    style={{ maxWidth: "80px" }}
-                  />
-                  <input
-                    className="form-control"
-                    name={`imagen-${event.id_evento}`}
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleImageChange(e, event.id_evento)}
-                  />
-                </td>
+                    <img
+                      key={event.imagen}
+                      src={event.imagen}
+                      alt={`Imagen para el evento ${event.id_evento}`}
+                      style={{ maxWidth: "95px" }}
+                    />
+                    <input
+                      className="form-control"
+                      name={`imagen-${event.id_evento}`}
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleImageChange(e, event.id_evento)}
+                      style={{ marginTop: '3px', maxWidth: '99px', padding: '7px, 14px', borderRadius: '8px'}}
+                    />
+                  </td>
 
                   {/*}<td>
                     {" "}
@@ -689,32 +691,35 @@ const CrudEvents = ({ organizerObj }) => {
 
                   <td>
                     <button
+                      style={{color: '#fff', padding: '7px 14px', borderRadius: '8px' }}
                       onClick={() => handleEditarEvento(event.id_evento)}
                       className="btn btn-warning"
                     >
                       <img src={"https://cdn-icons-png.flaticon.com/512/1827/1827933.png"} alt="Editar" width={'25px'} />
-                      <span style={{ margin: '0 3px' }}></span>
-                      EDITAR EVENTO
+                      <span style={{ margin: '0 0px' }}></span>
+                    
                     </button>
-                    <span style={{ margin: '0 10px' }}></span>
+                    <span style={{ margin: '0 3px' }}></span>
                     <button
+                      style={{color: '#fff', padding: '7px 14px', borderRadius: '8px' }}
                       className="btn btn-danger"
                       onClick={() => handleEliminarEvento(event.id_evento)}
                     >
                       <img src={"https://cdn-icons-png.flaticon.com/512/3221/3221845.png"} alt="Editar" width={'25px'} />
-                      <span style={{ margin: '0 3px' }}></span>
-                      DAR DE BAJA
+                      <span style={{ margin: '0 0px' }}></span>
+                     
                     </button> 
-                    <span style={{ margin: '0 1px' }}></span>
+                    <span style={{ margin: '0 0px' }}></span>
 
                     <button
+                      style={{ backgroundColor: '#17A2B8', color: '#fff', padding: '7px 14px', borderRadius: '8px' }}
                       type="button"
                       class="btn btn-primary"
                       onClick={() => mostrarOrdenCompra(event.id_evento)}
                     >
                       <img src={"https://cdn-icons-png.flaticon.com/512/46/46155.png"} alt="Editar" width={'25px'} />
-                      <span style={{ margin: '0 3px' }}></span>
-                      ORDEN COMPRA<span class="badge bg-secondary"></span>
+                      <span style={{ margin: '0 0px' }}></span>
+                      <span class="badge bg-secondary"></span>
                     </button>
                   </td>
                 </tr>

@@ -107,12 +107,17 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-grow: 1; /* Esto permite que el contenedor crezca para ocupar el espacio restante */
+  flex-grow: 1; 
 }
 
 .centered-panel .navbar-brand {
   color: #fff;
-  text-decoration: none;
+  text-decoration:overline;
   font-size: 24px;
   font-weight: bold;
+}
+
+.centered-panel:hover{
+  color: #333;
+  text-decoration: overline; 
 }
