@@ -1,0 +1,51 @@
+/* inicio.css */
+
+@keyframes bounceAndRotate {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0);
+    }
+    
+    40% {
+      transform: translateY(-30px) rotate(15deg);
+    }
+    
+    60% {
+      transform: translateY(-15px) rotate(-15deg);
+    }
+  }
+  
+  @keyframes sparkle {
+    0%, 100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    50% {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+  
+
+  
+  .fiesta-animation::before,
+  .fiesta-animation::after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #ffc107; /* Color del brillo (puedes cambiarlo) */
+    animation: sparkle 1s linear infinite;
+  }
+  
+  .fiesta-animation::before {
+    top: -5px;
+    left: -5px;
+  }
+  
+  .fiesta-animation::after {
+    top: -5px;
+    right: -5px;
+  }
+  
