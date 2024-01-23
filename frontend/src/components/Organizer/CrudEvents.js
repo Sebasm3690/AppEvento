@@ -924,9 +924,31 @@ const CrudEvents = ({ organizerObj }) => {
       {/*Ventana modal*/}
 
       <Modal isOpen={showModal}>
-        <ModalHeader>
+        <div style={{ marginTop: "50px" }}>
+          <button
+            className="close"
+            style={{ position: "absolute", left: "16px", top: "16px" }}
+            onClick={() => setShowModal(false)}
+          >
+            &times;
+          </button>
+
+          <div className="active"></div>
+          <div className="numbers">
+            <div className={step >= 1 ? "active" : ""}>1</div>
+            <div className={step >= 2 ? "active" : ""}>2</div>
+          </div>
+        </div>
+
+        <ModalHeader
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <div>
-            <h3>Editar Evento</h3>
+            <h3>EDITAR EVENTO</h3>
           </div>
         </ModalHeader>
 
@@ -1045,7 +1067,13 @@ const CrudEvents = ({ organizerObj }) => {
         </ModalBody>
 
         <ModalFooter>
-          <Button color="primary" onClick={() => validar(2)}>
+          <Button
+            color="primary"
+            onClick={() => {
+              validar(2);
+              setStep((s) => s + 1);
+            }}
+          >
             Siguiente
           </Button>
           <Button color="danger" onClick={() => setShowModal(false)}>
@@ -1180,7 +1208,29 @@ const CrudEvents = ({ organizerObj }) => {
       {/*boletos.filter(boleto).map((boleto) => boleto.id_organizador)*/}
 
       <Modal isOpen={showModalBoleto}>
-        <ModalHeader>
+        <div style={{ marginTop: "50px" }}>
+          <button
+            className="close"
+            style={{ position: "absolute", left: "16px", top: "16px" }}
+            onClick={() => setShowModalBoleto(false)}
+          >
+            &times;
+          </button>
+
+          <div className="active"></div>
+          <div className="numbers">
+            <div className={step >= 1 ? "active" : ""}>1</div>
+            <div className={step >= 2 ? "active" : ""}>2</div>
+          </div>
+        </div>
+
+        <ModalHeader
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <div>
             <h3>EDITAR BOLETO</h3>
           </div>
@@ -1256,7 +1306,13 @@ const CrudEvents = ({ organizerObj }) => {
         </ModalBody>
 
         <ModalFooter>
-          <Button color="primary" onClick={() => validarBoletoEditar()}>
+          <Button
+            color="primary"
+            onClick={() => {
+              validarBoletoEditar();
+              setStep((s) => s - 1);
+            }}
+          >
             Finalizar
           </Button>
         </ModalFooter>
