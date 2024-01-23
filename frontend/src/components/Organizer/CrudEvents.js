@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import axios from "axios";
 import {
   Table,
@@ -15,6 +15,183 @@ import { show_alerta } from "../../functions";
 
 import "../Organizer/indexEvents.css";
 
+const MapaDirecciones = ({ setUbicacion }) => {
+  const [find, setFind] = useState("");
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+  const [formattedAddress, setFormattedAddress] = useState(null);
+
+  const [adminData, setAdminData] = useState(null);
+
+  useEffect(() => {
+    fetchAdminData();
+  }, []);
+
+  const fetchAdminData = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/api/organizador/", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (response.status === 200) {
+        const data = await response.json();
+        setAdminData(data);
+      } else {
+        throw new Error("Error al obtener datos del Organizador");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      window.location.href = "/loginorg/";
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/api/logoutOrg/", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      if (response.status === 200) {
+        localStorage.removeItem("jwt");
+        window.location.href = "/loginorg/";
+      } else {
+        throw new Error("Error al cerrar sesión");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const api_key = "AIzaSyAbE7OP9YJ4aV5txxvUBIYlVNizls048-4";
+  const googleMapsUrl = `https://maps.googleapis.com/maps/api/js?key=${api_key}&libraries=places`;
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+          find
+        )}&key=${api_key}`
+      );
+      const data = response.data;
+
+      if (data.results && data.results.length > 0) {
+        const location = data.results[0].geometry.location;
+        setLatitude(location.lat);
+        setLongitude(location.lng);
+        setFormattedAddress(data.results[0].formatted_address);
+      } else {
+        console.error("No se encontraron resultados de geocodificación.");
+      }
+    } catch (error) {
+      console.error(
+        "Error al obtener datos del servicio de geocodificación:",
+        error
+      );
+    }
+  };
+
+  const loadGoogleMapsScript = () => {
+    if (!window.google) {
+      const script = document.createElement("script");
+      script.src = googleMapsUrl;
+      script.defer = true;
+      script.async = true;
+      document.head.appendChild(script);
+
+      script.onload = () => {
+        // El script de Google Maps se ha cargado correctamente.
+      };
+
+      script.onerror = (error) => {
+        console.error("Error al cargar el script de Google Maps:", error);
+      };
+    }
+  };
+
+  useEffect(() => {
+    loadGoogleMapsScript();
+
+    if (window.google) {
+      const map = new window.google.maps.Map(document.getElementById("map"), {
+        center: { lat: latitude || 0, lng: longitude || 0 },
+        zoom: 16,
+      });
+
+      if (latitude && longitude) {
+        new window.google.maps.Marker({
+          position: { lat: latitude, lng: longitude },
+          map: map,
+          title: formattedAddress,
+        });
+      }
+    }
+
+    return () => {
+      const script = document.querySelector(
+        'script[src="' + googleMapsUrl + '"]'
+      );
+      if (script) {
+        document.head.removeChild(script);
+      }
+    };
+  }, [googleMapsUrl, latitude, longitude, formattedAddress]);
+
+  return (
+    <>
+      <div className="container">
+        <div className="row">
+          <div className="col-md-12">
+            <h2 style={{ textAlign: "center" }}>
+              Dirección de la Ubicación del Evento
+            </h2>
+            <br />
+            <form
+              className="form-inline"
+              onSubmit={handleSubmit}
+              style={{ textAlign: "center" }}
+            >
+              <div className="form-group">
+                <input
+                  className="form-control"
+                  type="text"
+                  name="find"
+                  id="find"
+                  placeholder="Pais/Ciudad, Direccion"
+                  value={find}
+                  onChange={(e) => {
+                    setFind(e.target.value);
+                    setUbicacion(e.target.value);
+                  }}
+                />
+              </div>
+              <input className="btn btn-primary" type="submit" value="Buscar" />
+            </form>
+            <br />
+            <div style={{ textAlign: "center" }}>
+              <kbd>
+                <kbd>Latitude:</kbd>
+                {latitude}, <kbd>Longitude:</kbd>
+                {longitude}
+              </kbd>
+            </div>
+          </div>
+        </div>
+        <hr />
+        <div className="row">
+          <div id="map" style={{ height: "450px", width: "450px" }}></div>
+        </div>
+      </div>
+    </>
+  );
+};
+
 const CrudEvents = ({ organizerObj }) => {
   const estiloModal = {
     maxWidth: "80%",
@@ -27,6 +204,7 @@ const CrudEvents = ({ organizerObj }) => {
   const url_orden_compra = "http://127.0.0.1:8000/api/api/v1/OrdenCompra/";
   const url_asistente = "http://127.0.0.1:8000/api/api/v1/Asistente/";
   /*Evento */
+  const [opcion, setOpcion] = useState(1);
   const [events, setEvents] = useState([]);
   const [id, setId] = useState(0);
   const [nombre, setNombre] = useState("");
@@ -79,16 +257,21 @@ const CrudEvents = ({ organizerObj }) => {
   const [showModalBoletoIngresar, setShowModalBoletoIngresar] = useState(false);
   const [showModalImpuestosIngresar, setShowModalImpuestosIngresar] =
     useState(false);
+  const [showModalBoletoRegresar, setShowModalBoletoRegresar] = useState(false);
   const [showModalRecuperar, setShowModalRecuperar] = useState(false);
   const [showModalOrdenCompra, setShowModalOrdenCompra] = useState(false);
   const [showModalAsistente, setShowModalAsistente] = useState(false);
   const [showModalContiene, setShowModalContiene] = useState(false);
   const [step, setStep] = useState(1);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [showConfirmModalBoleto, setShowConfirmModalBoleto] = useState(false);
+  const [showConfirmModalDelete, setShowConfirmModalDelete] = useState(false);
   /*Imagen*/
   const [imagen, setImagen] = useState(null);
   const [eventImages, setEventImages] = useState({});
+
+  /*Mapa*/
+  const [mostrarMapa, setMostrarMapa] = useState(false);
+
   //Función para consumir API y obtener todo el objeto {}
 
   useEffect(() => {
@@ -221,18 +404,18 @@ const CrudEvents = ({ organizerObj }) => {
     }
   };*/
 
-   /*Imágen Actualizar*/
+  /*Imágen Actualizar*/
 
-   useEffect(() => {
+  useEffect(() => {
     cargarEventos();
   }, []);
 
   const cargarEventos = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/v1/event/');
+      const response = await axios.get("http://127.0.0.1:8000/api/v1/event/");
       setEvents(response.data);
     } catch (error) {
-      console.error('Error al cargar eventos:', error);
+      console.error("Error al cargar eventos:", error);
     }
   };
 
@@ -245,21 +428,24 @@ const CrudEvents = ({ organizerObj }) => {
     }
 
     const formData = new FormData();
-    formData.append('imagen', file);
+    formData.append("imagen", file);
 
     try {
-      const response = await axios.patch(`http://127.0.0.1:8000/api/v1/event/${eventId}/`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${localStorage.getItem('jwt')}`,
-        },
-      });
+      const response = await axios.patch(
+        `http://127.0.0.1:8000/api/v1/event/${eventId}/`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          },
+        }
+      );
 
       cargarEventos();
       show_alerta("Imagen Actualizada Exitosamente", "success");
-
     } catch (error) {
-      console.error('Error al enviar la imagen:', error);
+      console.error("Error al enviar la imagen:", error);
     }
   };
 
@@ -594,6 +780,10 @@ const CrudEvents = ({ organizerObj }) => {
     }
   };
 
+  function handleMapa() {
+    setMostrarMapa(true);
+  }
+
   return (
     <>
       <Container className="meetup-item" >
@@ -605,7 +795,7 @@ const CrudEvents = ({ organizerObj }) => {
           >
             NUEVO EVENTO
           </button>
-          <span style={{ margin: '0 40px' }}></span>
+          <span style={{ margin: "0 40px" }}></span>
           {events.some(
             (evento) =>
               evento.eliminado === false &&
@@ -619,7 +809,7 @@ const CrudEvents = ({ organizerObj }) => {
               AGREGAR IMPUESTOS
             </button>
           )}
-          <span style={{ margin: '0 40px' }}></span>
+          <span style={{ margin: "0 40px" }}></span>
           <button
             style={{ backgroundColor: '#6aabb5', borderColor: '#6aabb5', padding: '10px 20px', borderRadius: '8px' }}
             className="btn btn-success"
@@ -703,7 +893,10 @@ const CrudEvents = ({ organizerObj }) => {
                     <button
                       style={{color: '#fff', padding: '7px 14px', borderRadius: '8px' }}
                       className="btn btn-danger"
-                      onClick={() => handleEliminarEvento(event.id_evento)}
+                      onClick={() => {
+                        setShowConfirmModalDelete(true);
+                        setId(event.id_evento);
+                      }}
                     >
                       <img src={"https://cdn-icons-png.flaticon.com/512/3221/3221845.png"} alt="Editar" width={'25px'} />
                       <span style={{ margin: '0 0px' }}></span>
@@ -838,7 +1031,6 @@ const CrudEvents = ({ organizerObj }) => {
             />
           </FormGroup>
 
-
           <FormGroup>
             <label>Id Organizador:</label>
             <input
@@ -924,21 +1116,6 @@ const CrudEvents = ({ organizerObj }) => {
           </FormGroup>
 
           <FormGroup>
-            <label>Ubicación:</label>
-            <input
-              className="form-control"
-              name="ubicacion"
-              type="text"
-              onChange={(e) => setUbicacion(e.target.value)}
-            />
-            <div className="my-2">
-              <Link to="/mapa/">
-                <Button className="btn btn-primary">Ver Mapa</Button>
-              </Link>
-            </div>
-          </FormGroup>
-
-          <FormGroup>
             <label>Descripción:</label>
             <input
               className="form-control"
@@ -953,7 +1130,6 @@ const CrudEvents = ({ organizerObj }) => {
             <input
               className="form-control"
               name="tipo"
-              value={tipo}
               onChange={(e) => setTipo(e.target.value)}
             />
           </FormGroup>
@@ -966,6 +1142,10 @@ const CrudEvents = ({ organizerObj }) => {
               type="number"
               onChange={(e) => setLimite(e.target.value)}
             />
+          </FormGroup>
+
+          <FormGroup>
+            <MapaDirecciones setUbicacion={setUbicacion} />
           </FormGroup>
 
           {/*<FormGroup>
@@ -1081,7 +1261,7 @@ const CrudEvents = ({ organizerObj }) => {
         </ModalFooter>
       </Modal>
 
-      {/*----------------Modal Ibgresar Boleto-------------------*/}
+      {/*----------------Modal Ingresar Boleto-------------------*/}
 
       {/*Ventana modal*/}
 
@@ -1171,27 +1351,12 @@ const CrudEvents = ({ organizerObj }) => {
 
         <ModalFooter>
           <Button
-            className="buttons"
-            style={{
-              background: "#7950f2",
-              color: "#fff",
-              marginRight: "auto", // Esto empujará el botón hacia la izquierda
-            }}
-            color="primary"
-            onClick={() => {
-              setShowModal(true);
-              setShowModalBoletoIngresar(false);
-            }}
-          >
-            Atrás
-          </Button>
-          <Button
             color="primary"
             style={{
               background: "#7950f2",
               color: "#fff",
             }}
-            onClick={() => setShowConfirmModalBoleto(true)}
+            onClick={() => validarBoletoIngresar()}
           >
             Finalizar
           </Button>
@@ -1515,7 +1680,7 @@ const CrudEvents = ({ organizerObj }) => {
             className="btn btn-success"
             onClick={() => {
               setShowConfirmModal(false);
-              validar(1);
+              validar(opcion);
             }}
           >
             Sí
@@ -1529,30 +1694,101 @@ const CrudEvents = ({ organizerObj }) => {
         </ModalFooter>
       </Modal>
 
-      {/*-------Ventana modal preguntar insertar boleto -------*/}
+      {/*-------Ventana modal preguntar dar de baja evento -------*/}
 
-      <Modal isOpen={showConfirmModalBoleto}>
+      <Modal isOpen={showConfirmModalDelete}>
         <ModalHeader>
           <h3>Confirmación</h3>
         </ModalHeader>
         <ModalBody>
-          <p>¿Estás seguro de ingresar estos valores?</p>
+          <p>¿Estás seguro de dar de baja dicho evento?</p>
         </ModalBody>
         <ModalFooter>
           <Button
             className="btn btn-success"
             onClick={() => {
-              setShowConfirmModalBoleto(false);
-              validarBoletoIngresar(2);
+              setShowConfirmModalDelete(false);
+              handleEliminarEvento(id);
             }}
           >
             Sí
           </Button>
           <Button
             className="btn btn-error"
-            onClick={() => setShowConfirmModalBoleto(false)}
+            onClick={() => setShowConfirmModalDelete(false)}
           >
             No
+          </Button>
+        </ModalFooter>
+      </Modal>
+      {/*Ventana modal mapa*/}
+      <Modal isOpen={showModalAsistente}>
+        <ModalHeader>
+          <div>
+            <h3>Asistente</h3>
+          </div>
+        </ModalHeader>
+
+        <ModalBody>
+          <FormGroup>
+            <label>Id:</label>
+            <input
+              className="form-control"
+              readOnly
+              type="text"
+              name="id_asistente" //e es nuestro evento o lo que ingresa el usuario, con target apuntamos al valor ingresado por el usuario y se actualiza el objeto gracias al método set
+              value={asistentes.id_asistente}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <label>Nombre:</label>
+            <input
+              className="form-control"
+              readOnly
+              name="nombre_asistente"
+              type="text"
+              value={asistentes.nombre}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <label>Apellido:</label>
+            <input
+              className="form-control"
+              readOnly
+              name="apellido"
+              type="text"
+              value={asistentes.apellido}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <label>Correo:</label>
+            <input
+              className="form-control"
+              readOnly
+              name="correo"
+              type="text"
+              value={asistentes.email}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <label>CI:</label>
+            <input
+              className="form-control"
+              readOnly
+              name="ubicacion"
+              type="text"
+              value={asistentes.ci}
+            />
+          </FormGroup>
+        </ModalBody>
+
+        <ModalFooter>
+          <Button color="danger" onClick={() => setShowModalAsistente(false)}>
+            Cancelar
           </Button>
         </ModalFooter>
       </Modal>

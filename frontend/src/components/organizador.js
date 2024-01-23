@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import NavBarOrg from "./Organizer/navbarOrg";
 import Footer from "./footer";
 
-
 const Organizador = () => {
   const [adminData, setAdminData] = useState(null);
 
