@@ -60,9 +60,9 @@ function NavBar() {
           />
         </Link>
         </div>
-        <div className="navbar-left">
+        <div className="centered-panel">
           <Link to="/organizador" className="navbar-brand">
-            Panel Organizador
+            PANEL ORGANIZADOR
           </Link>
         </div>
         <div className="navbar-right">

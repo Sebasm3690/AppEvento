@@ -60,9 +60,9 @@ function NavBar() {
           />
         </Link>
       </div>
-      <div className="navbar-left">
+      <div className="centered-panel">
         <Link to="/dashboardadm" className="navbar-brand">
-          Panel Administrador
+          PANEL ADMINISTRADOR
         </Link>
       </div>
       <div className="navbar-right">
