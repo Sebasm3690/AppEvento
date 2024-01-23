@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import NavBarOrg from "./Organizer/navbarOrg";
 import Footer from "./footer";
 
-
 const Organizador = () => {
   const [adminData, setAdminData] = useState(null);
 
@@ -59,7 +58,7 @@ const Organizador = () => {
 
       <div className="container mt-5">
         {adminData ? (
-          <CrudEvents organizerObj={adminData}></CrudEvents>
+          <CrudEvents organizerObj={adminData} ></CrudEvents>
         ) : (
           <p>Cargando datos del organizador...</p>
         )}

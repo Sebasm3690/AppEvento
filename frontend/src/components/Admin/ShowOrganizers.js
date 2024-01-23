@@ -254,19 +254,20 @@ const CrudOrganizers = ({ adminObj }) => {
   return (
     <>
       <Container>
-        <button
-          className="btn btn-primary"
-          onClick={() => setShowModalInsert(true)}
-        >
-          INSERTAR ORGANIZADOR
-        </button> 
-        <span style={{ margin: '0 40px' }}></span>
-        <Button className="btn btn-success" onClick={handleRecuperar}>
-          RECUPERAR ORGANIZADOR
-        </Button>
-        <br></br>
-        <br></br>
-        <br></br>
+        <div style={{ paddingBlockEnd: '50px'}}>
+          <button
+            style={{ backgroundColor: '#2980b9', borderColor: '#2980b9', padding: '10px 20px', borderRadius: '8px' }}
+            className="btn btn-primary"
+            onClick={() => setShowModalInsert(true)}
+          >
+            INSERTAR ORGANIZADOR
+          </button> 
+          <span style={{ margin: '0 40px' }}></span>
+          <Button style={{ backgroundColor: '#6aabb5', borderColor: '#6aabb5', color: '#fff', padding: '10px 20px', borderRadius: '8px' }} className="btn btn-primary" onClick={handleRecuperar}>
+            RECUPERAR ORGANIZADOR
+          </Button>
+        </div>
+
         <Table className="table">
           <thead>
             <tr>
@@ -293,17 +294,19 @@ const CrudOrganizers = ({ adminObj }) => {
                   <td>{organizer.id_admin}</td>
                   <td>
                     <Button
+                    style={{color: '#fff', padding: '7px 14px', borderRadius: '8px' }}
                       onClick={() =>
                         handleEditarUsuario(organizer.id_organizador)
                       }
                       className="btn btn-warning"
                     >
                       <img src={"https://cdn-icons-png.flaticon.com/512/8188/8188360.png"} alt="Editar" width={'25px'} />
-                      <span style={{ margin: '0 3px' }}></span>
+                      <span style={{ margin: '0 3px'}}></span>
                       EDITAR
                     </Button>
                     <span style={{ margin: '0 10px' }}></span>
                     <Button
+                      style={{ padding: '7px 14px', borderRadius: '8px' }}
                       className="btn btn-danger"
                       onClick={() =>
                         handleEliminarUsuario(organizer.id_organizador)

@@ -87,30 +87,32 @@ const Asistente = () => {
   return (
     <div>
       <NavBarAsis />  
-      <div className="container mt-5">
-        <div className="col-md-6 offset-md-3">
-          {asistenteData && (
-            <>
-              <p className="mb-3">
-                Bienvenido, {asistenteData.nombre} {asistenteData.apellido}.
-              </p>
-            </>
-          )}
-        </div>
-      </div>
+      <div className="inicio-container">
+        <div className="container mt-5">
+          <div className="col-md-6 offset-md-3">
 
-      <div className="container mt-5">
-        <div className="col-md-10 offset-md-1">
-          <UncontrolledCarousel
-            items={carouselItems}
-            interval={1500}
-            //style={{ maxWidth: "1000px", maxHeight: "100px" }}
-          ></UncontrolledCarousel>
-        </div>
-        <div>
-          <Link to={`/meventos/`}>Ver Eventos</Link>
-          <br></br>
-          <Link to={`/historialas/`}>Ver Compras</Link>
+            {asistenteData && (
+              <h1 className="welcome-message text-center" style={{ color: 'black', fontFamily: 'Cambria', fontWeight: 'bold'}}>
+                ¡Bienvenido, {asistenteData.nombre} {asistenteData.apellido}!
+              </h1>
+            )}
+
+            <div className="col-md-10 offset-md-1">
+              <br />
+              <UncontrolledCarousel
+                items={carouselItems}
+                interval={2500}
+              />
+            </div>
+
+            <div className="button-container text-center">
+              <Link to="/meventos/" className="btn btn-primary"
+                style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+              >
+                VER EVENTOS
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
       <Footer />  

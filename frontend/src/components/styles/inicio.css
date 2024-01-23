@@ -3,13 +3,27 @@ body {
   font-family: 'Roboto', sans-serif;
   margin-top: 60px;
   background-color: #f8f9fa;
+  margin: 0;
 }
 
 /* Contenedor principal de la página de inicio */
 .inicio-container {
-  background-color: #333;
+  /*background-color: #333;*/
   padding: 20px;
   border-radius: 5px;
+}
+
+.custom-btn {
+  font-size: 18px; /* Tamaño de la fuente del botón */
+  padding: 12px 20px; /* Ajuste del relleno del botón */
+  border-radius: 8px; /* Bordes redondeados */
+  background-color: #2980b9; /* Color de fondo del botón */
+  color: #ffffff; /* Color del texto del botón */
+  text-decoration: none; /* Quitar subrayado del enlace */
+}
+
+.custom-btn:hover {
+  background-color: #1c6fa9; /* Cambio de color al pasar el mouse */
 }
 
 /* Contenedor de la aplicación */
@@ -65,11 +79,33 @@ body {
 
 /* Contenedor del carrusel */
 .carrucel-container {
-  flex: 1; /* Hace que ocupe el espacio disponible */
-  max-width: calc(100% - 40px); /* Calculamos el ancho restante restando el tamaño del info-container y su margen */
+  flex: 1;
+  max-width: calc(100% - 40px);
   padding: 20px;
 }
 
+.fixed-carousel {
+  max-height: 600px; /* Tamaño fijo para el carrusel */
+  border-radius: 20px;
+  overflow:auto; 
+}
+
+.fixed-carousel img {
+  width: 100%; /* Ajusta el tamaño de la imagen al 100% del contenedor */
+  height: auto; /* Mantiene la proporción de la imagen */
+}
+
+/* Alineamos verticalmente el texto dentro de los elementos del carrusel */
+.carousel-caption {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.7); 
+  color: #fff; 
+  padding: 20px;
+}
 @media (max-width: 768px) {
   .info-container,
   .carrucel-container {
