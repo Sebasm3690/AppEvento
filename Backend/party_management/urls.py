@@ -64,4 +64,5 @@ urlpatterns = [
     path('api/monto_organizador/',TotalGeneradoPorOrganizador.as_view(), name='monto_generado_organizador'),
     path('api/cantidadorg/', TotalCantidadOrganizador.as_view(), name='CantidadOrg'),
     path('api/cantidadsoborg/', CantidadSobranteOrg.as_view(), name='cantidad_sobrante'),
+    path('validate_qr/', validate_qr_code, name='validate_qr'),
 ]

@@ -857,3 +857,15 @@ class CantidadSobranteOrg(APIView):
             total_generado += venta['total_boletos']
 
         return Response({'total_sobrante': total_generado})
+
+@api_view(['POST'])
+def validate_qr_code(request):
+    scanned_code = request.data.get('code')
+
+    try:
+        contiene = Contiene.objects.get(boleto_cdg=scanned_code)
+
+        return Response({'valid': True, 'details': contiene.id_contiene}, status=status.HTTP_200_OK)
+
+    except Contiene.DoesNotExist:
+        return Response({'valid': False}, status=status.HTTP_400_BAD_REQUEST)

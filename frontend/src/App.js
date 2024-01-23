@@ -31,6 +31,7 @@ import ConfirmationPage from "./components/confirmado_correo";
 import EventoHP from "./components/eventosHP"
 import QS from "./components/otros/quienes-somos"
 import DashboardOrg from "./components/Dashboard";
+import QRScanner from "./components/QrScanner";
 
 function App() {
   return (
@@ -107,6 +108,11 @@ function App() {
         element={<DashboardOrg></DashboardOrg>}
         >
         </Route>
+
+        <Route
+        path="/escanearqr/"
+        element={<QRScanner></QRScanner>}
+        ></Route>
 
       </Routes>
 

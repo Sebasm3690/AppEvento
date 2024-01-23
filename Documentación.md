@@ -78,6 +78,7 @@
 
 NOTA: Paquetes a instalar por si acaso hay errores:
 npm install react-chartjs-2 chart.js
+npm install react-qr-reader --force
 
 - **Historia de Usuario #01:**
   - ID: HU-001
