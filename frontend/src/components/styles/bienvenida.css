@@ -1,0 +1,41 @@
+/* Estilos para la bienvenida */
+.container-welcome {
+    margin-top: 5rem;
+}
+
+.welcome-message {
+    font-size: 2.5rem;
+    font-family: 'Bahnschrift SemiBold', sans-serif;
+    font-weight: bold;
+    color: #333; /* Color gris oscuro */
+    text-align: left;
+}
+
+/* Estilos para los botones */
+.button-container {
+    text-align: left;
+    margin-top: 1rem;
+}
+
+.button-link {
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    padding: 15px 30px;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.button-eventos {
+    background-color: #007bff;
+    color: #fff;
+    border: 1px solid #007bff;
+}
+
+.button-compras {
+    background-color: #28a745;
+    color: #fff;
+    border: 1px solid #28a745;
+}

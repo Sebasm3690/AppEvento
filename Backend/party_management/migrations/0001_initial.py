@@ -151,16 +151,6 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='Boleto',
-            fields=[
-                ('id_boleto', models.AutoField(primary_key=True, serialize=False)),
-                ('stock', models.IntegerField()),
-                ('tipoBoleto', models.CharField(max_length=15)),
-                ('precio', models.FloatField()),
-                ('id_evento', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='party_management.evento')),
-            ],
-        ),
-        migrations.CreateModel(
             name='Vende',
             fields=[
                 ('id_vende', models.AutoField(primary_key=True, serialize=False)),

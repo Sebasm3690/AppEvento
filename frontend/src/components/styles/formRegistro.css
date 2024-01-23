@@ -1,42 +1,48 @@
 .custom-form {
-    width: 50%;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .custom-form label {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-  }
-  
-  .custom-form label svg {
-    margin-right: 8px;
-  }
-  
-  .custom-form .form-control {
-    width: 100%;
-    padding: 8px;
-    margin-top: 8px;
-    margin-bottom: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .btn-primary {
-    background-color: #2980b9;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .btn-primary:hover {
-    background-color: #1c5988;
-  }
-  
+  width: 60%;
+  margin: auto;
+  padding: 30px;
+  border: 2px solid #2980b9;
+  border-radius: 10px;
+  background-color: #f2f2f2;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.custom-form label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px; /* Aumentamos el espacio inferior para separar las etiquetas */
+}
+
+.custom-form label svg {
+  margin-right: 15px; /* Ajustamos el margen derecho del ícono */
+}
+
+.custom-form .form-control {
+  width: 100%;
+  padding: 15px; /* Aumentamos el espacio interno del input para mayor comodidad */
+  margin-top: 10px;
+  margin-bottom: 25px; /* Aumentamos el espacio inferior para separar los campos */
+  border: 2px solid #2980b9; /* Cambiamos el color del borde para coordinar con el botón */
+  border-radius: 8px; /* Redondeamos un poco más las esquinas */
+  box-sizing: border-box;
+  transition: border-color 0.3s; /* Agregamos una transición para el cambio de color del borde */
+}
+
+.custom-form .form-control:focus {
+  border-color: #1c5988; /* Cambiamos el color del borde al enfocar el input */
+}
+
+.btn-primary {
+  background-color: #3498db;
+  color: #fff;
+  padding: 15px 30px; /* Ajustamos el espaciado interno del botón */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #1c5988;
+}

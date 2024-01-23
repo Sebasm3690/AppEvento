@@ -2,6 +2,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import NavBarAsis from "./Asistente/navbaras";
+import Footer from "./footer";
+import "./styles/inicio.css";
+
 import {
   Button,
   Modal,
@@ -18,9 +22,11 @@ function EventosList() {
   const [showModal, setShowModal] = useState(false);
   const [id_evento, setId_evento] = useState(0);
   const [fecha, setFecha] = useState("");
+  const [nombre_evento, setNombre] = useState("");
   const [hora, setHora] = useState(0);
   const [ubicacion, setUbicacion] = useState("");
   const [descripcion, setDescripcion] = useState("");
+  const [imagen, setImagen] = useState(null);
 
   useEffect(() => {
     // Función para obtener los eventos desde tu API
@@ -43,12 +49,15 @@ function EventosList() {
     setUbicacion(evento.ubicacion);
     setDescripcion(evento.descripcion);
     setId_evento(evento.id_evento);
+    setNombre(evento.nombre_evento);
+    setImagen(evento.imagen);
     setShowModal(true);
   }
 
   return (
     <>
-      <h1 style={{ textAlign: "center" }}>Listado de Eventos</h1>
+     <NavBarAsis /><br></br>
+     <h1 className="display-4 text-center mb-4">LISTADO DE EVENTOS</h1>
       <div
         style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
       >
@@ -72,10 +81,10 @@ function EventosList() {
                     <small className="text-muted">{evento.fecha}</small>
                   </p>
                   <Button
-                    className="btn btn-primary"
+                    color="primary"
                     onClick={(e) => handleMostrarDatos(evento)}
-                  >
-                    Ver evento
+                    >
+                      Detalles del Evento
                   </Button>
                 </div>
               </div>
@@ -91,27 +100,24 @@ function EventosList() {
           </div>
         </ModalHeader>
 
-        {/* Vista previa de la imagen }
-
-        {image && (
+        {imagen && (
           <img
-            src={image}
+            src={imagen}
             alt="Imagen de vista previa"
             style={{ maxWidth: "100%", height: "auto" }}
           />
         )}
 
-        {----------------------------*/}
-
         <ModalBody>
           <FormGroup>
-            <label>Id:</label>
+            <label>Nombre del Evento:</label>
             <input
               className="form-control"
               readOnly
               name="id"
               type="text"
-              value={id_evento}
+              onChange={(e) => setNombre(e.target.value)}
+              value={nombre_evento}
             />
           </FormGroup>
           <FormGroup>
@@ -165,10 +171,14 @@ function EventosList() {
 
         <ModalFooter>
           <Link to={`/verboletos/${id_evento}`} className="btn btn-primary">
-            Ver más detalles
+            Comprar Boletos
           </Link>
+          <Button color="warning" onClick={() => setShowModal(false)}>
+            Cancelar
+          </Button>
         </ModalFooter>
       </Modal>
+      <Footer />  
     </>
   );
 }

@@ -1,13 +1,8 @@
-import CrudOrganizers from "./Admin/ShowOrganizers";
-
-// Dashboard.js
 import React, { useEffect, useState } from "react";
-import ShowOrganizers from "./Admin/ShowOrganizers";
-import NavBarAdmin from "./Admin/navbarAdmin";
 import { Link } from "react-router-dom";
-import Footer from "./footer";
+import "../styles/navbar.css";
 
-const Dashboard = () => {
+function NavBar() {
   const [adminData, setAdminData] = useState(null);
 
   useEffect(() => {
@@ -55,19 +50,28 @@ const Dashboard = () => {
   };
 
   return (
-    <div>
-      <NavBarAdmin />  
-
-      <div className="container mt-5">
-        {adminData ? (
-          <ShowOrganizers adminObj={adminData}> </ShowOrganizers>
-        ) : (
-          <p>Cargando datos del administrador...</p>
-        )}
+    <nav className="navbar">
+      <div className="navbar-left">
+        <Link to="/dashboardadm" className="navbar-brand">
+          <img
+            src="https://i.imgur.com/19Mo8I4.png"
+            alt="PartyConnect"
+            style={{ width: '20%', height: 'auto' }}
+          />
+        </Link>
       </div>
-      <Footer />
-    </div>
+      <div className="navbar-left">
+        <Link to="/dashboardadm" className="navbar-brand">
+          Panel Administrador
+        </Link>
+      </div>
+      <div className="navbar-right">
+        <Link to="/loginas" className="navbar-link" onClick={handleLogout}>
+          CERRAR SESIÓN
+        </Link>
+      </div>
+    </nav>
   );
-};
+}
 
-export default Dashboard;
+export default NavBar;
