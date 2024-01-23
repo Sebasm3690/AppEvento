@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { show_alerta } from "../../functions";
+import NavBarAsis from "../Asistente/navbaras";
+import Footer from "../footer";
 
 const EditarPerfil = () => {
   const [asistenteData, setAsistenteData] = useState(null);
@@ -17,7 +19,7 @@ const EditarPerfil = () => {
     ci: '',
     password: '',
   });
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(true); // Inicia en modo edición directa
 
   useEffect(() => {
     fetchData();
@@ -59,6 +61,7 @@ const EditarPerfil = () => {
       window.location.href = '/loginas';
     }
   };
+
   const handleLogout = async () => {
     try {
       const response = await fetch('http://localhost:8000/api/logoutAs', {
@@ -75,16 +78,6 @@ const EditarPerfil = () => {
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
     }
-  };
-
-  const handleEditClick = () => {
-    setIsEditing(true);
-  };
-
-  const handleCancelEdit = () => {
-    setIsEditing(false);
-    // Restore the main state with temporary changes when canceling the edit
-    setFormData(tempFormData);
   };
 
   const handleSaveEdit = async () => {
@@ -123,6 +116,8 @@ const EditarPerfil = () => {
         setIsEditing(false);
         await fetchData(); 
         show_alerta("Datos de Asistente Actualizados Exitosamente", "success");
+        // Redirect to '/asistente' after successful save
+        window.location.href = '/asistente';
       } else {
         const errorResponse = await response.json();
         console.error('Error al actualizar datos del asistente:', errorResponse);
@@ -149,119 +144,94 @@ const EditarPerfil = () => {
 
   return (
     <div>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <div className="container-fluid">
-          <a className="navbar-brand" href="/asistente">
-            Inicio
-          </a>
-          <a className="navbar-brand" href="/editarPerfil">
-            Editar Perfil
-          </a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <button className="btn btn-danger" onClick={handleLogout}>
-                  Cerrar sesión
-                </button>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-
+      <NavBarAsis />
       <div className="container mt-5">
         <div className="col-md-6 offset-md-3">
           {asistenteData && (
             <>
-              {isEditing ? (
-                <div>
-                  <p className="mb-3">Editando Perfil de {asistenteData.nombre} {asistenteData.apellido}.</p>
-                  <form>
-                    <div className="mb-3">
-                      <label htmlFor="ci" className="form-label">Cédula</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="ci"
-                        name="ci"
-                        value={formData.ci}
-                        onChange={handleChange}
-                      />
-                    </div>
+              <div style={{padding: '5px 0px 20px 0px'}}>
+                <center >
+                  <h1 className="mb-3">Editando Perfil de {asistenteData.nombre} {asistenteData.apellido}</h1>
+                </center>
+              </div>
 
-                    <div className="mb-3">
-                      <label htmlFor="nombre" className="form-label">Nombre</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="nombre"
-                        name="nombre"
-                        value={formData.nombre}
-                        onChange={handleChange}
-                      />
-                    </div>
+              <div>
+                <form>
+                  <div className="mb-3">
+                    <label htmlFor="ci" className="form-label" style={{fontWeight: 'bold'}}>Número de Cédula</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="ci"
+                      name="ci"
+                      value={formData.ci}
+                      onChange={handleChange}
+                    />
+                  </div>
 
-                    <div className="mb-3">
-                      <label htmlFor="apellido" className="form-label">Apellido</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="apellido"
-                        name="apellido"
-                        value={formData.apellido}
-                        onChange={handleChange}
-                      />
-                    </div>
+                  <div className="mb-3">
+                    <label htmlFor="nombre" className="form-label" style={{fontWeight: 'bold'}}>Nombre</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="nombre"
+                      name="nombre"
+                      value={formData.nombre}
+                      onChange={handleChange}
+                    />
+                  </div>
 
-                    <div className="mb-3">
-                      <label htmlFor="email" className="form-label">Correo Electrónico</label>
-                      <input
-                        type="email"
-                        className="form-control"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                      />
-                    </div>
+                  <div className="mb-3">
+                    <label htmlFor="apellido" className="form-label" style={{fontWeight: 'bold'}}>Apellido</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="apellido"
+                      name="apellido"
+                      value={formData.apellido}
+                      onChange={handleChange}
+                    />
+                  </div>
 
-                    <div className="mb-3">
-                      <label htmlFor="password" className="form-label">Contraseña</label>
-                      <input
-                        type="password"
-                        className="form-control"
-                        id="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                      />
-                    </div>
-                  </form>
-                  <button className="btn btn-primary" onClick={handleSaveEdit}>Guardar</button>
+                  <div className="mb-3">
+                    <label htmlFor="email" className="form-label" style={{fontWeight: 'bold'}}>Correo Electrónico</label>
+                    <input
+                      type="email"
+                      className="form-control"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label htmlFor="password" className="form-label" style={{fontWeight: 'bold'}}>Contraseña</label>
+                    <input
+                      type="password"
+                      className="form-control"
+                      id="password"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </form>
+                <center>
+                  <button className="btn btn-primary" onClick={handleSaveEdit}
+                    style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                  >GUARDAR</button>
                   <span className="mx-2"></span>
-                  <button className="btn btn-secondary" onClick={handleCancelEdit}>Cancelar</button>
-                </div>
-              ) : (
-                <div>
-                  <p className="mb-3">Perfil de {asistenteData.nombre} {asistenteData.apellido}.</p>
-                  <button className="btn btn-warning" onClick={handleEditClick}>Editar</button>
-                </div>
-              )}
+                  <button className="btn btn-secondary" onClick={() => { window.location.href = '/asistente'; }}
+                    style={{ backgroundColor: '#bb2d3b', borderColor: '#bb2d3b', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                  >CANCELAR</button>
+                </center>
+              </div>
             </>
           )}
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

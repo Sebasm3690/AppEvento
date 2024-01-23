@@ -2,6 +2,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import NavBarAsis from "./Asistente/navbaras";
+import Footer from "./footer";
+import "./styles/inicio.css";
+
 import {
   Button,
   Modal,
@@ -18,9 +22,11 @@ function EventosList() {
   const [showModal, setShowModal] = useState(false);
   const [id_evento, setId_evento] = useState(0);
   const [fecha, setFecha] = useState("");
+  const [nombre_evento, setNombre] = useState("");
   const [hora, setHora] = useState(0);
   const [ubicacion, setUbicacion] = useState("");
   const [descripcion, setDescripcion] = useState("");
+  const [imagen, setImagen] = useState(null);
 
   useEffect(() => {
     // Función para obtener los eventos desde tu API
@@ -43,12 +49,17 @@ function EventosList() {
     setUbicacion(evento.ubicacion);
     setDescripcion(evento.descripcion);
     setId_evento(evento.id_evento);
+    setNombre(evento.nombre_evento);
+    setImagen(evento.imagen);
     setShowModal(true);
   }
 
   return (
     <>
-      <h1 style={{ textAlign: "center" }}>Listado de Eventos</h1>
+     <NavBarAsis />
+     <h1 className="display-4 text-center mb-4"
+      style={{ padding: '50px 700px 10px 700px'}}
+     >LISTADO DE EVENTOS</h1>
       <div
         style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
       >
@@ -66,17 +77,23 @@ function EventosList() {
                   alt="..."
                 />
                 <div className="card-body">
-                  <h5 className="card-title">{evento.nombre_evento}</h5>
+                  <center>
+                    <h5 className="card-title">{evento.nombre_evento}</h5>
+                  </center>
                   <p className="card-text">{evento.descripcion}</p>
+                  <p className="card-text">{evento.ubicacion}</p>
                   <p className="card-text">
                     <small className="text-muted">{evento.fecha}</small>
                   </p>
-                  <Button
-                    className="btn btn-primary"
-                    onClick={(e) => handleMostrarDatos(evento)}
-                  >
-                    Ver evento
-                  </Button>
+                  <center>
+                    <Button
+                      color="primary"
+                      style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                      onClick={(e) => handleMostrarDatos(evento)}
+                      >
+                        VER MAS DETALLES
+                    </Button>
+                  </center>
                 </div>
               </div>
             </div>
@@ -87,35 +104,34 @@ function EventosList() {
       <Modal isOpen={showModal}>
         <ModalHeader>
           <div>
-            <h3>Información del evento</h3>
+            <center>
+              <h3>INFORMACIÓN DEL EVENTO</h3>
+            </center>
           </div>
         </ModalHeader>
 
-        {/* Vista previa de la imagen }
-
-        {image && (
+        {imagen && (
           <img
-            src={image}
+            src={imagen}
             alt="Imagen de vista previa"
             style={{ maxWidth: "100%", height: "auto" }}
           />
         )}
 
-        {----------------------------*/}
-
         <ModalBody>
           <FormGroup>
-            <label>Id:</label>
+            <label style={{fontWeight: 'bold'}}>Evento:</label>
             <input
               className="form-control"
               readOnly
               name="id"
               type="text"
-              value={id_evento}
+              onChange={(e) => setNombre(e.target.value)}
+              value={nombre_evento}
             />
           </FormGroup>
           <FormGroup>
-            <label>Fecha:</label>
+            <label style={{fontWeight: 'bold'}}>Fecha:</label>
             <input
               className="form-control"
               readOnly
@@ -127,7 +143,7 @@ function EventosList() {
           </FormGroup>
 
           <FormGroup>
-            <label>Hora:</label>
+            <label style={{fontWeight: 'bold'}}>Hora:</label>
             <input
               className="form-control"
               readOnly
@@ -139,7 +155,7 @@ function EventosList() {
           </FormGroup>
 
           <FormGroup>
-            <label>Ubicacion:</label>
+            <label style={{fontWeight: 'bold'}}>Ubicación:</label>
             <input
               className="form-control"
               readOnly
@@ -151,7 +167,7 @@ function EventosList() {
           </FormGroup>
 
           <FormGroup>
-            <label>Descripcion:</label>
+            <label style={{fontWeight: 'bold'}}>Descripción:</label>
             <input
               className="form-control"
               readOnly
@@ -164,11 +180,19 @@ function EventosList() {
         </ModalBody>
 
         <ModalFooter>
-          <Link to={`/verboletos/${id_evento}`} className="btn btn-primary">
-            Ver más detalles
+          <Link to={`/verboletos/${id_evento}`} className="btn btn-primary"
+            style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+          >
+            COMPRAR BOLETOS
           </Link>
+          <Button color="warning" onClick={() => setShowModal(false)}
+            style={{ backgroundColor: '#e8a726', borderColor: '#e8a726', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+          >
+            CANCELAR
+          </Button>
         </ModalFooter>
       </Modal>
+      <Footer />  
     </>
   );
 }

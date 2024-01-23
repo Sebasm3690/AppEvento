@@ -1,0 +1,15 @@
+/* Opcional: Agregar estilos específicos para cada tipo de información */
+.resumen-compra p.valor-total {
+    font-weight: bold;
+    color: #007bff; /* Cambiar el color según tus preferencias */
+  }
+  
+  .resumen-compra p.cantidad-boletos {
+    font-style: italic;
+    color: #28a745; /* Cambiar el color según tus preferencias */
+  }
+  
+  .resumen-compra p.fecha-compra {
+    font-weight: bold;
+    color: #dc3545; /* Cambiar el color según tus preferencias */
+  }
