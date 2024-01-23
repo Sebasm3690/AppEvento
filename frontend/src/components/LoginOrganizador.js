@@ -42,49 +42,75 @@ const LoginOrganizador = () => {
   return (
     <div>
       <NavBar />
-      <div className="container mt-5">
+      <div className="container mt-5"
+        style={{
+          paddingTop: '50px'
+        }}
+      >
         <div className="col-md-6 offset-md-3">
-          <center>
-            <h1>ORGANIZADOR</h1> <br></br>
-          </center>
-          <form className="custom-form">
-            <div className="form-group">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Correo electrónico"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </div>
-            <div className="form-group">
-              <input
-                type="password"
-                className="form-control"
-                placeholder="Contraseña"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            {error && <p className="error-message">{error}</p>}
-            <button
-              type="button"
-              className="btn btn-primary btn-block"
-              onClick={loginUser}
+          <div style={{
+            backgroundImage: 'url(https://images.unsplash.com/photo-1589810264340-0ce27bfbf751?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHZlcnRpY2FsJTIwd2FsbHBhcGVyfGVufDB8fDB8fHww)',
+            backgroundSize: 'cover',  // Ajusta el tamaño de la imagen
+            width: '100%',  // Ancho del div
+            height: '600px',  // Altura del div
+            borderRadius: '30px',
+          }}>
+            <center>
+              <h1 style={{ padding: '10px 20px', borderRadius: '30px', backgroundColor: '#2980b9', color: '#ffffff' }}>ORGANIZADOR</h1> <br></br>
+            </center>
+            <form className="custom-form"
+              style={{
+                borderRadius: '30px'
+              }}
             >
-              INICIAR SESIÓN
-            </button>
-            <p className="form-info">
-                ¿Eres Administrador?{' '}
+              <div className="form-group">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Correo electrónico"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <input
+                  type="password"
+                  className="form-control"
+                  placeholder="Contraseña"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              {error && <p className="error-message">{error}</p>}
               <button
                 type="button"
-                className="btn btn-link btn-reset"
-                onClick={() => navigate('/loginadm')}
+                style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                className="btn btn-primary btn-block"
+                onClick={loginUser}
               >
-                Ingresa Aquí
+                INICIAR SESIÓN
               </button>
-            </p>
-          </form>
+              <p className="form-info">
+                  ¿Eres Administrador?{' '} <br></br>
+                <button
+                  type="button"
+                  className="btn btn-link btn-register"
+                  style={{ 
+                    color: '#3498db',
+                    border: '1px solid #3498db',
+                    transition: 'border 0.3s',
+                    padding: '10px 20px',
+                    borderRadius: '8px'
+                  }}
+                  onMouseOver={(e) => (e.target.style.border = '1px solid transparent')}  // Borde transparente al poner el mouse
+                  onMouseOut={(e) => (e.target.style.border = '1px solid #3498db')}
+                  onClick={() => navigate('/loginadm')}
+                >
+                  Ingresa Aquí
+                </button>
+              </p>
+            </form>
+          </div>
         </div>
       </div>
       <Footer />
