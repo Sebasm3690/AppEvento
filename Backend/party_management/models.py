@@ -184,6 +184,7 @@ class Contiene(models.Model):
     boleto_cdg = models.CharField(default='', max_length=50, unique=True)  # Asegúrate de que este campo sea opcional
     num_orden = models.ForeignKey("OrdenCompra", on_delete=models.CASCADE)
     cantidad_total = models.IntegerField()
+    asistido = models.BooleanField(default=False)
 
     class Meta:
         unique_together = (('id_boleto', 'num_orden'),)

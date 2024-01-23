@@ -5,6 +5,8 @@ import { QrReader } from 'react-qr-reader';
 const QRScanner = () => {
   const [scanResult, setScanResult] = useState('');
   const [validationResult, setValidationResult] = useState(null);
+  const [alreadyScanned, setAlreadyScanned] = useState(false);
+  const [scanEnabled, setScanEnabled] = useState(true);
 
   const extractCodeFromText = (text) => {
     const codeMatch = text.match(/Codigo: ([^,]+)/);
@@ -18,11 +20,23 @@ const QRScanner = () => {
 
       const extractedCode = extractCodeFromText(scannedText);
       if (extractedCode) {
-        // Aquí puedes agregar la lógica para enviar el resultado al backend
+        // Verificar si el boleto ya ha sido escaneado
+        if (alreadyScanned) {
+          setValidationResult('¡Error! El boleto ya ha sido escaneado.');
+          return;
+        }
+
         axios.post('http://localhost:8000/validate_qr/', { code: extractedCode })
           .then(response => {
-            // Manejo de la respuesta de validación
-            setValidationResult('Código válido');
+            if (response.data.valid) {
+              setValidationResult('Código válido');
+              // Marcar que el boleto ha sido escaneado
+              setAlreadyScanned(true);
+              // Deshabilitar el escaneo después de una validación exitosa
+              setScanEnabled(false);
+            } else {
+              setValidationResult('Código inválido: ' + response.data.details);
+            }
           })
           .catch(error => {
             console.error('Error de validación', error);
@@ -41,13 +55,16 @@ const QRScanner = () => {
 
   return (
     <div>
-      <QrReader
-        delay={300}
-        onResult={handleResult}
-        style={{ width: '100%' }}
-        constraints={{ facingMode: 'environment' }} // Para cámaras traseras en dispositivos móviles
-      />
+      {scanEnabled && (
+        <QrReader
+          delay={300}
+          onResult={handleResult}
+          style={{ width: '50%' }}
+          constraints={{ facingMode: 'environment' }}
+        />
+      )}
       <div>{validationResult}</div>
+      <div>{scanResult}</div>
     </div>
   );
 }

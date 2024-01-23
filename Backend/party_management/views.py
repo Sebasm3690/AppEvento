@@ -60,6 +60,21 @@ class UploadImageView(APIView):
 class OrganizerView(viewsets.ModelViewSet):
     serializer_class = OrganizerSerializer
     queryset = Organizador.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        correo = request.data.get('correo')  # Asegúrate de que 'correo' es el nombre correcto del campo en tu serializer
+        cedula = request.data.get('ci')
+
+        if validar_cedular_repetida(cedula)['existe']:
+            return Response({'error': 'La cedula ya fue registrada por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if validar_correo(correo)['existe']:
+            return Response({'error': 'El correo ya fue registrado por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            return super().create(request, *args, **kwargs)
+        except ValidationError as e:
+            return Response({'error': e.message_dict}, status=status.HTTP_400_BAD_REQUEST)
     
 class AdminView(viewsets.ModelViewSet):
     serializer_class = AdminSerializer
@@ -863,6 +878,7 @@ def validar_correo(correo):
 def validar_cedular_repetida(cedula):
     # Verificar si el correo ya existe en cualquiera de los modelos
     if Asistente.objects.filter(ci=cedula).exists() or \
+       Administrador.objects.filter(ci=cedula).exists() or \
        Organizador.objects.filter(ci=cedula).exists():
         return {'existe': True}
     else:
@@ -960,10 +976,17 @@ def validate_qr_code(request):
     try:
         contiene = Contiene.objects.get(boleto_cdg=scanned_code)
 
+        if contiene.asistido:
+            return Response({'valid': False, 'details': 'El boleto ya ha sido escaneado'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Marcar el boleto como asistido
+        contiene.asistido = True
+        contiene.save()
+
         return Response({'valid': True, 'details': contiene.id_contiene}, status=status.HTTP_200_OK)
 
     except Contiene.DoesNotExist:
-        return Response({'valid': False}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'valid': False, 'details': 'Código inválido'}, status=status.HTTP_400_BAD_REQUEST)
 
 class CompraBoletoView(APIView):
     """
