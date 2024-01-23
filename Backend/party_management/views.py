@@ -964,3 +964,23 @@ def validate_qr_code(request):
 
     except Contiene.DoesNotExist:
         return Response({'valid': False}, status=status.HTTP_400_BAD_REQUEST)
+
+class CompraBoletoView(APIView):
+    """
+    Vista para manejar la compra de boletos y actualizar el límite del evento.
+    """
+    def post(self, request, *args, **kwargs):
+        serializer = ContieneSerializer(data=request.data)
+        if serializer.is_valid():
+            contiene = serializer.save()
+
+            # Obtener el evento relacionado y actualizar el límite
+            evento = contiene.id_boleto.id_evento
+            if evento.limite >= contiene.cantidad_total:
+                evento.limite -= contiene.cantidad_total
+                evento.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response({"error": "No hay suficientes boletos disponibles."}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

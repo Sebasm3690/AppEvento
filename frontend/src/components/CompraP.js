@@ -93,7 +93,7 @@ const CompraR = () => {
                 show_alerta("Compra realizada Correctamente! Se le enviará su entrada al correo electrónico registrado", "success");
                 
                 try {
-                    const response2 = await fetch('http://127.0.0.1:8000/api/contiene/agregar/', {
+                    const response2 = await fetch('http://127.0.0.1:8000/compra-boleto/', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
