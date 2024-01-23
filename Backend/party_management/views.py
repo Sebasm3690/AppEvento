@@ -971,22 +971,19 @@ class CantidadSobranteOrg(APIView):
 
 @api_view(['POST'])
 def validate_qr_code(request):
+    # Obtener el código escaneado desde los datos de la solicitud
     scanned_code = request.data.get('code')
 
     try:
+        # Intentar obtener un objeto Contiene que coincida con el código escaneado
         contiene = Contiene.objects.get(boleto_cdg=scanned_code)
 
-        if contiene.asistido:
-            return Response({'valid': False, 'details': 'El boleto ya ha sido escaneado'}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Marcar el boleto como asistido
-        contiene.asistido = True
-        contiene.save()
-
+        # Si se encuentra, el código QR es válido, devolver una respuesta con estado 200
         return Response({'valid': True, 'details': contiene.id_contiene}, status=status.HTTP_200_OK)
 
     except Contiene.DoesNotExist:
-        return Response({'valid': False, 'details': 'Código inválido'}, status=status.HTTP_400_BAD_REQUEST)
+        # Si no se encuentra, el código QR es inválido, devolver una respuesta con estado 400
+        return Response({'valid': False}, status=status.HTTP_400_BAD_REQUEST)
 
 class CompraBoletoView(APIView):
     """
