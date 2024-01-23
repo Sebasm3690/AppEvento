@@ -60,7 +60,7 @@ function Inicio() {
             <div className="col-md-10 offset-md-1">
               <UncontrolledCarousel
                 items={carouselItems}
-                interval={2000}
+                interval={2500}
                 className="fixed-carousel" 
               ></UncontrolledCarousel>
             </div>

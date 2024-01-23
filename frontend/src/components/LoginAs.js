@@ -33,6 +33,10 @@ function Login() {
       } else if (data.error === 'Correo no confirmado') {
         // Muestra una alerta si el correo no está confirmado
         alert('Su correo no se ha confirmado, verifiquelo de nuevo');
+        window.location.href = '/asistente';
+      } else if (data.error === 'Correo no confirmado') {
+        // Muestra una alerta si el correo no está confirmado
+        alert('Su correo no se ha confirmado, verifiquelo de nuevo');
       } else {
         throw new Error('Credenciales incorrectas');
       }
@@ -122,3 +126,4 @@ function Login() {
 }
 
 export default Login;
+

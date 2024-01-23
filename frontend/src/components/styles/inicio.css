@@ -8,9 +8,22 @@ body {
 
 /* Contenedor principal de la página de inicio */
 .inicio-container {
-  background-color: #333;
+  /*background-color: #333;*/
   padding: 20px;
   border-radius: 5px;
+}
+
+.custom-btn {
+  font-size: 18px; /* Tamaño de la fuente del botón */
+  padding: 12px 20px; /* Ajuste del relleno del botón */
+  border-radius: 8px; /* Bordes redondeados */
+  background-color: #2980b9; /* Color de fondo del botón */
+  color: #ffffff; /* Color del texto del botón */
+  text-decoration: none; /* Quitar subrayado del enlace */
+}
+
+.custom-btn:hover {
+  background-color: #1c6fa9; /* Cambio de color al pasar el mouse */
 }
 
 /* Contenedor de la aplicación */
@@ -93,7 +106,6 @@ body {
   color: #fff; 
   padding: 20px;
 }
-
 @media (max-width: 768px) {
   .info-container,
   .carrucel-container {
