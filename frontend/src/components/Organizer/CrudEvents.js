@@ -14,6 +14,8 @@ import {
 import { show_alerta } from "../../functions";
 
 import "../Organizer/indexEvents.css";
+import DashboardOrg from "../Dashboard";
+import { useNavigate } from 'react-router-dom';
 
 const CrudEvents = ({ organizerObj }) => {
   const estiloModal = {
@@ -43,6 +45,7 @@ const CrudEvents = ({ organizerObj }) => {
   const [precio, setPrecio] = useState(0);
   const [idEventoBoleto, setIdEventoBoleto] = useState(0);
 
+  const navigate = useNavigate();
   const [limite, setLimite] = useState(0);
   //const [image, setImage] = useState("");
 
@@ -624,6 +627,16 @@ const CrudEvents = ({ organizerObj }) => {
           >
             {/*Recuperar evento*/}
             HISTÓRICO
+          </button>
+
+          <span style={{ margin: '0 40px' }}></span>
+
+          <button
+          className="btn btn-success"
+          onClick={() => navigate('/dashboardorg/')}
+          
+          >
+            DASHBOARD
           </button>
         </div>
 

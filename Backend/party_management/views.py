@@ -33,6 +33,7 @@ from django.template.loader import render_to_string
 from django.shortcuts import render
 from django.template.loader import get_template
 import base64
+from django.db.models import Sum
 
 #resend.api_key = os.environ["RESEND_API_KEY"]
 
@@ -771,3 +772,88 @@ def validar_cedular_repetida(cedula):
         return {'existe': True}
     else:
         return {'existe': False}
+
+class TotalGeneradoPorOrganizador(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if not token:
+            raise AuthenticationFailed('No inicio sesión correctamente')
+
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('No inicio sesión')
+
+        id_organizador = payload['id']
+        try:
+            organizador = Organizador.objects.get(pk=id_organizador)
+        except Organizador.DoesNotExist:
+            return Response({'error': 'Organizador no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+        total = 0
+        ventas = Vende.objects.filter(id_organizador=organizador.id_organizador)
+
+        for venta in ventas:
+            contiene_registros = Contiene.objects.filter(id_boleto=venta.id_boleto)
+            for contiene in contiene_registros:
+                orden = OrdenCompra.objects.get(num_orden=contiene.num_orden.num_orden)
+                total += orden.valor_total
+
+        return Response({'total_generado': total})
+
+class TotalCantidadOrganizador(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if not token:
+            raise AuthenticationFailed('No inicio sesión correctamente')
+
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('No inicio sesión')
+
+        id_organizador = payload['id']
+        try:
+            organizador = Organizador.objects.get(pk=id_organizador)
+        except Organizador.DoesNotExist:
+            return Response({'error': 'Organizador no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+        total_generado = 0
+        ventas = Vende.objects.filter(id_organizador=organizador.id_organizador)
+
+        for venta in ventas:
+            contiene_registros = Contiene.objects.filter(id_boleto=venta.id_boleto)
+            for contiene in contiene_registros:
+                total_generado += contiene.cantidad_total
+
+        return Response({'total_cantidad_generada': total_generado})
+
+class CantidadSobranteOrg(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if not token:
+            raise AuthenticationFailed('No inició sesión correctamente')
+
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('No inició sesión')
+
+        id_organizador = payload['id']
+        try:
+            organizador = Organizador.objects.get(pk=id_organizador)
+        except Organizador.DoesNotExist:
+            return Response({'error': 'Organizador no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+        total_generado = 0
+
+        # Obtener la cantidad de boletos vendidos por boleto y por organizador
+        ventas_por_boleto = Vende.objects.filter(id_organizador=organizador.id_organizador).values('id_boleto').annotate(total_boletos=Sum('stock_actual'))
+
+        for venta in ventas_por_boleto:
+            total_generado += venta['total_boletos']
+
+        return Response({'total_sobrante': total_generado})

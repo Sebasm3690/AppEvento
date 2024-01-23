@@ -30,6 +30,7 @@ import Maps from "./components/Organizer/Ubicación";
 import ConfirmationPage from "./components/confirmado_correo";
 import EventoHP from "./components/eventosHP"
 import QS from "./components/otros/quienes-somos"
+import DashboardOrg from "./components/Dashboard";
 
 function App() {
   return (
@@ -100,6 +101,12 @@ function App() {
             path="/quienes-somos/"
             element={<QS></QS>}
         ></Route>
+
+        <Route
+        path="/dashboardorg/"
+        element={<DashboardOrg></DashboardOrg>}
+        >
+        </Route>
 
       </Routes>
 
