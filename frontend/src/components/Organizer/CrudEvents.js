@@ -15,7 +15,7 @@ import { show_alerta } from "../../functions";
 
 import "../Organizer/indexEvents.css";
 
-const MapaDirecciones = () => {
+const MapaDirecciones = ({ setUbicacion }) => {
   const [find, setFind] = useState("");
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
@@ -145,42 +145,13 @@ const MapaDirecciones = () => {
 
   return (
     <>
-      <div>
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-          <div className="container-fluid">
-            <a className="navbar-brand" href="/organizador/">
-              Panel Organizadores
-            </a>
-            <button
-              className="navbar-toggler"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarNav"
-              aria-controls="navbarNav"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span className="navbar-toggler-icon"></span>
-            </button>
-            <div className="collapse navbar-collapse" id="navbarNav">
-              <ul className="navbar-nav ml-auto">
-                <li className="nav-item">
-                  <button className="btn btn-danger" onClick={handleLogout}>
-                    Cerrar sesión
-                  </button>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </nav>
-      </div>
-
       <div className="container">
         <div className="row">
           <div className="col-md-12">
-            <h1 style={{ textAlign: "center" }}>
+            <h2 style={{ textAlign: "center" }}>
               Dirección de la Ubicación del Evento
-            </h1>
+            </h2>
+            <br />
             <form
               className="form-inline"
               onSubmit={handleSubmit}
@@ -194,7 +165,10 @@ const MapaDirecciones = () => {
                   id="find"
                   placeholder="Pais/Ciudad, Direccion"
                   value={find}
-                  onChange={(e) => setFind(e.target.value)}
+                  onChange={(e) => {
+                    setFind(e.target.value);
+                    setUbicacion(e.target.value);
+                  }}
                 />
               </div>
               <input className="btn btn-primary" type="submit" value="Buscar" />
@@ -211,7 +185,7 @@ const MapaDirecciones = () => {
         </div>
         <hr />
         <div className="row">
-          <div id="map" style={{ height: "400px" }}></div>
+          <div id="map" style={{ height: "450px", width: "450px" }}></div>
         </div>
       </div>
     </>
@@ -294,6 +268,10 @@ const CrudEvents = ({ organizerObj }) => {
   /*Imagen*/
   const [imagen, setImagen] = useState(null);
   const [eventImages, setEventImages] = useState({});
+
+  /*Mapa*/
+  const [mostrarMapa, setMostrarMapa] = useState(false);
+
   //Función para consumir API y obtener todo el objeto {}
 
   useEffect(() => {
@@ -802,6 +780,10 @@ const CrudEvents = ({ organizerObj }) => {
     }
   };
 
+  function handleMapa() {
+    setMostrarMapa(true);
+  }
+
   return (
     <>
       <Container className="meetup-item">
@@ -1147,22 +1129,6 @@ const CrudEvents = ({ organizerObj }) => {
           </FormGroup>
 
           <FormGroup>
-            <label>Ubicación:</label>
-            <input
-              className="form-control"
-              name="ubicacion"
-              type="text"
-              value={ubicacion}
-              onChange={(e) => setUbicacion(e.target.value)}
-            />
-            <div className="my-2">
-              <Link to={{ pathname: "/mapa", state: { ubicacion } }}>
-                <Button className="btn btn-primary">Ver Mapa</Button>
-              </Link>
-            </div>
-          </FormGroup>
-
-          <FormGroup>
             <label>Descripción:</label>
             <input
               className="form-control"
@@ -1189,6 +1155,10 @@ const CrudEvents = ({ organizerObj }) => {
               type="number"
               onChange={(e) => setLimite(e.target.value)}
             />
+          </FormGroup>
+
+          <FormGroup>
+            <MapaDirecciones setUbicacion={setUbicacion} />
           </FormGroup>
 
           {/*<FormGroup>
