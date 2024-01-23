@@ -1140,6 +1140,7 @@ const CrudEvents = ({ organizerObj }) => {
               className="form-control"
               name="limite"
               type="number"
+              style={{ width: '18%' }}
               onChange={(e) => setLimite(e.target.value)}
             />
           </FormGroup>
