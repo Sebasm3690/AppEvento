@@ -90,8 +90,8 @@ const Asistente = () => {
       <div className="container mt-5">
         <div className="col-md-6 offset-md-3">
           {asistenteData && (
-            <p className="welcome-message text-center">
-              Bienvenido, {asistenteData.nombre} {asistenteData.apellido}.
+            <p className="welcome-message text-center" style={{ color: 'white' }}>
+            Bienvenido, {asistenteData.nombre} {asistenteData.apellido}.
             </p>
           )}
 
