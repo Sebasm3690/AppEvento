@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { QrReader } from 'react-qr-reader';
+import Modal from 'react-bootstrap/Modal';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-const QRScanner = () => {
+const QRScanner = ({ show, handleClose }) => {
   const [scanResult, setScanResult] = useState('');
   const [validationResult, setValidationResult] = useState(null);
 
@@ -18,10 +20,8 @@ const QRScanner = () => {
 
       const extractedCode = extractCodeFromText(scannedText);
       if (extractedCode) {
-        // Aquí puedes agregar la lógica para enviar el resultado al backend
         axios.post('http://localhost:8000/validate_qr/', { code: extractedCode })
           .then(response => {
-            // Manejo de la respuesta de validación
             setValidationResult('Código válido');
           })
           .catch(error => {
@@ -40,18 +40,22 @@ const QRScanner = () => {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: 'auto', textAlign: 'center', marginTop: '150px' }}>
-      <QrReader
-        delay={300}
-        onResult={handleResult}
-        style={{ width: '100%' }}
-        constraints={{ facingMode: 'environment' }}
-      />
-      <div>{scanResult}</div>
-      <div>{validationResult}</div>
-    </div>
+    <Modal show={show} onHide={handleClose}>
+      <Modal.Header closeButton>
+        <Modal.Title>Escáner QR</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <QrReader
+          delay={300}
+          onResult={handleResult}
+          style={{ width: '100%' }}
+          constraints={{ facingMode: 'environment' }}
+        />
+        <div>{scanResult}</div>
+        <div>{validationResult}</div>
+      </Modal.Body>
+    </Modal>
   );
-  
-}
+};
 
 export default QRScanner;

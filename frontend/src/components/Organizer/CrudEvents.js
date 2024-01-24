@@ -12,6 +12,7 @@ import {
   ModalFooter,
 } from "reactstrap";
 import { show_alerta } from "../../functions";
+import QRScanner from "../QrScanner";
 
 import "../Organizer/indexEvents.css";
 import DashboardOrg from "../Dashboard";
@@ -267,10 +268,14 @@ const CrudEvents = ({ organizerObj }) => {
   const [showModalContiene, setShowModalContiene] = useState(false);
   const [step, setStep] = useState(1);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showModalQr, setShowModalQr] = useState(false);
   const [showConfirmModalDelete, setShowConfirmModalDelete] = useState(false);
   /*Imagen*/
   const [imagen, setImagen] = useState(null);
   const [eventImages, setEventImages] = useState({});
+
+  const handleOpen = () => setShowModalQr(true);
+  const handleClose = () => setShowModalQr(false);
 
   /*Mapa*/
   const [mostrarMapa, setMostrarMapa] = useState(false);
@@ -831,6 +836,11 @@ const CrudEvents = ({ organizerObj }) => {
           >
             DASHBOARD
           </button>
+
+        <Button variant="primary" onClick={handleOpen}>
+        Abrir Escáner QR
+      </Button>
+      <QRScanner show={showModalQr} handleClose={handleClose} />
         </div>
 
         <Table className="table table-borderless">
