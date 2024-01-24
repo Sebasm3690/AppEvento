@@ -40,17 +40,18 @@ const QRScanner = () => {
   };
 
   return (
-    <div>
+    <div style={{ maxWidth: '400px', margin: 'auto', textAlign: 'center', marginTop: '150px' }}>
       <QrReader
         delay={300}
         onResult={handleResult}
         style={{ width: '100%' }}
-        constraints={{ facingMode: 'environment' }} // Para cámaras traseras en dispositivos móviles
+        constraints={{ facingMode: 'environment' }}
       />
       <div>{scanResult}</div>
       <div>{validationResult}</div>
     </div>
   );
+  
 }
 
 export default QRScanner;
