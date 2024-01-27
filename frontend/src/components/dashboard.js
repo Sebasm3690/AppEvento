@@ -6,6 +6,8 @@ import { Chart as ChartJS } from "chart.js/auto";
 import { Bar, Chart, Doughnut, Line, Pie } from "react-chartjs-2";
 import Footer from "./footer";
 import NavBarOrg from "./Organizer/navbarOrg";
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
 
 function DashboardGrafico() {
   const { id } = useParams();
@@ -169,6 +171,63 @@ function DashboardGrafico() {
     }
   };
 
+  const exportPDF = () => {
+    const contents = document.querySelectorAll('.print-content');
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+  
+    let combinedCanvasHeight = 0;
+    let allCanvases = [];
+  
+    const processContent = (content, index) => {
+      return html2canvas(content, {
+        scale: 1,
+        useCORS: true,
+        width: content.offsetWidth,
+        windowWidth: content.scrollWidth
+      }).then((canvas) => {
+        allCanvases[index] = canvas;
+        combinedCanvasHeight += canvas.height;
+      });
+    };
+  
+    const processAllContents = () => {
+      Promise.all(Array.from(contents).map((content, index) => processContent(content, index)))
+        .then(() => {
+          // Agregar título
+          pdf.setFontSize(18); // Ajustar tamaño de fuente según necesidad
+          pdf.text('AQUI TIENE SU REPORTE', 105, 15, { align: 'center' }); // Centrar el título en la página
+  
+          let yOffset = 25; // Iniciar después del título
+  
+          allCanvases.forEach((canvas) => {
+            const imgWidth = 190;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            const imgData = canvas.toDataURL('image/png');
+            const marginX = (210 - imgWidth) / 2;
+  
+            if (yOffset + imgHeight > 297) {
+              pdf.addPage();
+              yOffset = 10; // Reajustar para la nueva página
+            }
+  
+            pdf.addImage(imgData, 'PNG', marginX, yOffset, imgWidth, imgHeight);
+            yOffset += imgHeight;
+          });
+          pdf.save('dashboard.pdf');
+        })
+        .catch(error => {
+          console.error("Error al generar el PDF: ", error);
+        });
+    };
+  
+    processAllContents();
+  };
+  
+  
   return (
     <div>
       <NavBarOrg />
@@ -179,7 +238,7 @@ function DashboardGrafico() {
 
           {/*  <!-- Content Wrapper --> */}
 
-          <div id="content-wrapper" className="d-flex flex-column">
+          <div id="content-wrapper" className="d-flex flex-column ">
             {/*  <!-- Main Content --> */}
             <div id="content">
               {/*  <!-- Topbar --> */}
@@ -225,17 +284,17 @@ function DashboardGrafico() {
                 {/*  <!-- Page Heading --> */}
                 <div className="d-sm-flex align-items-center justify-content-between mb-4">
                   <h1 className="h3 mb-0 text-gray-800">Dashboard</h1>
-                  {/* <a
-                    href="#"
-                    className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
-                  >
-                    <i className="fas fa-download fa-sm text-white-50"></i>{" "}
-                    Generate Report
-              </a> */}
+                  <a
+  href="javascript:void(0)"
+  className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+  onClick={exportPDF}
+>
+  <i className="fas fa-download fa-sm text-white-50"></i> Descargar Reporte
+</a>
                 </div>
 
                 {/*  <!-- Content Row --> */}
-                <div className="row">
+                <div className="row print-content">
                   {/*  <!-- Earnings (Monthly) Card Example --> */}
                   <div className="col-xl-3 col-md-6 mb-4">
                     <div className="card border-left-success shadow h-100 py-2">
@@ -372,7 +431,7 @@ function DashboardGrafico() {
 
                 {/*  <!-- Content Row --> */}
 
-                <div className="row">
+                <div className="row print-content">
                   {/*   <!-- Area Chart --> */}
                   <div
                     className="col-xl-8 col-lg-7"
