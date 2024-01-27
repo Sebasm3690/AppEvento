@@ -30,6 +30,10 @@ urlpatterns = [
     path("recuperar_evento/<int:id_evento>/",views.recuperarEvento.as_view(),name="recuperar_evento"),
     path("Update_iva_ice/",views.Update_iva_ice.as_view(),name="Update_iva_ice"),
     path("vendeBoleto/",views.VendeBoleto.as_view(),name="vendeBoleto"),
+    path("ganancia/<int:id_evento>/",views.GananciaEvento.as_view(),name="ganancia"),
+    path("ordenDashboard/<int:id_evento>/",views.ordenCompraDashboard.as_view(),name="ordenDashboard"),
+    path("ganancia_general/",views.GananciaGeneral.as_view(),name='ganancia_general'),
+    path("valoresPIE/",views.ValoresPIETotal.as_view(),name='valoresPIE'),
 
     path("api/login/", LoginViewAdm.as_view(), name='login'),
     path('api/logout/', LogoutViewAdm.as_view(), name='logout'),
@@ -61,5 +65,9 @@ urlpatterns = [
     path('validar-correo/', views.validar_correo, name='validar_correo'),
 
     path('api/v1/event/<int:id_evento>/upload-image/', UploadImageView.as_view(), name='upload_image'),
-
+    path('api/monto_organizador/',TotalGeneradoPorOrganizador.as_view(), name='monto_generado_organizador'),
+    path('api/cantidadorg/', TotalCantidadOrganizador.as_view(), name='CantidadOrg'),
+    path('api/cantidadsoborg/', CantidadSobranteOrg.as_view(), name='cantidad_sobrante'),
+    path('validate_qr/', validate_qr_code, name='validate_qr'),
+    path('compra-boleto/', CompraBoletoView.as_view(), name='compra-boleto'),
 ]

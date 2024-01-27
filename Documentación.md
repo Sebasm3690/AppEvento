@@ -76,6 +76,11 @@
   [![Correo Electrónico](https://img.shields.io/badge/Correo%20Electrónico-styven.padilla%40espoch.edu.ec-pink?style=for-the-badge&logo=email&logoColor=white&labelColor=101010)](mailto:styven.padilla@espoch.edu.ec)
 
 <!--
+
+NOTA: Paquetes a instalar por si acaso hay errores:
+npm install react-chartjs-2 chart.js
+npm install react-qr-reader --force
+
 - **Historia de Usuario #01:**
   - ID: HU-001
   - Descripción: Como un organizador, necesito gestionar los eventos, con la finalidad de crear, editar, eliminar eventos con detalles como nombre, fecha, hora, ubicación y descripción.

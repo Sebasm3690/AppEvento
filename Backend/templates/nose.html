@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+<div class="min-h-screen flex">
+  <!-- Sidebar -->
+  <div class="w-64 bg-blue-900 text-white p-6">
+    <div class="mb-8">
+      <div class="text-white text-3xl mb-2">👤</div>
+      <div class="uppercase text-xs">Dashboard</div>
+    </div>
+    <div class="mb-4">
+      <div class="text-blue-300 text-lg mb-2">🏠</div>
+      <div class="uppercase text-xs">Interface</div>
+      <div class="ml-4 text-sm">
+        <div>Components</div>
+        <div>Utilities</div>
+      </div>
+    </div>
+    <div>
+      <div class="text-blue-300 text-lg mb-2">📦</div>
+      <div class="uppercase text-xs">Addons</div>
+      <div class="ml-4 text-sm">
+        <div>Pages</div>
+        <div>Charts</div>
+        <div>Tables</div>
+      </div>
+    </div>
+  </div>
+  <!-- Content -->
+  <div class="flex-1 p-10">
+    <div class="flex justify-between">
+      <h1 class="text-4xl font-semibold">Dashboard</h1>
+      <div>
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Generate Report</button>
+      </div>
+    </div>
+    <div class="grid grid-cols-4 gap-4 mt-8">
+      <!-- Card 1 -->
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="mb-2 font-bold text-gray-700 uppercase text-xs">Earnings (Monthly)</div>
+        <div class="text-2xl font-bold">$40,000</div>
+      </div>
+      <!-- Card 2 -->
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="mb-2 font-bold text-gray-700 uppercase text-xs">Earnings (Annual)</div>
+        <div class="text-2xl font-bold">$215,000</div>
+      </div>
+      <!-- Card 3 -->
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="mb-2 font-bold text-gray-700 uppercase text-xs">Tasks</div>
+        <div class="w-full bg-gray-200 rounded-full h-2.5">
+          <div class="bg-blue-600 h-2.5 rounded-full" style="width: 50%"></div>
+        </div>
+      </div>
+      <!-- Card 4 -->
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="mb-2 font-bold text-gray-700 uppercase text-xs">Pending Requests</div>
+        <div class="text-2xl font-bold">18</div>
+      </div>
+    </div>
+    <div class="mt-8">
+      <!-- Additional content here -->
+    </div>
+  </div>
+</div>
+</body>
+</html>
