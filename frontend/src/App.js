@@ -114,12 +114,6 @@ function App() {
             element={<QS></QS>}
         ></Route>
 
-<Route
-        path="/dashboardorg/"
-        element={<DashboardOrg></DashboardOrg>}
-        >
-        </Route>
-
         <Route
         path="/escanearqr/"
         element={<QRScanner></QRScanner>}

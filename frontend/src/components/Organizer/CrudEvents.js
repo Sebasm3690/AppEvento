@@ -17,7 +17,6 @@ import { show_alerta } from "../../functions";
 import QRScanner from "../QrScanner";
 
 import "../Organizer/indexEvents.css";
-import { useNavigate } from 'react-router-dom';
 
 const MapaDirecciones = ({ setUbicacion, ubicacion }) => {
   const [find, setFind] = useState("");
