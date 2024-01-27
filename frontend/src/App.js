@@ -28,8 +28,10 @@ import VerQR from "./components/MostrarQR";
 
 import Maps from "./components/Organizer/Ubicación";
 import ConfirmationPage from "./components/confirmado_correo";
-import EventoHP from "./components/eventosHP"
-import QS from "./components/otros/quienes-somos"
+import EventoHP from "./components/eventosHP";
+import QS from "./components/otros/quienes-somos";
+import DashboardGrafico from "./components/dashboard";
+import DashboardGeneral from "./components/dashboardGeneral";
 
 function App() {
   return (
@@ -42,6 +44,11 @@ function App() {
         <Route
           path="/panelAdmin/"
           element={<ShowOrganizers></ShowOrganizers>}
+        ></Route>
+
+        <Route
+          path="/dashboardGrafico/:id"
+          element={<DashboardGrafico></DashboardGrafico>}
         ></Route>
 
         <Route path="/loginadm/" element={<LoginAdm></LoginAdm>}></Route>
@@ -67,6 +74,11 @@ function App() {
           element={<Organizador></Organizador>}
         ></Route>
 
+        <Route
+          path="/dashboardGeneral/"
+          element={<DashboardGeneral></DashboardGeneral>}
+        ></Route>
+
         <Route path="/payfinal/" element={<Payjs></Payjs>}></Route>
         <Route path="/meventos/" element={<EventosList></EventosList>}></Route>
         <Route
@@ -88,21 +100,10 @@ function App() {
           element={<ComprasAsistente></ComprasAsistente>}
         ></Route>
         <Route path="/observarqr/" element={<VerQR></VerQR>}></Route>
-        <Route
-          path="/correo-confirmado"
-          element={<ConfirmationPage />}
-        ></Route>
-       <Route
-            path="/eventosHP/"
-            element={<EventoHP></EventoHP>}
-        ></Route>
-        <Route
-            path="/quienes-somos/"
-            element={<QS></QS>}
-        ></Route>
-
+        <Route path="/correo-confirmado" element={<ConfirmationPage />}></Route>
+        <Route path="/eventosHP/" element={<EventoHP></EventoHP>}></Route>
+        <Route path="/quienes-somos/" element={<QS></QS>}></Route>
       </Routes>
-
     </BrowserRouter>
   );
 }

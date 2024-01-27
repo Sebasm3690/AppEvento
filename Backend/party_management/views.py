@@ -33,6 +33,7 @@ from django.template.loader import render_to_string
 from django.shortcuts import render
 from django.template.loader import get_template
 import base64
+from django.db.models import Sum, functions
 
 #resend.api_key = os.environ["RESEND_API_KEY"]
 
@@ -110,6 +111,7 @@ class EventView(viewsets.ModelViewSet):
     serializer_class = EventSerializer
     queryset = Evento.objects.all()
 
+
 class TicketView(viewsets.ModelViewSet):
     serializer_class = TicketSerializer
     queryset = Boleto.objects.all()
@@ -200,6 +202,142 @@ class EventView(viewsets.ModelViewSet):
 class TicketView(viewsets.ModelViewSet):
     serializer_class = TicketSerializer
     queryset = Boleto.objects.all()
+
+
+class ordenCompraDashboard (APIView):
+    def get(self,request,id_evento):
+        #Obtener compra del evento
+        boletos_ids = Boleto.objects.filter(id_evento=id_evento).values_list('id_boleto', flat=True)
+        ordenes_ids = Contiene.objects.filter(id_boleto__in=boletos_ids).values_list('num_orden', flat=True)
+        compras = OrdenCompra.objects.filter(num_orden__in=ordenes_ids)
+        
+        #Lógica compras
+        ventas_mensuales = compras.annotate(   #objects.annotate en caso de que saques del modelo ordenCompra
+            mes=functions.ExtractMonth('fecha'),
+            año=functions.ExtractYear('fecha')          
+        ).values('mes','año').annotate( #Aqui se agrupan los meses y año, por lo que en la linea de abajo se suman en caso que los meses y años sean iguales (GROUP BY)
+            total_mes=Sum('valor_total')
+        ).order_by('año', 'mes')
+
+        total_anual = sum(venta['total_mes'] for venta in ventas_mensuales) #Se pone venta["total_mes"] para solo obtener solo el total_mes de cada elemento
+        
+        #print("Total anual y ventas mensuales: {} y {}".format(total_anual, ventas_mensuales))
+        return Response({'ventas_mensuales': ventas_mensuales, 'total_anual': total_anual})
+     
+   
+        #compras_data = [{"num_orden": compra.num_orden, "valor_total": compra.valor_total, "fecha": compra.fecha} for compra in compras]
+        #return JsonResponse(compras_data, safe=False)
+
+class GananciaGeneral(APIView):
+    def get(self, request):
+        # Lista para almacenar la ganancia total de cada evento
+        ganancia_por_evento = []
+
+        eventos = Evento.objects.all()   #Los modelos no son iterablesm por lo que se debe guardar en una variable y luego iterar
+
+        # Lista para almacenar la ganancia total de cada evento
+        for evento in eventos:
+            ganancia_total_evento = 0
+            boletos = Boleto.objects.filter(id_evento=evento)
+            gasto = 0
+
+            for boleto in boletos:
+                contienes = Contiene.objects.filter(id_boleto=boleto)
+            
+                for contiene in contienes:
+                    ganancia_total_evento += boleto.precio * contiene.cantidad_total
+                    gasto = evento.gasto - ganancia_total_evento
+                    if(gasto < 0):
+                        gasto = 0
+
+            ganancia_general = {
+                "nombre_evento": evento.nombre_evento,
+                "ganancia_total_evento": ganancia_total_evento,
+                "gasto_general":gasto
+            }
+
+            ganancia_por_evento.append(ganancia_general)
+        
+
+        return JsonResponse(ganancia_por_evento, safe=False)
+                
+
+class ValoresPIETotal(APIView):
+    def get(self,request):
+        ganancia_total_eventos = 0
+        gasto_total_eventos = 0
+        ganancia_total_posible = 0
+        ordenCompras = OrdenCompra.objects.all()
+        eventos = Evento.objects.filter(eliminado=False)
+        vende = Vende.objects.first()
+        boletos = Boleto.objects.all()
+        
+
+        for ordenCompra in ordenCompras:
+            ganancia_total_eventos+=ordenCompra.valor_total
+        
+        for evento in eventos:
+            gasto_total_eventos+=evento.gasto
+
+        for boleto in boletos:
+            ganancia_total_posible += boleto.stock * boleto.precio
+      
+
+        ganancia_porcentaje = round (float(ganancia_total_eventos * 100) / float(ganancia_total_posible),2)
+        
+
+
+        valoresPIE = {
+            "ganancia_total_eventos": ganancia_total_eventos,
+            "gasto_total_eventos": gasto_total_eventos,
+            "iva": vende.iva,
+            "ganancia_porcentaje": ganancia_porcentaje
+        }
+
+        return JsonResponse(valoresPIE, safe=False)
+                
+        
+
+        
+
+
+class GananciaEvento(APIView):
+    def get(self,request,id_evento):
+        evento = Evento.objects.filter(id_evento=id_evento).first()
+        boleto = Boleto.objects.filter(id_evento=id_evento).first()
+        vende = Vende.objects.filter(id_boleto=boleto.id_boleto).first()
+        numeroBoletosVendidos = boleto.stock - vende.stock_actual
+        ganancia = numeroBoletosVendidos * boleto.precio
+        ganancia_posible = boleto.stock * boleto.precio
+        porcentajeBoletosVendidos = 100 - (vende.stock_actual * 100) / boleto.stock
+        porcentajeGananciaTotal = (ganancia * 100) / ganancia_posible
+        perdida = evento.gasto - ganancia
+        #print(perdida)
+        if (perdida < 0):
+            perdida = 0
+        evento_serializer = EventSerializer(evento)
+
+        data = {
+            'ganancia_total': ganancia,
+            'ganancia_posible': ganancia_posible,
+            'numero_boletos_vendidos':numeroBoletosVendidos,
+            'porcentaje_boletos':porcentajeBoletosVendidos,
+            'porcentajeGananciaTotal':porcentajeGananciaTotal,
+            'evento':evento_serializer.data,
+            'perdida':perdida
+        }
+
+        return Response(data)
+
+
+
+
+
+
+class GananciaGeneralEventos(APIView):
+    def get(self, request):
+        eventos = Evento.objects.all()        
+
 
 class BorradoLogicoOrganizer(APIView):
     def post(self,request,id_organizador):
