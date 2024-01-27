@@ -863,9 +863,9 @@ const CrudEvents = ({ organizerObj }) => {
             VER DASHBOARD GENERAL
           </button>
           <Button variant="primary" onClick={handleOpen}>
-        Abrir Escáner QR
-      </Button>
-      <QRScanner show={showModalQr} handleClose={handleClose} />
+            Abrir Escáner QR
+          </Button>
+          <QRScanner show={showModalQr} handleClose={handleClose} />
         </div>
 
         <Table className="table table-borderless">
@@ -1496,16 +1496,6 @@ const CrudEvents = ({ organizerObj }) => {
               name="precio"
               type="money"
               onChange={(e) => setPrecio(e.target.value)}
-            />
-          </FormGroup>
-
-          <FormGroup>
-            <label>ID Evento:</label>
-            <input
-              className="form-control"
-              name="number"
-              type="money"
-              value={idEventoBoleto}
             />
           </FormGroup>
         </ModalBody>
