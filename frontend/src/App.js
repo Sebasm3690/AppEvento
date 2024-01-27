@@ -30,7 +30,8 @@ import Maps from "./components/Organizer/Ubicación";
 import ConfirmationPage from "./components/confirmado_correo";
 import EventoHP from "./components/eventosHP"
 import QS from "./components/otros/quienes-somos"
-import DashboardOrg from "./components/Dashboard";
+import DashboardGrafico from "./components/dashboard";
+import DashboardGeneral from "./components/dashboardGeneral";
 import QRScanner from "./components/QrScanner";
 
 function App() {
@@ -44,6 +45,11 @@ function App() {
         <Route
           path="/panelAdmin/"
           element={<ShowOrganizers></ShowOrganizers>}
+        ></Route>
+
+        <Route
+          path="/dashboardGrafico/:id"
+          element={<DashboardGrafico></DashboardGrafico>}
         ></Route>
 
         <Route path="/loginadm/" element={<LoginAdm></LoginAdm>}></Route>
@@ -67,6 +73,11 @@ function App() {
         <Route
           path="/organizador/"
           element={<Organizador></Organizador>}
+        ></Route>
+
+        <Route
+          path="/dashboardGeneral/"
+          element={<DashboardGeneral></DashboardGeneral>}
         ></Route>
 
         <Route path="/payfinal/" element={<Payjs></Payjs>}></Route>
@@ -103,7 +114,7 @@ function App() {
             element={<QS></QS>}
         ></Route>
 
-        <Route
+<Route
         path="/dashboardorg/"
         element={<DashboardOrg></DashboardOrg>}
         >
@@ -115,7 +126,6 @@ function App() {
         ></Route>
 
       </Routes>
-
     </BrowserRouter>
   );
 }

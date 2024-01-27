@@ -30,6 +30,10 @@ urlpatterns = [
     path("recuperar_evento/<int:id_evento>/",views.recuperarEvento.as_view(),name="recuperar_evento"),
     path("Update_iva_ice/",views.Update_iva_ice.as_view(),name="Update_iva_ice"),
     path("vendeBoleto/",views.VendeBoleto.as_view(),name="vendeBoleto"),
+    path("ganancia/<int:id_evento>/",views.GananciaEvento.as_view(),name="ganancia"),
+    path("ordenDashboard/<int:id_evento>/",views.ordenCompraDashboard.as_view(),name="ordenDashboard"),
+    path("ganancia_general/",views.GananciaGeneral.as_view(),name='ganancia_general'),
+    path("valoresPIE/",views.ValoresPIETotal.as_view(),name='valoresPIE'),
 
     path("api/login/", LoginViewAdm.as_view(), name='login'),
     path('api/logout/', LogoutViewAdm.as_view(), name='logout'),

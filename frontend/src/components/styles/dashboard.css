@@ -1,0 +1,61 @@
+.a1 {
+  width: 50%;
+}
+.a2 {
+  width: 20%;
+}
+.a3 {
+  width: 40%;
+}
+.a4 {
+  width: 80%;
+}
+.a5 {
+  width: 100%;
+}
+.a6 {
+  width: 25rem;
+}
+.a7 {
+  width: 60%;
+}
+
+/* Agrega atributos ARIA correctamente */
+.a1,
+.a2,
+.a3,
+.a4,
+.a5,
+.a7 {
+  aria-valuenow: 0;
+  aria-valuemin: 0;
+  aria-valuemax: 100;
+}
+
+.a1 {
+  aria-valuenow: 50;
+}
+.a2 {
+  aria-valuenow: 20;
+}
+.a3 {
+  aria-valuenow: 40;
+}
+.a4 {
+  aria-valuenow: 80;
+}
+.a5 {
+  aria-valuenow: 100;
+}
+.a7 {
+  aria-valuenow: 60;
+}
+
+.toggled {
+  overflow: visible !important;
+  width: 6.5rem !important;
+}
+.toggled1 {
+  width: 0 !important;
+  overflow: hidden !important;
+}

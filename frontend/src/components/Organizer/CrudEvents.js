@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import DashboardGrafico from "../../components/dashboard";
 import axios from "axios";
 import {
   Table,
@@ -15,10 +17,9 @@ import { show_alerta } from "../../functions";
 import QRScanner from "../QrScanner";
 
 import "../Organizer/indexEvents.css";
-import DashboardOrg from "../Dashboard";
 import { useNavigate } from 'react-router-dom';
 
-const MapaDirecciones = ({ setUbicacion }) => {
+const MapaDirecciones = ({ setUbicacion, ubicacion }) => {
   const [find, setFind] = useState("");
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
@@ -167,7 +168,7 @@ const MapaDirecciones = ({ setUbicacion }) => {
                   name="find"
                   id="find"
                   placeholder="Pais/Ciudad, Direccion"
-                  value={find}
+                  value={ubicacion}
                   onChange={(e) => {
                     setFind(e.target.value);
                     setUbicacion(e.target.value);
@@ -196,6 +197,7 @@ const MapaDirecciones = ({ setUbicacion }) => {
 };
 
 const CrudEvents = ({ organizerObj }) => {
+  const navigate = useNavigate();
   const estiloModal = {
     maxWidth: "80%",
     width: "auto",
@@ -216,6 +218,7 @@ const CrudEvents = ({ organizerObj }) => {
   const [ubicacion, setUbicacion] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [tipo, setTipo] = useState("");
+  const [gasto, setGasto] = useState(0);
   /*Boleto*/
   const [boletos, setBoletos] = useState([]);
   const [idBoleto, setIdBoleto] = useState(0);
@@ -224,7 +227,6 @@ const CrudEvents = ({ organizerObj }) => {
   const [precio, setPrecio] = useState(0);
   const [idEventoBoleto, setIdEventoBoleto] = useState(0);
 
-  const navigate = useNavigate();
   const [limite, setLimite] = useState(0);
   //const [image, setImage] = useState("");
 
@@ -330,6 +332,7 @@ const CrudEvents = ({ organizerObj }) => {
       setNombre(evento.nombre_evento);
       setFecha(evento.fecha);
       setHora(evento.hora);
+      setGasto(evento.gasto);
       setUbicacion(evento.ubicacion);
       setDescripcion(evento.descripcion);
       setTipo(evento.tipo);
@@ -636,6 +639,9 @@ const CrudEvents = ({ organizerObj }) => {
       show_alerta("Escribe la descripción del evento", "warning");
     } else if (tipo.trim() === "") {
       show_alerta("Escribe el tipo de evento", "warning");
+      if (gasto === 0) {
+        show_alerta("Escribe gasto para realizar el evento", "warning");
+      }
     } else if (limite <= 20) {
       show_alerta(
         "El límite del evento debe ser de mas de 20 personas",
@@ -676,6 +682,7 @@ const CrudEvents = ({ organizerObj }) => {
         nombre_evento: nombre.trim(),
         fecha,
         hora,
+        gasto,
         ubicacion: ubicacion.trim(),
         descripcion: descripcion.trim(),
         tipo: tipo.trim(),
@@ -711,6 +718,7 @@ const CrudEvents = ({ organizerObj }) => {
         nombre_evento: nombre.trim(),
         fecha: fecha,
         hora: hora,
+        gasto: gasto,
         ubicacion: ubicacion.trim(),
         descripcion: descripcion.trim(),
         tipo: tipo.trim(),
@@ -794,15 +802,21 @@ const CrudEvents = ({ organizerObj }) => {
 
   return (
     <>
-      <Container className="meetup-item" >
-        <div style={{ paddingBlockEnd: '50px'}}>
+      <Container className="meetup-item">
+        <div style={{ paddingBlockEnd: "50px" }}>
           <button
-            style={{ backgroundColor: '#2980b9', borderColor: '#2980b9', padding: '10px 20px', borderRadius: '8px' }}
+            style={{
+              backgroundColor: "#2980b9",
+              borderColor: "#2980b9",
+              padding: "10px 20px",
+              borderRadius: "8px",
+            }}
             className="btn btn-primary"
             onClick={() => setShowModalInsert(true)}
           >
             NUEVO EVENTO
           </button>
+
           <span style={{ margin: "0 40px" }}></span>
           {events.some(
             (evento) =>
@@ -811,7 +825,13 @@ const CrudEvents = ({ organizerObj }) => {
           ) && (
             <button
               className="btn btn-info"
-              style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+              style={{
+                backgroundColor: "#3498db",
+                borderColor: "#3498db",
+                color: "#fff",
+                padding: "10px 20px",
+                borderRadius: "8px",
+              }}
               onClick={() => setShowModalImpuestosIngresar(true)}
             >
               AGREGAR IMPUESTOS
@@ -819,25 +839,31 @@ const CrudEvents = ({ organizerObj }) => {
           )}
           <span style={{ margin: "0 40px" }}></span>
           <button
-            style={{ backgroundColor: '#6aabb5', borderColor: '#6aabb5', padding: '10px 20px', borderRadius: '8px' }}
+            style={{
+              backgroundColor: "#6aabb5",
+              borderColor: "#6aabb5",
+              padding: "10px 20px",
+              borderRadius: "8px",
+            }}
             className="btn btn-success"
             onClick={() => setShowModalRecuperar(true)}
           >
             {/*Recuperar evento*/}
             HISTÓRICO
           </button>
-
-          <span style={{ margin: '0 40px' }}></span>
-
           <button
-          className="btn btn-success"
-          onClick={() => navigate('/dashboardorg/')}
-          
+            style={{
+              backgroundColor: "#2980b9",
+              borderColor: "#2980b9",
+              padding: "10px 20px",
+              borderRadius: "8px",
+            }}
+            className="btn btn-primary"
+            onClick={() => navigate("/dashboardGeneral/")}
           >
-            DASHBOARD
+            VER DASHBOARD GENERAL
           </button>
-
-        <Button variant="primary" onClick={handleOpen}>
+          <Button variant="primary" onClick={handleOpen}>
         Abrir Escáner QR
       </Button>
       <QRScanner show={showModalQr} handleClose={handleClose} />
@@ -849,6 +875,7 @@ const CrudEvents = ({ organizerObj }) => {
               <th>Nombre</th>
               <th>Fecha</th>
               <th>Hora</th>
+              <th>Gasto del evento</th>
               <th>Ubicación</th>
               <th>Descripción</th>
               <th>Tipo</th>
@@ -869,6 +896,7 @@ const CrudEvents = ({ organizerObj }) => {
                   <td>{event.nombre_evento}</td>
                   <td>{event.fecha}</td>
                   <td>{event.hora}</td>
+                  <td>{event.gasto}</td>
                   <td>{event.ubicacion}</td>
                   <td>{event.descripcion}</td>
                   <td>{event.tipo}</td>
@@ -887,56 +915,95 @@ const CrudEvents = ({ organizerObj }) => {
                       type="file"
                       accept="image/*"
                       onChange={(e) => handleImageChange(e, event.id_evento)}
-                      style={{ marginTop: '3px', maxWidth: '99px', padding: '7px, 14px', borderRadius: '8px'}}
+                      style={{
+                        marginTop: "3px",
+                        maxWidth: "99px",
+                        padding: "7px, 14px",
+                        borderRadius: "8px",
+                      }}
                     />
                   </td>
 
-                  {/*}<td>
-                    {" "}
-                    {image && (
-                      <img
-                        src={event.image}
-                        alt="Imagen de vista previa"
-                        style={{ maxWidth: "100%", height: "auto" }}
-                      />
-                    )}
-                    </td>*/}
-
                   <td>
                     <button
-                      style={{color: '#fff', padding: '7px 14px', borderRadius: '8px' }}
+                      style={{
+                        color: "#fff",
+                        padding: "7px 14px",
+                        borderRadius: "8px",
+                      }}
                       onClick={() => handleEditarEvento(event.id_evento)}
                       className="btn btn-warning"
                     >
-                      <img src={"https://cdn-icons-png.flaticon.com/512/1827/1827933.png"} alt="Editar" width={'25px'} />
-                      <span style={{ margin: '0 0px' }}></span>
-                    
+                      <img
+                        src={
+                          "https://cdn-icons-png.flaticon.com/512/1827/1827933.png"
+                        }
+                        alt="Editar"
+                        width={"25px"}
+                      />
+                      <span style={{ margin: "0 0px" }}></span>
                     </button>
-                    <span style={{ margin: '0 3px' }}></span>
+                    <span style={{ margin: "0 3px" }}></span>
                     <button
-                      style={{color: '#fff', padding: '7px 14px', borderRadius: '8px' }}
+                      style={{
+                        color: "#fff",
+                        padding: "7px 14px",
+                        borderRadius: "8px",
+                      }}
                       className="btn btn-danger"
                       onClick={() => {
                         setShowConfirmModalDelete(true);
                         setId(event.id_evento);
                       }}
                     >
-                      <img src={"https://cdn-icons-png.flaticon.com/512/3221/3221845.png"} alt="Editar" width={'25px'} />
-                      <span style={{ margin: '0 0px' }}></span>
-                     
-                    </button> 
-                    <span style={{ margin: '0 0px' }}></span>
+                      <img
+                        src={
+                          "https://cdn-icons-png.flaticon.com/512/3221/3221845.png"
+                        }
+                        alt="Editar"
+                        width={"25px"}
+                      />
+                      <span style={{ margin: "0 0px" }}></span>
+                    </button>
+                    <span style={{ margin: "0 0px" }}></span>
 
                     <button
-                      style={{ backgroundColor: '#17A2B8', color: '#fff', padding: '7px 14px', borderRadius: '8px' }}
+                      style={{
+                        backgroundColor: "#17A2B8",
+                        color: "#fff",
+                        padding: "7px 14px",
+                        borderRadius: "8px",
+                      }}
                       type="button"
                       class="btn btn-primary"
                       onClick={() => mostrarOrdenCompra(event.id_evento)}
                     >
-                      <img src={"https://cdn-icons-png.flaticon.com/512/46/46155.png"} alt="Editar" width={'25px'} />
-                      <span style={{ margin: '0 0px' }}></span>
+                      <img
+                        src={
+                          "https://cdn-icons-png.flaticon.com/512/46/46155.png"
+                        }
+                        alt="Editar"
+                        width={"25px"}
+                      />
+                      <span style={{ margin: "0 0px" }}></span>
                       <span class="badge bg-secondary"></span>
                     </button>
+                  </td>
+                  <td>
+                    <Button
+                      style={{
+                        backgroundColor: "#2980b9",
+                        borderColor: "#2980b9",
+                        padding: "10px 20px",
+                        borderRadius: "8px",
+                      }}
+                      className="btn btn-primary"
+                      onClick={() =>
+                        navigate(`/dashboardGrafico/${event.id_evento}`)
+                      }
+                    >
+                      VER DASHBOARD
+                    </Button>
                   </td>
                 </tr>
               ))}
@@ -1033,6 +1100,17 @@ const CrudEvents = ({ organizerObj }) => {
           </FormGroup>
 
           <FormGroup>
+            <label>Gasto:</label>
+            <input
+              className="form-control"
+              name="gasto"
+              type="number"
+              onChange={(e) => setGasto(e.target.value)}
+              value={gasto}
+            />
+          </FormGroup>
+
+          <FormGroup>
             <label>Ubicación:</label>
             <input
               className="form-control"
@@ -1076,17 +1154,7 @@ const CrudEvents = ({ organizerObj }) => {
             />
           </FormGroup>
 
-          <FormGroup>
-            <label>Id Organizador:</label>
-            <input
-              className="form-control"
-              readOnly
-              name="id_organizador"
-              type="text"
-              onChange={(e) => setIdOrganizador(e.target.value)}
-              value={id_organizador}
-            />
-          </FormGroup>
+          <MapaDirecciones />
         </ModalBody>
 
         <ModalFooter>
@@ -1167,6 +1235,16 @@ const CrudEvents = ({ organizerObj }) => {
           </FormGroup>
 
           <FormGroup>
+            <label>Gasto:</label>
+            <input
+              className="form-control"
+              name="gasto"
+              type="number"
+              onChange={(e) => setGasto(e.target.value)}
+            />
+          </FormGroup>
+
+          <FormGroup>
             <label>Descripción:</label>
             <input
               className="form-control"
@@ -1191,13 +1269,16 @@ const CrudEvents = ({ organizerObj }) => {
               className="form-control"
               name="limite"
               type="number"
-              style={{ width: '18%' }}
+              style={{ width: "18%" }}
               onChange={(e) => setLimite(e.target.value)}
             />
           </FormGroup>
 
           <FormGroup>
-            <MapaDirecciones setUbicacion={setUbicacion} />
+            <MapaDirecciones
+              setUbicacion={setUbicacion}
+              ubicacion={ubicacion}
+            />
           </FormGroup>
 
           {/*<FormGroup>
@@ -1310,17 +1391,18 @@ const CrudEvents = ({ organizerObj }) => {
             <label>Precio:</label>
             <input
               className="form-control"
-              name="hora"
+              name="precio"
               type="money"
               onChange={(e) => setPrecio(e.target.value)}
               value={precio}
             />
           </FormGroup>
+
           <FormGroup>
             <label>ID Evento:</label>
             <input
               className="form-control"
-              name="hora"
+              name="id"
               type="money"
               onChange={(e) => setIdEventoBoleto(e.target.value)}
               value={id}
@@ -1504,6 +1586,7 @@ const CrudEvents = ({ organizerObj }) => {
                 <th>Nombre</th>
                 <th>Fecha</th>
                 <th>Hora</th>
+                <th>Gasto del evento</th>
                 <th>Ubicación</th>
                 <th>Descripción</th>
                 <th>Tipo</th>
@@ -1525,6 +1608,7 @@ const CrudEvents = ({ organizerObj }) => {
                     <td>{event.nombre_evento}</td>
                     <td>{event.fecha}</td>
                     <td>{event.hora}</td>
+                    <td>{event.gasto}</td>
                     <td>{event.ubicacion}</td>
                     <td>{event.descripcion}</td>
                     <td>{event.tipo}</td>
@@ -1549,12 +1633,29 @@ const CrudEvents = ({ organizerObj }) => {
                       >
                         Recuperar Evento
                   </Button>*/}
-                      <Button
-                        className="btn btn-info"
-                        onClick={() => mostrarOrdenCompra(event.id_evento)}
-                      >
-                        Ver Orden de compra
-                      </Button>
+                      <td>
+                        <Button
+                          className="btn btn-info"
+                          onClick={() => mostrarOrdenCompra(event.id_evento)}
+                        >
+                          Ver Orden de compra
+                        </Button>{" "}
+                        <Button
+                          style={{
+                            backgroundColor: "#2980b9",
+                            borderColor: "#2980b9",
+                            padding: "10px 20px",
+                            borderRadius: "8px",
+                          }}
+                          className="btn btn-primary"
+                          onClick={() =>
+                            navigate(`/dashboardGrafico/${event.id_evento}`)
+                          }
+                        >
+                          VER DASHBOARD
+                        </Button>
+                      </td>
+
                       <br></br>
                     </td>
                   </tr>
