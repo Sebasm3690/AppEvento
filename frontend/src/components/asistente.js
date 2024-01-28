@@ -6,7 +6,6 @@ import NavBarAsis from "./Asistente/navbaras";
 import Footer from "./footer";
 import "./styles/inicio.css";
 
-
 const Asistente = () => {
   const [asistenteData, setAsistenteData] = useState(null);
   const [eventos, setEventos] = useState([]);
@@ -93,22 +92,24 @@ const Asistente = () => {
           <div className="col-md-6 offset-md-3">
 
             {asistenteData && (
-              <p className="welcome-message text-center" style={{ color: 'black', fontSize: '30px', fontFamily: 'Cambria' }}>
-                Bienvenido, {asistenteData.nombre} {asistenteData.apellido}.
-              </p>
+              <h1 className="welcome-message text-center" style={{ color: 'black', fontFamily: 'Cambria', fontWeight: 'bold'}}>
+                ¡Bienvenido, {asistenteData.nombre} {asistenteData.apellido}!
+              </h1>
             )}
 
             <div className="col-md-10 offset-md-1">
               <br />
               <UncontrolledCarousel
                 items={carouselItems}
-                interval={1500}
+                interval={2500}
               />
             </div>
 
             <div className="button-container text-center">
-              <Link to={`/meventos/`} className="btn btn-primary custom-btn">
-                Ver Eventos
+              <Link to="/meventos/" className="btn btn-primary"
+                style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+              >
+                VER EVENTOS
               </Link>
             </div>
           </div>

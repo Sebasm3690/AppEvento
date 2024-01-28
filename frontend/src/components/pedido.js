@@ -158,7 +158,7 @@ function BoletosList() {
       <h1 className="display-4 text-center mb-4">BOLETOS DISPONIBLES</h1>
       <div className="container mt-5">
         <div className="row">
-          <div className="col-md-5 d-flex">
+          <div className="col-md-5 mx-auto">
             <ul className="list-group">
               {boletos
                 .filter((boleto) => parseInt(boleto.id_evento) === parseInt(id))
@@ -169,7 +169,7 @@ function BoletosList() {
                   const imagenEvento = eventoCorrespondiente
                     ? eventoCorrespondiente.imagen
                     : null;
-
+  
                   return (
                     <li key={boleto.id_boleto}>
                       {imagenEvento && (
@@ -181,6 +181,7 @@ function BoletosList() {
                         />
                       )}
                       <div className="form-check checkbox-container">
+                        <br></br>
                         <input
                           className="form-check-input"
                           type="checkbox"
@@ -195,18 +196,10 @@ function BoletosList() {
                               )
                             );
                           }}
-                        />
+                        /> 
                         <label className="form-check-label" htmlFor={`checkbox-${boleto.id_boleto}`}>
                           Seleccione la opción
                         </label>
-                      </div>
-                      <div className="precio-stock-container">
-                        <div className="precio-label">
-                          <strong>Precio:</strong> ${boleto.precio}
-                        </div>
-                        <div className="stock-label">
-                          <strong>Stock:</strong> {boleto.stock}
-                        </div>
                       </div>
                       {boleto.isChecked && (
                         <div className="input-group mt-3">
@@ -243,6 +236,20 @@ function BoletosList() {
             </ul>
           </div>
           <div className="col-md-5">
+            {boletos
+              .filter((boleto) => parseInt(boleto.id_evento) === parseInt(id))
+              .map((boleto, index) => (
+                <div key={boleto.id_boleto}>
+                  <div className="precio-stock-container" style={{ backgroundColor: '#6aabb5' }}>
+                    <div className="precio-label">
+                      <strong>Precio:</strong> ${boleto.precio}
+                    </div>
+                    <div className="stock-label">
+                      <strong>Stock:</strong> {boleto.stock}
+                    </div>
+                  </div>
+                </div>
+              ))}
             <div className="text-center mt-3">
               {boletos.some((boleto) => boleto.isChecked) && (
                 <p className="total-pagar">Total a Pagar: ${total}</p>
@@ -250,8 +257,10 @@ function BoletosList() {
               <p className="total-llevar">Total de boletos a llevar: {totalBoletosSeleccionados}</p>
               <div className="button-container">
                 {boletos.filter((boleto) => boleto.isChecked) && (
-                  <button onClick={() => handleRealizarPedido(cantidad)}>
-                    Realizar Pedido
+                  <button onClick={() => handleRealizarPedido(cantidad)}
+                    style={{ backgroundColor: '#92c7a3', borderColor: '#92c7a3', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                  >
+                    REALIZAR COMPRA
                   </button>
                 )}
               </div>
@@ -262,5 +271,6 @@ function BoletosList() {
       <Footer />
     </div>
   );
+  
 }
 export default BoletosList;

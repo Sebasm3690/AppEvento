@@ -93,7 +93,7 @@ const CompraR = () => {
                 show_alerta("Compra realizada Correctamente! Se le enviará su entrada al correo electrónico registrado", "success");
                 
                 try {
-                    const response2 = await fetch('http://127.0.0.1:8000/api/contiene/agregar/', {
+                    const response2 = await fetch('http://127.0.0.1:8000/compra-boleto/', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -125,26 +125,36 @@ const CompraR = () => {
         
         <div>
             <NavBarAsis />
-            <div className="d-flex justify-content-center align-items-center" style={{ marginTop: '50px' }}>
+            <div className="d-flex justify-content-center align-items-center" style={{ marginTop: '50px' }}>
             {error && <p className="text-danger">{error}</p>}
                 <form onSubmit={handleSubmit}>
                     <Card style={{ width: '25rem' }}>
                     <CardBody>
-                        <CardTitle tag="h5">Resumen de la Compra</CardTitle>
+                        <center >
+                            <CardTitle tag="h3" style={{fontWeight: 'bold'}}>RESUMEN DE LA COMPRA</CardTitle>
+                        </center>
                     </CardBody>
                     <img alt="Card cap" src="https://fecbiwu.stripocdn.email/content/guids/4d001e18-5396-4c01-ac01-15dfda6a11b8/images/_ba465e2abddd42d88eaaf734fd9b694dremovebgpreview.png" width="100%" />
                     <CardBody>
                         <CardText>
                         <div className="mb-3">
-                            <p className="mb-3 valor-total">Valor total de la compra: ${value} $</p>
-                            <p className="mb-3 cantidad-boletos">Cantidad de boletos comprados: ${description}</p>
-                            <p className="mb-3 fecha-compra">Fecha de compra: ${currentDate}</p>
+                            <p className="mb-3 valor-total">
+                                <strong>Valor total de la compra:</strong> ${value}
+                            </p>
+                            <p className="mb-3 cantidad-boletos">
+                                <strong>Cantidad de boletos comprados:</strong> {description}
+                            </p>
+                            <p className="mb-3 fecha-compra">
+                                <strong>Fecha de compra:</strong> {currentDate}
+                            </p>
                         </div>
                         </CardText>
                     </CardBody>
                     <CardFooter className="text-center">
-                        <Button type="submit" color="primary">
-                            Confirmar
+                        <Button type="submit" color="primary"
+                            style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                        >
+                            CONFIRMAR
                         </Button>
                     </CardFooter>
                     </Card>

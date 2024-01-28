@@ -19,9 +19,6 @@
   text-decoration: none;
   transition: color 0.3s;
 }
-.link-negro {
-  color: rgba(243, 242, 242, 0.998);
-}
 
 .footer a:hover {
   color: #2980b9;

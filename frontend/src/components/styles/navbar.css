@@ -1,3 +1,7 @@
+body {
+  margin: 0;
+}
+
 .navbar {
   background-color: #2980b9;
   padding: 15px 20px;
@@ -82,8 +86,10 @@
 }
 
 .navbar-left {
-  margin-right: 20px;
+  width: 45%; 
+  box-sizing: border-box; 
   padding-left: 20px;
+  padding-right: 0;
 }
 
 .navbar-left a {
@@ -93,6 +99,25 @@
 }
 
 .navbar-left:hover {
+  color: #333;
+  text-decoration: overline; 
+}
+
+.centered-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1; 
+}
+
+.centered-panel .navbar-brand {
+  color: #fff;
+  text-decoration:overline;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.centered-panel:hover{
   color: #333;
   text-decoration: overline; 
 }

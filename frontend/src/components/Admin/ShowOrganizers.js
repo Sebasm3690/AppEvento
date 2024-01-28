@@ -78,16 +78,16 @@ const CrudOrganizers = ({ adminObj }) => {
     if (cedula.length !== 10) {
       return false;
     }
-    const digitos = cedula.substring(0, 9).split('').map(Number);
+    const digitos = cedula.substring(0, 9).split("").map(Number);
     const digitoVerificador = parseInt(cedula.charAt(9), 10);
     let suma = 0;
     for (let i = 0; i < 9; i++) {
-      let multiplicador = (i % 2 === 0) ? 2 : 1;
+      let multiplicador = i % 2 === 0 ? 2 : 1;
       let resultado = digitos[i] * multiplicador;
-      suma += (resultado > 9) ? resultado - 9 : resultado;
+      suma += resultado > 9 ? resultado - 9 : resultado;
     }
     let modulo = suma % 10;
-    let resultadoEsperado = (modulo === 0) ? 0 : 10 - modulo;
+    let resultadoEsperado = modulo === 0 ? 0 : 10 - modulo;
     return resultadoEsperado === digitoVerificador;
   };
 
@@ -130,8 +130,8 @@ const CrudOrganizers = ({ adminObj }) => {
       show_alerta("Escribe el nombre del organizador", "warning");
     } else if (apellido.trim() === "") {
       show_alerta("Escribe el apellido del organizador", "warning");
-    } else if (!validarCedulaEcuatoriana(ci.trim())){
-      show_alerta("La cedula del organizador no es valida", "warning")
+    } else if (!validarCedulaEcuatoriana(ci.trim())) {
+      show_alerta("La cedula del organizador no es valida", "warning");
     } else if (ci.trim() === "") {
       show_alerta("Escribe la cédula del organizador", "warning");
     } else if (correo.trim() === "") {
@@ -193,9 +193,13 @@ const CrudOrganizers = ({ adminObj }) => {
             setOrganizers((organizers) => [...organizers, response.data]);
           })
           .catch((error) => {
-            if(error.response && error.response.data && error.response.data.error){
+            if (
+              error.response &&
+              error.response.data &&
+              error.response.data.error
+            ) {
               show_alerta(error.response.data.error, "error");
-            }else{
+            } else {
               console.error("Error al realizar la solicitud POST:", error);
               show_alerta("Error al agregar el organizador", "error");
             }
@@ -254,19 +258,20 @@ const CrudOrganizers = ({ adminObj }) => {
   return (
     <>
       <Container>
-        <button
-          className="btn btn-primary"
-          onClick={() => setShowModalInsert(true)}
-        >
-          INSERTAR ORGANIZADOR
-        </button> 
-        <span style={{ margin: '0 40px' }}></span>
-        <Button className="btn btn-success" onClick={handleRecuperar}>
-          RECUPERAR ORGANIZADOR
-        </Button>
-        <br></br>
-        <br></br>
-        <br></br>
+        <div style={{ paddingBlockEnd: '50px'}}>
+          <button
+            style={{ backgroundColor: '#2980b9', borderColor: '#2980b9', padding: '10px 20px', borderRadius: '8px' }}
+            className="btn btn-primary"
+            onClick={() => setShowModalInsert(true)}
+          >
+            INSERTAR ORGANIZADOR
+          </button> 
+          <span style={{ margin: '0 40px' }}></span>
+          <Button style={{ backgroundColor: '#6aabb5', borderColor: '#6aabb5', color: '#fff', padding: '10px 20px', borderRadius: '8px' }} className="btn btn-primary" onClick={handleRecuperar}>
+            RECUPERAR ORGANIZADOR
+          </Button>
+        </div>
+
         <Table className="table">
           <thead>
             <tr>
@@ -293,24 +298,30 @@ const CrudOrganizers = ({ adminObj }) => {
                   <td>{organizer.id_admin}</td>
                   <td>
                     <Button
+                    style={{color: '#fff', padding: '7px 14px', borderRadius: '8px' }}
                       onClick={() =>
                         handleEditarUsuario(organizer.id_organizador)
                       }
                       className="btn btn-warning"
                     >
                       <img src={"https://cdn-icons-png.flaticon.com/512/8188/8188360.png"} alt="Editar" width={'25px'} />
-                      <span style={{ margin: '0 3px' }}></span>
+                      <span style={{ margin: '0 3px'}}></span>
                       EDITAR
                     </Button>
-                    <span style={{ margin: '0 10px' }}></span>
+                    <span style={{ margin: "0 10px" }}></span>
                     <Button
+                      style={{ padding: '7px 14px', borderRadius: '8px' }}
                       className="btn btn-danger"
                       onClick={() =>
                         handleEliminarUsuario(organizer.id_organizador)
                       }
                     >
-                      <img src="https://cdn-icons-png.flaticon.com/512/2340/2340337.png" alt="Editar" width={'25px'}/>
-                      <span style={{ margin: '0 3px' }}></span>
+                      <img
+                        src="https://cdn-icons-png.flaticon.com/512/2340/2340337.png"
+                        alt="Editar"
+                        width={"25px"}
+                      />
+                      <span style={{ margin: "0 3px" }}></span>
                       DAR DE BAJA
                     </Button>
                   </td>

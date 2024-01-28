@@ -149,11 +149,16 @@ const EditarPerfil = () => {
         <div className="col-md-6 offset-md-3">
           {asistenteData && (
             <>
+              <div style={{padding: '5px 0px 20px 0px'}}>
+                <center >
+                  <h1 className="mb-3">Editando Perfil de {asistenteData.nombre} {asistenteData.apellido}</h1>
+                </center>
+              </div>
+
               <div>
-                <p className="mb-3">Editando Perfil de {asistenteData.nombre} {asistenteData.apellido}.</p>
                 <form>
                   <div className="mb-3">
-                    <label htmlFor="ci" className="form-label">Cédula</label>
+                    <label htmlFor="ci" className="form-label" style={{fontWeight: 'bold'}}>Número de Cédula</label>
                     <input
                       type="text"
                       className="form-control"
@@ -165,7 +170,7 @@ const EditarPerfil = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label htmlFor="nombre" className="form-label">Nombre</label>
+                    <label htmlFor="nombre" className="form-label" style={{fontWeight: 'bold'}}>Nombre</label>
                     <input
                       type="text"
                       className="form-control"
@@ -177,7 +182,7 @@ const EditarPerfil = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label htmlFor="apellido" className="form-label">Apellido</label>
+                    <label htmlFor="apellido" className="form-label" style={{fontWeight: 'bold'}}>Apellido</label>
                     <input
                       type="text"
                       className="form-control"
@@ -189,7 +194,7 @@ const EditarPerfil = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label htmlFor="email" className="form-label">Correo Electrónico</label>
+                    <label htmlFor="email" className="form-label" style={{fontWeight: 'bold'}}>Correo Electrónico</label>
                     <input
                       type="email"
                       className="form-control"
@@ -201,7 +206,7 @@ const EditarPerfil = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label htmlFor="password" className="form-label">Contraseña</label>
+                    <label htmlFor="password" className="form-label" style={{fontWeight: 'bold'}}>Contraseña</label>
                     <input
                       type="password"
                       className="form-control"
@@ -212,9 +217,15 @@ const EditarPerfil = () => {
                     />
                   </div>
                 </form>
-                <button className="btn btn-primary" onClick={handleSaveEdit}>Guardar</button>
-                <span className="mx-2"></span>
-                <button className="btn btn-secondary" onClick={() => { window.location.href = '/asistente'; }}>Cancelar</button>
+                <center>
+                  <button className="btn btn-primary" onClick={handleSaveEdit}
+                    style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                  >GUARDAR</button>
+                  <span className="mx-2"></span>
+                  <button className="btn btn-secondary" onClick={() => { window.location.href = '/asistente'; }}
+                    style={{ backgroundColor: '#bb2d3b', borderColor: '#bb2d3b', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                  >CANCELAR</button>
+                </center>
               </div>
             </>
           )}

@@ -27,6 +27,11 @@ function EventosList() {
   const [ubicacion, setUbicacion] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [imagen, setImagen] = useState(null);
+  const [tipo, setTipo] = useState(""); // Para el filtro de tipo de evento
+  const [nombre, setNombreBusqueda] = useState(""); // Para la búsqueda por nombre
+  const [mes, setMes] = useState(""); // Para el filtro de mes
+  const [ordenamientoMes, setOrdenamientoMes] = useState("asc");
+  const [tipomes, setTipomes] = useState("");
 
   useEffect(() => {
     // Función para obtener los eventos desde tu API
@@ -54,10 +59,57 @@ function EventosList() {
     setShowModal(true);
   }
 
+  const buscarEventos = async () => {
+    try {
+      // Determinar el ordenamiento basado en la opción seleccionada
+      let ordenamiento = "asc"; // Por defecto, ascendente
+      if (tipomes === "Mesmenm") {
+        ordenamiento = "desc"; // Si se selecciona "Mes (De mayor a menor)", descendente
+      }
+      else{
+        ordenamiento = "asc";
+      }
+  
+      const response = await axios.get(`http://localhost:8000/api/eventoslist/`, {
+        params: {
+          tipo: tipo,
+          nombre: nombre,
+          //mes: mes !== "Todo" ? mes : null,
+          ordenamiento: ordenamiento, // Utilizar el ordenamiento determinado
+        },
+      });
+      setEventos(response.data);
+    } catch (error) {
+      console.error("Error en la búsqueda de eventos:", error);
+    }
+  };
+
   return (
     <>
-     <NavBarAsis /><br></br>
-     <h1 className="display-4 text-center mb-4">LISTADO DE EVENTOS</h1>
+     <NavBarAsis />
+     <h1 className="display-4 text-center mb-4"
+      style={{ padding: '50px 700px 10px 700px'}}
+     >LISTADO DE EVENTOS</h1>
+      <div style={{ display: 'flex', justifyContent: 'center', margin: '20px' }}>
+        {/* Campo de Búsqueda y Filtros */}
+        <input
+          type="text"
+          placeholder="Buscar por nombre..."
+          value={nombre}
+          onChange={(e) => setNombreBusqueda(e.target.value)}
+        />
+        <select value={tipo} onChange={(e) => setTipo(e.target.value)}>
+          <option value="">Todos los tipos</option>
+          <option value="Publico">Público</option>
+          <option value="Privado">Privado</option>
+        </select>
+        <select value={tipomes} onChange={(e) => setTipomes(e.target.value)}>
+          <option value="Todo">Todo el año</option>
+          <option value="Mesmenm">Mes (De mayor a menor)</option>
+          <option value="Mesmam">Mes (De menor a mayor)</option>
+        </select>
+        <button onClick={buscarEventos}>Buscar</button>
+      </div>
       <div
         style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
       >
@@ -75,17 +127,23 @@ function EventosList() {
                   alt="..."
                 />
                 <div className="card-body">
-                  <h5 className="card-title">{evento.nombre_evento}</h5>
+                  <center>
+                    <h5 className="card-title">{evento.nombre_evento}</h5>
+                  </center>
                   <p className="card-text">{evento.descripcion}</p>
+                  <p className="card-text">{evento.ubicacion}</p>
                   <p className="card-text">
                     <small className="text-muted">{evento.fecha}</small>
                   </p>
-                  <Button
-                    color="primary"
-                    onClick={(e) => handleMostrarDatos(evento)}
-                    >
-                      Detalles del Evento
-                  </Button>
+                  <center>
+                    <Button
+                      color="primary"
+                      style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                      onClick={(e) => handleMostrarDatos(evento)}
+                      >
+                        VER MAS DETALLES
+                    </Button>
+                  </center>
                 </div>
               </div>
             </div>
@@ -96,7 +154,9 @@ function EventosList() {
       <Modal isOpen={showModal}>
         <ModalHeader>
           <div>
-            <h3>Información del evento</h3>
+            <center>
+              <h3>INFORMACIÓN DEL EVENTO</h3>
+            </center>
           </div>
         </ModalHeader>
 
@@ -110,7 +170,7 @@ function EventosList() {
 
         <ModalBody>
           <FormGroup>
-            <label>Nombre del Evento:</label>
+            <label style={{fontWeight: 'bold'}}>Evento:</label>
             <input
               className="form-control"
               readOnly
@@ -121,7 +181,7 @@ function EventosList() {
             />
           </FormGroup>
           <FormGroup>
-            <label>Fecha:</label>
+            <label style={{fontWeight: 'bold'}}>Fecha:</label>
             <input
               className="form-control"
               readOnly
@@ -133,7 +193,7 @@ function EventosList() {
           </FormGroup>
 
           <FormGroup>
-            <label>Hora:</label>
+            <label style={{fontWeight: 'bold'}}>Hora:</label>
             <input
               className="form-control"
               readOnly
@@ -145,7 +205,7 @@ function EventosList() {
           </FormGroup>
 
           <FormGroup>
-            <label>Ubicacion:</label>
+            <label style={{fontWeight: 'bold'}}>Ubicación:</label>
             <input
               className="form-control"
               readOnly
@@ -157,7 +217,7 @@ function EventosList() {
           </FormGroup>
 
           <FormGroup>
-            <label>Descripcion:</label>
+            <label style={{fontWeight: 'bold'}}>Descripción:</label>
             <input
               className="form-control"
               readOnly
@@ -170,11 +230,15 @@ function EventosList() {
         </ModalBody>
 
         <ModalFooter>
-          <Link to={`/verboletos/${id_evento}`} className="btn btn-primary">
-            Comprar Boletos
+          <Link to={`/verboletos/${id_evento}`} className="btn btn-primary"
+            style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+          >
+            COMPRAR BOLETOS
           </Link>
-          <Button color="warning" onClick={() => setShowModal(false)}>
-            Cancelar
+          <Button color="warning" onClick={() => setShowModal(false)}
+            style={{ backgroundColor: '#e8a726', borderColor: '#e8a726', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+          >
+            CANCELAR
           </Button>
         </ModalFooter>
       </Modal>

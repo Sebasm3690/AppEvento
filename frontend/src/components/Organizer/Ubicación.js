@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const MapaDirecciones = () => {
-  const [find, setFind] = useState('');
+  const [find, setFind] = useState("");
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [formattedAddress, setFormattedAddress] = useState(null);
@@ -60,7 +60,11 @@ const MapaDirecciones = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(find)}&key=${api_key}`);
+      const response = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+          find
+        )}&key=${api_key}`
+      );
       const data = response.data;
 
       if (data.results && data.results.length > 0) {
@@ -69,16 +73,19 @@ const MapaDirecciones = () => {
         setLongitude(location.lng);
         setFormattedAddress(data.results[0].formatted_address);
       } else {
-        console.error('No se encontraron resultados de geocodificación.');
+        console.error("No se encontraron resultados de geocodificación.");
       }
     } catch (error) {
-      console.error('Error al obtener datos del servicio de geocodificación:', error);
+      console.error(
+        "Error al obtener datos del servicio de geocodificación:",
+        error
+      );
     }
   };
 
   const loadGoogleMapsScript = () => {
     if (!window.google) {
-      const script = document.createElement('script');
+      const script = document.createElement("script");
       script.src = googleMapsUrl;
       script.defer = true;
       script.async = true;
@@ -89,7 +96,7 @@ const MapaDirecciones = () => {
       };
 
       script.onerror = (error) => {
-        console.error('Error al cargar el script de Google Maps:', error);
+        console.error("Error al cargar el script de Google Maps:", error);
       };
     }
   };
@@ -98,7 +105,7 @@ const MapaDirecciones = () => {
     loadGoogleMapsScript();
 
     if (window.google) {
-      const map = new window.google.maps.Map(document.getElementById('map'), {
+      const map = new window.google.maps.Map(document.getElementById("map"), {
         center: { lat: latitude || 0, lng: longitude || 0 },
         zoom: 16,
       });
@@ -113,7 +120,9 @@ const MapaDirecciones = () => {
     }
 
     return () => {
-      const script = document.querySelector('script[src="' + googleMapsUrl + '"]');
+      const script = document.querySelector(
+        'script[src="' + googleMapsUrl + '"]'
+      );
       if (script) {
         document.head.removeChild(script);
       }
@@ -155,8 +164,14 @@ const MapaDirecciones = () => {
       <div className="container">
         <div className="row">
           <div className="col-md-12">
-            <h1 style={{ textAlign: 'center' }}>Dirección de la Ubicación del Evento</h1>
-            <form className="form-inline" onSubmit={handleSubmit} style={{ textAlign: 'center' }}>
+            <h1 style={{ textAlign: "center" }}>
+              Dirección de la Ubicación del Evento
+            </h1>
+            <form
+              className="form-inline"
+              onSubmit={handleSubmit}
+              style={{ textAlign: "center" }}
+            >
               <div className="form-group">
                 <input
                   className="form-control"
@@ -171,14 +186,18 @@ const MapaDirecciones = () => {
               <input className="btn btn-primary" type="submit" value="Buscar" />
             </form>
             <br />
-            <div style={{ textAlign: 'center' }}>
-              <kbd><kbd>Latitude:</kbd>{latitude}, <kbd>Longitude:</kbd>{longitude}</kbd>
+            <div style={{ textAlign: "center" }}>
+              <kbd>
+                <kbd>Latitude:</kbd>
+                {latitude}, <kbd>Longitude:</kbd>
+                {longitude}
+              </kbd>
             </div>
           </div>
         </div>
         <hr />
         <div className="row">
-          <div id="map" style={{ height: '400px' }}></div>
+          <div id="map" style={{ height: "400px" }}></div>
         </div>
       </div>
     </>

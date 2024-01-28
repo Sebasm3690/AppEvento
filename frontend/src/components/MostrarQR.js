@@ -35,10 +35,12 @@ function GenerarQR({ match }) {
 
     return (
         <div>
-          <NavBarAsis /><br></br>
-          <h1 className="display-4 text-center mb-4">
-            BOLETO QR
-          </h1>     
+          <NavBarAsis />
+          <div style={{ padding: '50px 700px 0px 700px'}}>
+            <h1 className="display-4 text-center mb-4">
+              BOLETO QR
+            </h1>     
+          </div>
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <h1> 
               <br/>
