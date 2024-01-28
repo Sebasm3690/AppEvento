@@ -4,7 +4,8 @@ import { UncontrolledCarousel } from "reactstrap";
 import EditarPerfil from "./Asistente/editarPerfil";
 import NavBarAsis from "./Asistente/navbaras";
 import Footer from "./footer";
-import "./styles/bienvenida.css";
+import "./styles/inicio.css";
+
 
 const Asistente = () => {
   const [asistenteData, setAsistenteData] = useState(null);
@@ -87,26 +88,29 @@ const Asistente = () => {
   return (
     <div>
       <NavBarAsis />  
-      <div className="container mt-5">
-        <div className="col-md-6 offset-md-3">
-          {asistenteData && (
-            <p className="welcome-message text-center" style={{ color: 'white' }}>
-            Bienvenido, {asistenteData.nombre} {asistenteData.apellido}.
-            </p>
-          )}
+      <div className="inicio-container">
+        <div className="container mt-5">
+          <div className="col-md-6 offset-md-3">
 
-        <div className="col-md-10 offset-md-1"><br></br>
-            <UncontrolledCarousel
-              items={carouselItems}
-              interval={1500}
-              //style={{ maxWidth: "1000px", maxHeight: "100px" }}
-            ></UncontrolledCarousel>
-        </div>
+            {asistenteData && (
+              <p className="welcome-message text-center" style={{ color: 'black', fontSize: '30px', fontFamily: 'Cambria' }}>
+                Bienvenido, {asistenteData.nombre} {asistenteData.apellido}.
+              </p>
+            )}
 
-        <div className="button-container text-center">
-            <Link to={`/meventos/`} className="btn btn-primary">
-              Ver Eventos
-            </Link>
+            <div className="col-md-10 offset-md-1">
+              <br />
+              <UncontrolledCarousel
+                items={carouselItems}
+                interval={1500}
+              />
+            </div>
+
+            <div className="button-container text-center">
+              <Link to={`/meventos/`} className="btn btn-primary custom-btn">
+                Ver Eventos
+              </Link>
+            </div>
           </div>
         </div>
       </div>

@@ -125,7 +125,7 @@ const CompraR = () => {
         
         <div>
             <NavBarAsis />
-            <div className="d-flex justify-content-center align-items-center vh-100" style={{ marginTop: '50px' }}>
+            <div className="d-flex justify-content-center align-items-center" style={{ marginTop: '50px' }}>
             {error && <p className="text-danger">{error}</p>}
                 <form onSubmit={handleSubmit}>
                     <Card style={{ width: '25rem' }}>

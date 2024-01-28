@@ -177,6 +177,7 @@ function BoletosList() {
                           src={imagenEvento}
                           alt={`Imagen del evento ${eventoCorrespondiente.nombre_evento}`}
                           className="img-fluid"
+                          style={{ maxWidth: '600px', marginRight: '100px' }}
                         />
                       )}
                       <div className="form-check checkbox-container">
