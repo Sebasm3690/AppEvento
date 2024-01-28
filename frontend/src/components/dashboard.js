@@ -23,7 +23,6 @@ function DashboardGrafico() {
   const [total_anual, setTotal_anual] = useState(0);
 
   useEffect(() => {
-    getEventData();
     getOrdenCompra();
     sendMonths();
   }, [id]);
@@ -34,30 +33,6 @@ function DashboardGrafico() {
     }
   }, [ordenesCompra]); //Se ejecuta solo cuando cambie el id
 
-  const getEventData = async () => {
-    try {
-      const response = await axios.get(`http://127.0.0.1:8000/ganancia/${id}/`);
-      setGananciaTotal(response.data.ganancia_total);
-      setBoletosVendidos(response.data.numero_boletos_vendidos);
-      setGananciaPorcentaje(response.data.porcentajeGananciaTotal);
-      setBoletosPorcentaje(response.data.porcentaje_boletos);
-      setGananciaPosible(response.data.ganancia_posible);
-      setEvent(response.data.evento);
-      setPerdida(response.data.perdida);
-    } catch (error) {
-      if (!error.response) {
-        // Network error
-        console.error("Error: Network error");
-      } else {
-        // API error
-        console.error(
-          `Error: API error - Status: ${error.response.status} - Message: ${error.response.statusText}`
-        );
-      }
-      return null;
-    }
-  };
-
   const getOrdenCompra = async () => {
     try {
       const response = await axios.get(
@@ -66,6 +41,10 @@ function DashboardGrafico() {
       console.log("La respuesta del servidor es:" + console.log(response.data)); // Verifica la estructura de la respuesta)
       setOrdenesCompra(response.data.ventas_mensuales);
       setTotal_anual(response.data.total_anual);
+      setGananciaPorcentaje(response.data.porcentaje_total_anual);
+      setBoletosVendidos(response.data.boletos_comprados);
+      setBoletosPorcentaje(response.data.boletos_porcentaje);
+      setPerdida(response.data.perdida);
     } catch (error) {
       if (!error.response) {
         console.error("Error: Newtork error");
@@ -90,7 +69,7 @@ function DashboardGrafico() {
     labels: ["Ganancia", "Pérdida"],
     datasets: [
       {
-        data: [ganancia_total, perdida],
+        data: [total_anual, perdida],
       },
     ],
   };
@@ -284,6 +263,7 @@ function DashboardGrafico() {
                 {/*  <!-- Page Heading --> */}
                 <div className="d-sm-flex align-items-center justify-content-between mb-4">
                   <h1 className="h3 mb-0 text-gray-800">Dashboard</h1>
+
                   <a
   href="javascript:void(0)"
   className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"

@@ -225,6 +225,7 @@ const CrudEvents = ({ organizerObj }) => {
   const [boletos, setBoletos] = useState([]);
   const [idBoleto, setIdBoleto] = useState(0);
   const [stock, setStock] = useState(0);
+  const [stockVIP, setStockVIP] = useState(0);
   const [tipoBoleto, setTipoBoleto] = useState("");
   const [precio, setPrecio] = useState(0);
   const [idEventoBoleto, setIdEventoBoleto] = useState(0);
@@ -264,6 +265,8 @@ const CrudEvents = ({ organizerObj }) => {
   const [showModalBoleto, setShowModalBoleto] = useState(false);
   const [showModalBoletoIngresar, setShowModalBoletoIngresar] = useState(false);
   const [showModalImpuestosIngresar, setShowModalImpuestosIngresar] =
+    useState(false);
+  const [showModalBoletoIngresarVIP, setShowModalBoletoIngresarVIP] =
     useState(false);
   const [showModalBoletoRegresar, setShowModalBoletoRegresar] = useState(false);
   const [showModalRecuperar, setShowModalRecuperar] = useState(false);
@@ -544,8 +547,24 @@ const CrudEvents = ({ organizerObj }) => {
     setShowModalBoletoIngresar(false);
   };
 
-  const validarBoletoIngresar = async () => {
+  const validarBoletoIngresar = async (option) => {
+    let tipoBoletoLocal = option === 1 ? "Normal" : "VIP";
+    let stockFinal = option === 2 ? stockVIP : stock;
     var parametrosBoleto;
+
+    if (option === 2 && stock + stockVIP > limite) {
+      show_alerta(
+        "El maximo de boletos VIP ingresados puede ser de hasta" +
+          limite -
+          (stock + stockVIP) +
+          "boletos",
+        "warning"
+      );
+      return;
+    }
+    if (option === 2) {
+      setStock(stockVIP);
+    }
 
     if (stock > limite) {
       show_alerta(
@@ -556,6 +575,8 @@ const CrudEvents = ({ organizerObj }) => {
         "warning"
       );
       return;
+    } else if (stock === limite) {
+      //option = 2;
     } else if (tipo.trim() === "") {
       show_alerta("Escribe el tipo de boleto", "warning");
     } else if (precio <= 0) {
@@ -563,15 +584,9 @@ const CrudEvents = ({ organizerObj }) => {
       return;
     }
 
-    const apiConfig = {
-      boleto: {
-        tipo: "tipoBoleto",
-      },
-    };
-
     parametrosBoleto = {
-      stock: parseInt(stock),
-      [apiConfig.boleto.tipo]: tipoBoleto.trim(),
+      stock: stockFinal,
+      tipoBoleto: tipoBoletoLocal,
       precio: precio,
       id_evento: idEventoBoleto, //El valor se toma del response.data.id_evento del "const validar" en la opción 1 al insertar el evento
     };
@@ -587,10 +602,15 @@ const CrudEvents = ({ organizerObj }) => {
       .catch((error) => {
         console.error("Error al realizar la solicitud POST:", error);
       });
-    setShowModalBoletoIngresar(false);
-    setStep((s) => s - 1);
 
-    // Configurar el temporizador
+    if (option === 1) {
+      setShowModalBoletoIngresar(false);
+      setShowModalBoletoIngresarVIP(true);
+      setStep((s) => s + 1);
+    } else {
+      setShowModalBoletoIngresarVIP(false);
+      setStep((s) => s - 2);
+    }
   };
 
   /*********************************/
@@ -641,9 +661,6 @@ const CrudEvents = ({ organizerObj }) => {
       show_alerta("Escribe la descripción del evento", "warning");
     } else if (tipo.trim() === "") {
       show_alerta("Escribe el tipo de evento", "warning");
-      if (gasto === 0) {
-        show_alerta("Escribe gasto para realizar el evento", "warning");
-      }
     } else if (limite <= 20) {
       show_alerta(
         "El límite del evento debe ser de mas de 20 personas",
@@ -935,9 +952,9 @@ const CrudEvents = ({ organizerObj }) => {
             VER DASHBOARD GENERAL
           </button>
           <Button variant="primary" onClick={handleOpen}>
-            Abrir Escáner QR
-          </Button>
-          <QRScanner show={showModalQr} handleClose={handleClose} />
+        Abrir Escáner QR
+      </Button>
+      <QRScanner show={showModalQr} handleClose={handleClose} />
         </div>
 
         <Table className="table table-borderless">
@@ -1127,17 +1144,6 @@ const CrudEvents = ({ organizerObj }) => {
 
         <ModalBody>
           <FormGroup>
-            <label>ID:</label>
-            <input
-              className="form-control"
-              readOnly
-              type="text"
-              name="id_evento" //e es nuestro evento o lo que ingresa el usuario, con target apuntamos al valor ingresado por el usuario y se actualiza el objeto gracias al método set
-              value={id}
-            />
-          </FormGroup>
-
-          <FormGroup>
             <label>Nombre:</label>
             <input
               className="form-control"
@@ -1194,13 +1200,16 @@ const CrudEvents = ({ organizerObj }) => {
 
           <FormGroup>
             <label>Tipo:</label>
-            <input
+            <select
               className="form-control"
               name="tipo"
-              type="text"
-              onChange={(e) => setTipo(e.target.value)}
               value={tipo}
-            />
+              onChange={(e) => setTipo(e.target.value)}
+            >
+              <option value="">Seleccione un tipo</option>
+              <option value="Tipo1">Público</option>
+              <option value="Tipo2">Privado</option>
+            </select>
           </FormGroup>
 
           <FormGroup>
@@ -1220,12 +1229,12 @@ const CrudEvents = ({ organizerObj }) => {
               className="form-control"
               name="limite"
               type="number"
-              onChange={(e) => setLimite(e.target.value)}
+              onChange={(e) => setLimite(Number(e.target.value))}
               value={limite}
             />
           </FormGroup>
 
-          <MapaDirecciones />
+          <MapaDirecciones setUbicacion={setUbicacion} ubicacion={ubicacion} />
         </ModalBody>
 
         <ModalFooter>
@@ -1259,6 +1268,7 @@ const CrudEvents = ({ organizerObj }) => {
           <div className="numbers">
             <div className={step >= 1 ? "active" : ""}>1</div>
             <div className={step >= 2 ? "active" : ""}>2</div>
+            <div className={step >= 3 ? "active" : ""}>3</div>
           </div>
         </div>
 
@@ -1327,11 +1337,16 @@ const CrudEvents = ({ organizerObj }) => {
 
           <FormGroup>
             <label>Tipo:</label>
-            <input
+            <select
               className="form-control"
               name="tipo"
+              value={tipo}
               onChange={(e) => setTipo(e.target.value)}
-            />
+            >
+              <option value="">Seleccione un tipo</option>
+              <option value="Tipo1">Público</option>
+              <option value="Tipo2">Privado</option>
+            </select>
           </FormGroup>
 
           <FormGroup>
@@ -1341,7 +1356,7 @@ const CrudEvents = ({ organizerObj }) => {
               name="limite"
               type="number"
               style={{ width: "18%" }}
-              onChange={(e) => setLimite(e.target.value)}
+              onChange={(e) => setLimite(Number(e.target.value))}
             />
           </FormGroup>
 
@@ -1468,17 +1483,6 @@ const CrudEvents = ({ organizerObj }) => {
               value={precio}
             />
           </FormGroup>
-
-          <FormGroup>
-            <label>ID Evento:</label>
-            <input
-              className="form-control"
-              name="id"
-              type="money"
-              onChange={(e) => setIdEventoBoleto(e.target.value)}
-              value={id}
-            />
-          </FormGroup>
         </ModalBody>
 
         <ModalFooter>
@@ -1494,7 +1498,7 @@ const CrudEvents = ({ organizerObj }) => {
         </ModalFooter>
       </Modal>
 
-      {/*----------------Modal Ingresar Boleto-------------------*/}
+      {/*----------------Modal Ingresar Boleto Normal-------------------*/}
 
       {/*Ventana modal*/}
 
@@ -1512,6 +1516,7 @@ const CrudEvents = ({ organizerObj }) => {
           <div className="numbers">
             <div className={step >= 1 ? "active" : ""}>1</div>
             <div className={step >= 2 ? "active" : ""}>2</div>
+            <div className={step >= 3 ? "active" : ""}>3</div>
           </div>
         </div>
 
@@ -1523,7 +1528,7 @@ const CrudEvents = ({ organizerObj }) => {
               alignItems: "center",
             }}
           >
-            <h3>INGRESAR BOLETO</h3>
+            <h3>INGRESAR BOLETO NORMAL</h3>
           </div>
         </ModalHeader>
 
@@ -1546,10 +1551,10 @@ const CrudEvents = ({ organizerObj }) => {
               className="form-control"
               name="stock"
               type="text"
-              onChange={(e) => setStock(e.target.value)}
+              onChange={(e) => setStock(Number(e.target.value))}
             />
           </FormGroup>
-          <FormGroup>
+          {/*<FormGroup>
             <label>Tipo:</label>
             <select
               className="form-control"
@@ -1560,16 +1565,113 @@ const CrudEvents = ({ organizerObj }) => {
               <option value="Tipo1">VIP</option>
               <option value="Tipo2">Normal</option>
             </select>
-          </FormGroup>
+      </FormGroup>*/}
           <FormGroup>
             <label>Precio:</label>
             <input
               className="form-control"
               name="precio"
               type="money"
-              onChange={(e) => setPrecio(e.target.value)}
+              onChange={(e) => setPrecio(Number(e.target.value))}
             />
           </FormGroup>
+
+          </ModalBody>
+
+<ModalFooter>
+  <Button
+    color="primary"
+    style={{
+      background: "#7950f2",
+      color: "#fff",
+    }}
+    onClick={() => {
+      setTipoBoleto("Normal");
+      validarBoletoIngresar(1);
+    }}
+  >
+    Siguiente
+  </Button>
+</ModalFooter>
+</Modal>
+
+{/*----------------Modal Ingresar Boleto VIP-------------------*/}
+
+{/*Ventana modal*/}
+
+<Modal isOpen={showModalBoletoIngresarVIP}>
+<div style={{ marginTop: "50px" }}>
+  <button
+    className="close"
+    style={{ position: "absolute", left: "16px", top: "16px" }}
+    onClick={() => setShowModalInsert(false)}
+  >
+    &times;
+  </button>
+
+  <div className="active"></div>
+  <div className="numbers">
+    <div className={step >= 1 ? "active" : ""}>1</div>
+    <div className={step >= 2 ? "active" : ""}>2</div>
+    <div className={step >= 3 ? "active" : ""}>3</div>
+  </div>
+</div>
+
+<ModalHeader>
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    }}
+  >
+    <h3>INGRESAR BOLETO VIP</h3>
+  </div>
+</ModalHeader>
+
+{/* Vista previa de la imagen }
+
+{image && (
+  <img
+    src={image}
+    alt="Imagen de vista previa"
+    style={{ maxWidth: "100%", height: "auto" }}
+  />
+)}
+
+{----------------------------*/}
+
+<ModalBody>
+  <FormGroup>
+    <label>Stock:</label>
+    <input
+      className="form-control"
+      name="stock"
+      type="text"
+      onChange={(e) => setStockVIP(Number(e.target.value))}
+    />
+  </FormGroup>
+  {/*<FormGroup>
+    <label>Tipo:</label>
+    <select
+      className="form-control"
+      name="tipo"
+      onChange={(e) => setTipoBoleto(e.target.value)}
+    >
+      <option value="">Seleccione un tipo</option>
+      <option value="Tipo1">VIP</option>
+      <option value="Tipo2">Normal</option>
+    </select>
+</FormGroup>*/}
+  <FormGroup>
+    <label>Precio:</label>
+    <input
+      className="form-control"
+      name="precio"
+      type="money"
+      onChange={(e) => setPrecio(Number(e.target.value))}
+    />
+  </FormGroup>
         </ModalBody>
 
         <ModalFooter>
@@ -1579,7 +1681,10 @@ const CrudEvents = ({ organizerObj }) => {
               background: "#7950f2",
               color: "#fff",
             }}
-            onClick={() => validarBoletoIngresar()}
+            onClick={() => {
+              setTipoBoleto("VIP");
+              validarBoletoIngresar(2);
+            }}
           >
             Finalizar
           </Button>
