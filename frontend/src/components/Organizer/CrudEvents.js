@@ -15,6 +15,9 @@ import {
 } from "reactstrap";
 import { show_alerta } from "../../functions";
 import QRScanner from "../QrScanner";
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
 
 import "../Organizer/indexEvents.css";
 
@@ -744,7 +747,6 @@ const CrudEvents = ({ organizerObj }) => {
 
   const mostrarOrdenCompra = async (id_evento) => {
     //Aqui guarda el Id de orden compra con el set, para luego mostrar en la tabla filtrando la ordenCompra y solamente mostrando las que posean el ID de las ordenes compras que coincidan con el evento, boleto y contiene
-    setShowModalOrdenCompra(true);
     var boletoEvento = boletos.find((boleto) => boleto.id_evento === id_evento);
 
     if (!boletoEvento) {
@@ -771,6 +773,7 @@ const CrudEvents = ({ organizerObj }) => {
     }*/
 
     setOrdenCompraFiltradas(ordenCompraContiene);
+    generatePDF(ordenCompraContiene);
     //setContienesFiltrados(contieneBoletos);
   };
 
@@ -782,6 +785,75 @@ const CrudEvents = ({ organizerObj }) => {
     );
     setContienesFiltrados(contieneOrdenCompra);
   };
+
+  const generatePDF = async (ordersData) => {
+    const pdf = new jsPDF();
+  
+    ordersData.forEach(order => {
+      // Datos de la orden de compra
+      const orderDetails = [
+        ["Número de Orden", order.num_orden],
+        ["Fecha", order.fecha],
+        ["Valor Total", `${order.valor_total}$`],
+        ["IVA", `${iva}%`]
+      ];
+  
+      // Detalles del boleto (contiene)
+      const contieneOrdenCompra = contienes.filter(
+        (contiene) => contiene.num_orden === order.num_orden
+      );
+      const ticketDetails = contieneOrdenCompra.map(contiene => [
+        "Código del Boleto", contiene.boleto_cdg,
+        "Boletos Comprados", contiene.cantidad_total
+      ]);
+  
+      // Detalles del asistente
+      const asistenteDetails = asistentes.find(
+        (asistente) => asistente.id_asistente === order.id_asistente
+      );
+      const assistantDetails = [
+        ["ID del Asistente", asistenteDetails?.id_asistente ?? ""],
+        ["Nombre", asistenteDetails?.nombre ?? ""],
+        ["Apellido", asistenteDetails?.apellido ?? ""],
+        ["Correo", asistenteDetails?.email ?? ""],
+        ["CI", asistenteDetails?.ci ?? ""]
+      ];
+  
+      // Agregar tablas al PDF
+      pdf.text("Datos de la Orden de Compra", 14, 15);
+      pdf.autoTable({
+        head: [['Campo', 'Valor']],
+        body: orderDetails,
+        startY: 20
+      });
+  
+      const ticketDetailsStartY = pdf.lastAutoTable.finalY + 10;
+      pdf.text("Detalles del Boleto", 14, ticketDetailsStartY);
+      pdf.autoTable({
+        head: [['Campo', 'Valor']],
+        body: ticketDetails,
+        startY: ticketDetailsStartY + 5
+      });
+  
+      const assistantDetailsStartY = pdf.lastAutoTable.finalY + 10;
+      pdf.text("Detalles del Asistente", 14, assistantDetailsStartY);
+      pdf.autoTable({
+        head: [['Campo', 'Valor']],
+        body: assistantDetails,
+        startY: assistantDetailsStartY + 5
+      });
+  
+      // Separador para la siguiente orden
+      pdf.addPage();
+    });
+  
+    // Eliminar la última página en blanco
+    const numberOfPages = pdf.internal.getNumberOfPages();
+    pdf.deletePage(numberOfPages);
+  
+    pdf.save('detalle_ordenes_compras.pdf');
+  };
+  
 
   var ver_asistente = (ordenCompra) => {
     setShowModalAsistente(true);
@@ -863,9 +935,9 @@ const CrudEvents = ({ organizerObj }) => {
             VER DASHBOARD GENERAL
           </button>
           <Button variant="primary" onClick={handleOpen}>
-        Abrir Escáner QR
-      </Button>
-      <QRScanner show={showModalQr} handleClose={handleClose} />
+            Abrir Escáner QR
+          </Button>
+          <QRScanner show={showModalQr} handleClose={handleClose} />
         </div>
 
         <Table className="table table-borderless">
@@ -1496,16 +1568,6 @@ const CrudEvents = ({ organizerObj }) => {
               name="precio"
               type="money"
               onChange={(e) => setPrecio(e.target.value)}
-            />
-          </FormGroup>
-
-          <FormGroup>
-            <label>ID Evento:</label>
-            <input
-              className="form-control"
-              name="number"
-              type="money"
-              value={idEventoBoleto}
             />
           </FormGroup>
         </ModalBody>

@@ -82,6 +82,7 @@ npm install react-qr-reader --force
 
 Para pdf:
 npm install jspdf html2canvas
+npm install jspdf-autotable --force
 
 
 - **Historia de Usuario #01:**
