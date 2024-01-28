@@ -1207,8 +1207,8 @@ const CrudEvents = ({ organizerObj }) => {
               onChange={(e) => setTipo(e.target.value)}
             >
               <option value="">Seleccione un tipo</option>
-              <option value="Tipo1">Público</option>
-              <option value="Tipo2">Privado</option>
+              <option value="Publico">Público</option>
+              <option value="Privado">Privado</option>
             </select>
           </FormGroup>
 
@@ -1344,8 +1344,8 @@ const CrudEvents = ({ organizerObj }) => {
               onChange={(e) => setTipo(e.target.value)}
             >
               <option value="">Seleccione un tipo</option>
-              <option value="Tipo1">Público</option>
-              <option value="Tipo2">Privado</option>
+              <option value="Publico">Público</option>
+              <option value="Privado">Privado</option>
             </select>
           </FormGroup>
 
