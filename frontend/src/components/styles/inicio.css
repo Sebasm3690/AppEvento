@@ -67,50 +67,164 @@ body {
   flex-wrap:wrap;
 }
 
-/* Contenedor de información */
-.info-container {
-  flex: 1; /* Hace que ocupe el espacio disponible */
-  max-width: 600px; /* Tamaño máximo */
-  margin-right: 20px; /* Espacio entre contenedores */
-  margin-bottom: 20px; /* Espacio inferior */
-  padding: 20px;
-  background-color: #f1f1f1;
-}
-
 /* Contenedor del carrusel */
 .carrucel-container {
-  flex: 1;
-  max-width: calc(100% - 40px);
-  padding: 20px;
+  padding: 0.2%;
+  width: 99vw; /* Ajuste de ancho para que ocupe casi toda la pantalla */
+  margin: auto; /* Centra el carrusel */
 }
 
 .fixed-carousel {
-  max-height: 600px; /* Tamaño fijo para el carrusel */
-  border-radius: 20px;
-  overflow:auto; 
+  max-height: 890px; /* Establece una altura máxima menor */
+  overflow: hidden; /* Oculta cualquier contenido que exceda la altura máxima */
 }
 
-.fixed-carousel img {
-  width: 100%; /* Ajusta el tamaño de la imagen al 100% del contenedor */
-  height: auto; /* Mantiene la proporción de la imagen */
+.carrucel-asistente {
+  max-height: 890px; 
+
 }
 
-/* Alineamos verticalmente el texto dentro de los elementos del carrusel */
+/* Contenedor de información */
+.info-container {
+  text-align: center; /* Alineación del texto al centro */
+  padding: 20px;
+  margin: 20px auto; /* Centrado con margen automático */
+  max-width: 600px; /* Tamaño máximo para pantallas grandes */
+  background-color: #67B0E0; /* Color de fondo */
+  border-radius: 50px; /* Bordes redondeados */
+}
+
+/* Estilos para pantallas grandes (mayores de 1800px) */
+@media (min-width: 1800px) {
+  .carrusel-container {
+    /* Agrega estilos específicos para pantallas grandes */
+    padding: 1%;
+ 
+    /* Otros estilos... */
+  }
+
+  .fixed-carousel img {
+    width: auto; /* Ajusta el tamaño de la imagen de forma automática */
+    max-height: 890px; /* Altura máxima de la imagen */
+  }
+
+  .fixed-carousel2 img {
+    width: auto; /* Ajusta el tamaño de la imagen de forma automática */
+    max-height: 700px; /* Altura máxima de la imagen */
+  }
+}
+
+/* Estilos para tabletas (entre 768px y 992px) */
+@media (min-width: 992px) and (max-width: 1800px) {
+  .carrusel-container {
+    padding: 2%;
+  }
+
+  .fixed-carousel img {
+    width: auto; /* Ajusta el tamaño de la imagen de forma automática */
+    max-height: 550px; /* Altura máxima de la imagen */
+  }
+
+  .fixed-carousel2 img {
+    width: auto; /* Ajusta el tamaño de la imagen de forma automática */
+    max-height: 450px; /* Altura máxima de la imagen */
+  }
+}
+
+/* Estilos para tabletas (entre 768px y 992px) */
+@media (min-width: 768px) and (max-width: 992px) {
+  .carrusel-container {
+    /* Agrega estilos específicos para tabletas */
+    padding: 2%;
+  }
+
+  .fixed-carousel img {
+    width: auto; /* Ajusta el tamaño de la imagen de forma automática */
+    max-height: 350px; /* Altura máxima de la imagen */
+  }
+
+  .fixed-carousel2 img {
+    width: auto; /* Ajusta el tamaño de la imagen de forma automática */
+    max-height: 380px; /* Altura máxima de la imagen */
+  }
+}
+
+/* Estilos para móviles (menos de 768px) */
+@media (min-width: 250px) and  (max-width: 768px) {
+  .carrusel-container {
+    /* Agrega estilos específicos para móviles */
+    padding: 3%;
+  }
+
+  .fixed-carousel img {
+    width: 100%; /* Ajusta el tamaño de la imagen al 100% del contenedor */
+    max-height: 215px; /* Altura máxima de la imagen */
+  }
+
+  .fixed-carousel2 img {
+    width: auto; /* Ajusta el tamaño de la imagen de forma automática */
+    max-height: 300px; /* Altura máxima de la imagen */
+  }
+}
+
+/* Estilos para la tarjeta de confirmación */
+.confirmation-card {
+  padding: 40px;
+  background-color: #f7f7f7; /* Color de fondo suave */
+  border-radius: 15px; /* Bordes redondeados */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  margin-top: 50px; /* Espaciado superior */
+}
+
+.confirmation-title {
+  color: #2ecc71; /* Color verde para el éxito */
+  font-size: 2em; /* Tamaño de fuente grande */
+  margin-bottom: 20px; /* Espaciado debajo del título */
+}
+
+.confirmation-message {
+  color: #333; /* Color oscuro para el texto */
+  font-size: 1.2em; /* Tamaño de fuente del mensaje */
+  margin-bottom: 20px; /* Espaciado debajo del mensaje */
+}
+
+.confirmation-action .custom-button {
+  background-color: #3498db; /* Color azul para el botón */
+  border-color: #3498db; /* Color de borde para el botón */
+  color: #fff; /* Texto blanco para el botón */
+  padding: 10px 20px; /* Relleno del botón */
+  border-radius: 8px; /* Bordes redondeados del botón */
+  /* font-weight: bold; /Texto en negrita */
+  text-decoration: none; /* No subrayado */
+  transition: background-color 0.3s ease; /* Transición suave al cambiar de color */
+}
+
+.confirmation-action .custom-button:hover {
+  background-color: #1c6fa9; 
+  text-decoration: none; 
+}
+
+.custom-button:hover {
+  background-color: #1c6fa9;
+  text-decoration: none; 
+}
+
 .carousel-caption {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  background: rgba(0, 0, 0, 0.7); 
-  color: #fff; 
-  padding: 20px;
+  background: rgba(0, 0, 0, 0); /* Aumenté un poco la opacidad */
+  color: #fff;
+  padding: 25px;
+
+  font-size: 1.2em; /* Ajusté el tamaño de fuente */
+  line-height: 1.5; /* Aumenté el espaciado entre líneas */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Agregué una sutil sombra al texto */
+  transition: background 0.5s ease; /* Agregué una transición suave para el cambio de fondo */
 }
-@media (max-width: 768px) {
-  .info-container,
-  .carrucel-container {
-    max-width: 100%;
-    margin-right: 0; 
-    margin-bottom: 10px; 
-  }
+
+.carousel-caption:hover {
+  background: rgba(0, 0, 0, 0.7); 
 }

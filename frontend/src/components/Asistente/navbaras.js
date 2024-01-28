@@ -5,6 +5,7 @@ import "../styles/navbar.css";
 function NavBar() {
   const [asistenteData, setAsistenteData] = useState(null);
   const [eventos, setEventos] = useState([]);
+  const [isNavExpanded, setIsNavExpanded] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -84,7 +85,15 @@ function NavBar() {
           />
         </Link>
       </div>
-      <div className="navbar-right">
+      <button 
+        className="navbar-toggler" 
+        aria-expanded={isNavExpanded} 
+        onClick={() => setIsNavExpanded(!isNavExpanded)}
+        aria-label="Toggle navigation"
+      >
+        &#9776;
+      </button>
+      <div className={isNavExpanded ? "navbar-right show" : "navbar-right"} id="navbar-links">
         <Link to="/editarperfil" className="navbar-link">
           PERFIL
         </Link>
