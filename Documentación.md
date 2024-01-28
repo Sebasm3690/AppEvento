@@ -81,6 +81,11 @@ NOTA: Paquetes a instalar por si acaso hay errores:
 npm install react-chartjs-2 chart.js
 npm install react-qr-reader --force
 
+Para pdf:
+npm install jspdf html2canvas
+npm install jspdf-autotable --force
+
+
 - **Historia de Usuario #01:**
   - ID: HU-001
   - Descripción: Como un organizador, necesito gestionar los eventos, con la finalidad de crear, editar, eliminar eventos con detalles como nombre, fecha, hora, ubicación y descripción.

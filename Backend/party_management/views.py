@@ -221,7 +221,18 @@ class TicketView(viewsets.ModelViewSet):
 class ordenCompraDashboard (APIView):
     def get(self,request,id_evento):
         #Obtener compra del evento
-        boletos_ids = Boleto.objects.filter(id_evento=id_evento).values_list('id_boleto', flat=True)
+        total_precio = 0
+        total_boletos = 0
+        total_posible = 0
+        total_stock_actual = 0
+        boletos_comprados = 0
+        boletos_porcentaje = 0
+        perdida = 0
+        boletos = Boleto.objects.filter(id_evento = id_evento)
+        evento = Evento.objects.filter(id_evento = id_evento).first()
+
+        boletos_ids = Boleto.objects.filter(id_evento=id_evento).values_list('id_boleto', flat=True) 
+        vendes = Vende.objects.filter(id_boleto__in = boletos_ids)
         ordenes_ids = Contiene.objects.filter(id_boleto__in=boletos_ids).values_list('num_orden', flat=True)
         compras = OrdenCompra.objects.filter(num_orden__in=ordenes_ids)
         
@@ -235,8 +246,35 @@ class ordenCompraDashboard (APIView):
 
         total_anual = sum(venta['total_mes'] for venta in ventas_mensuales) #Se pone venta["total_mes"] para solo obtener solo el total_mes de cada elemento
         
+
+        
+
+        #Ganancia posible 
+        for boleto in boletos:
+            total_precio += boleto.precio
+            total_boletos += boleto.stock
+        
+
+        for vende in vendes:
+            total_stock_actual += vende.stock_actual
+        
+        boletos_comprados = total_boletos - total_stock_actual
+
+
+        #Porcentaje ganancia 
+        total_posible = total_precio * total_boletos
+        porcentaje_total_anual = round(float(total_anual * 100) / float(total_posible),2)
+
+
+        #Porcentaje boletos comprados
+        boletos_porcentaje = round((boletos_comprados * 100) / total_boletos,2)
+
+        #Perdida
+
+        perdida = round(int(evento.gasto) - int(total_anual),2)
+            
         #print("Total anual y ventas mensuales: {} y {}".format(total_anual, ventas_mensuales))
-        return Response({'ventas_mensuales': ventas_mensuales, 'total_anual': total_anual})
+        return Response({'ventas_mensuales': ventas_mensuales, 'total_anual': total_anual, 'porcentaje_total_anual':porcentaje_total_anual,'total_boletos':total_boletos,'boletos_comprados':boletos_comprados,'boletos_porcentaje':boletos_porcentaje,'perdida':perdida})
      
    
         #compras_data = [{"num_orden": compra.num_orden, "valor_total": compra.valor_total, "fecha": compra.fecha} for compra in compras]
@@ -278,6 +316,8 @@ class GananciaGeneral(APIView):
 
 class ValoresPIETotal(APIView):
     def get(self,request):
+        total_boletos = 0
+        total_precio = 0
         ganancia_total_eventos = 0
         gasto_total_eventos = 0
         ganancia_total_posible = 0
@@ -294,11 +334,14 @@ class ValoresPIETotal(APIView):
             gasto_total_eventos+=evento.gasto
 
         for boleto in boletos:
-            ganancia_total_posible += boleto.stock * boleto.precio
+            total_boletos+=boleto.stock
+            total_precio+=boleto.precio
+            
+        ganancia_total_posible += total_boletos * total_precio
       
 
         ganancia_porcentaje = round (float(ganancia_total_eventos * 100) / float(ganancia_total_posible),2)
-        
+        gasto_total_eventos=round(float(gasto_total_eventos)-float(ganancia_total_eventos),2)
 
 
         valoresPIE = {
@@ -1140,3 +1183,35 @@ class CompraBoletoView(APIView):
                 return Response({"error": "No hay suficientes boletos disponibles."}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class EventoList(generics.ListAPIView):
+    queryset = Evento.objects.all()
+    serializer_class = EventSerializer
+
+    def list(self, request, *args, **kwargs):
+        # Filtrar por tipo, nombre, fecha (mes y año) si se proporcionan en los parámetros de la URL
+        tipo = self.request.query_params.get('tipo', None)
+        nombre = self.request.query_params.get('nombre', None)
+        mes = self.request.query_params.get('mes', None)
+        anio = self.request.query_params.get('anio', None)
+        ordenamiento = self.request.query_params.get('ordenamiento', None)
+
+        queryset = self.get_queryset()
+
+        if tipo:
+            queryset = queryset.filter(tipo=tipo)
+        if nombre:
+            queryset = queryset.filter(nombre_evento__icontains=nombre)
+        if mes:
+            queryset = queryset.filter(fecha__month=mes)
+        if anio:
+            queryset = queryset.filter(fecha__year=anio)
+        
+            # Ordenar por mes
+        if ordenamiento == 'asc':
+           queryset = queryset.order_by('fecha__month')
+        elif ordenamiento == 'desc':
+           queryset = queryset.order_by('-fecha__month')
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)

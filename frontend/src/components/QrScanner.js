@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { QrReader } from 'react-qr-reader';
 import Modal from 'react-bootstrap/Modal';
@@ -8,7 +8,22 @@ const QRScanner = ({ show, handleClose }) => {
   const [scanResult, setScanResult] = useState('');
   const [validationResult, setValidationResult] = useState(null);
   const [scannedData, setScannedData] = useState(null);
+  const [isCameraOn, setIsCameraOn] = useState(false);
+  const qrReaderRef = useRef(null);
 
+  useEffect(() => {
+    if (show) {
+      // La modal se ha abierto, enciende la cámara
+      if (qrReaderRef.current) {
+        qrReaderRef.current.openImageDialog();
+      }
+    } else {
+      // La modal se ha cerrado, apaga la cámara
+      if (qrReaderRef.current) {
+        qrReaderRef.current.closeImageDialog();
+      }
+    }
+  }, [show]);
 
   const extractCodeFromText = (text) => {
     const codeMatch = text.match(/Codigo: ([^,]+)/);
@@ -81,6 +96,7 @@ const QRScanner = ({ show, handleClose }) => {
       </Modal.Header>
       <Modal.Body>
         <QrReader
+          ref={qrReaderRef}
           delay={300}
           onResult={handleResult}
           style={{ width: '100%' }}
