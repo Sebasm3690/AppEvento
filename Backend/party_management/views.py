@@ -33,7 +33,7 @@ from django.template.loader import render_to_string
 from django.shortcuts import render
 from django.template.loader import get_template
 import base64
-
+from django.db.models import Sum, functions
 #resend.api_key = os.environ["RESEND_API_KEY"]
 
 class UploadImageView(APIView):
@@ -59,6 +59,21 @@ class UploadImageView(APIView):
 class OrganizerView(viewsets.ModelViewSet):
     serializer_class = OrganizerSerializer
     queryset = Organizador.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        correo = request.data.get('correo')  # Asegúrate de que 'correo' es el nombre correcto del campo en tu serializer
+        cedula = request.data.get('ci')
+
+        if validar_cedular_repetida(cedula)['existe']:
+            return Response({'error': 'La cedula ya fue registrada por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if validar_correo(correo)['existe']:
+            return Response({'error': 'El correo ya fue registrado por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            return super().create(request, *args, **kwargs)
+        except ValidationError as e:
+            return Response({'error': e.message_dict}, status=status.HTTP_400_BAD_REQUEST)
     
 class AdminView(viewsets.ModelViewSet):
     serializer_class = AdminSerializer
@@ -110,6 +125,7 @@ class EventView(viewsets.ModelViewSet):
     serializer_class = EventSerializer
     queryset = Evento.objects.all()
 
+
 class TicketView(viewsets.ModelViewSet):
     serializer_class = TicketSerializer
     queryset = Boleto.objects.all()
@@ -200,6 +216,185 @@ class EventView(viewsets.ModelViewSet):
 class TicketView(viewsets.ModelViewSet):
     serializer_class = TicketSerializer
     queryset = Boleto.objects.all()
+
+
+class ordenCompraDashboard (APIView):
+    def get(self,request,id_evento):
+        #Obtener compra del evento
+        total_precio = 0
+        total_boletos = 0
+        total_posible = 0
+        total_stock_actual = 0
+        boletos_comprados = 0
+        boletos_porcentaje = 0
+        perdida = 0
+        boletos = Boleto.objects.filter(id_evento = id_evento)
+        evento = Evento.objects.filter(id_evento = id_evento).first()
+
+        boletos_ids = Boleto.objects.filter(id_evento=id_evento).values_list('id_boleto', flat=True) 
+        vendes = Vende.objects.filter(id_boleto__in = boletos_ids)
+        ordenes_ids = Contiene.objects.filter(id_boleto__in=boletos_ids).values_list('num_orden', flat=True)
+        compras = OrdenCompra.objects.filter(num_orden__in=ordenes_ids)
+        
+        #Lógica compras
+        ventas_mensuales = compras.annotate(   #objects.annotate en caso de que saques del modelo ordenCompra
+            mes=functions.ExtractMonth('fecha'),
+            año=functions.ExtractYear('fecha')          
+        ).values('mes','año').annotate( #Aqui se agrupan los meses y año, por lo que en la linea de abajo se suman en caso que los meses y años sean iguales (GROUP BY)
+            total_mes=Sum('valor_total')
+        ).order_by('año', 'mes')
+
+        total_anual = sum(venta['total_mes'] for venta in ventas_mensuales) #Se pone venta["total_mes"] para solo obtener solo el total_mes de cada elemento
+        
+
+        
+
+        #Ganancia posible 
+        for boleto in boletos:
+            total_precio += boleto.precio
+            total_boletos += boleto.stock
+        
+
+        for vende in vendes:
+            total_stock_actual += vende.stock_actual
+        
+        boletos_comprados = total_boletos - total_stock_actual
+
+
+        #Porcentaje ganancia 
+        total_posible = total_precio * total_boletos
+        porcentaje_total_anual = round(float(total_anual * 100) / float(total_posible),2)
+
+
+        #Porcentaje boletos comprados
+        boletos_porcentaje = round((boletos_comprados * 100) / total_boletos,2)
+
+        #Perdida
+
+        perdida = round(int(evento.gasto) - int(total_anual),2)
+            
+        #print("Total anual y ventas mensuales: {} y {}".format(total_anual, ventas_mensuales))
+        return Response({'ventas_mensuales': ventas_mensuales, 'total_anual': total_anual, 'porcentaje_total_anual':porcentaje_total_anual,'total_boletos':total_boletos,'boletos_comprados':boletos_comprados,'boletos_porcentaje':boletos_porcentaje,'perdida':perdida})
+     
+   
+        #compras_data = [{"num_orden": compra.num_orden, "valor_total": compra.valor_total, "fecha": compra.fecha} for compra in compras]
+        #return JsonResponse(compras_data, safe=False)
+
+class GananciaGeneral(APIView):
+    def get(self, request):
+        # Lista para almacenar la ganancia total de cada evento
+        ganancia_por_evento = []
+
+        eventos = Evento.objects.all()   #Los modelos no son iterablesm por lo que se debe guardar en una variable y luego iterar
+
+        # Lista para almacenar la ganancia total de cada evento
+        for evento in eventos:
+            ganancia_total_evento = 0
+            boletos = Boleto.objects.filter(id_evento=evento)
+            gasto = 0
+
+            for boleto in boletos:
+                contienes = Contiene.objects.filter(id_boleto=boleto)
+            
+                for contiene in contienes:
+                    ganancia_total_evento += boleto.precio * contiene.cantidad_total
+                    gasto = evento.gasto - ganancia_total_evento
+                    if(gasto < 0):
+                        gasto = 0
+
+            ganancia_general = {
+                "nombre_evento": evento.nombre_evento,
+                "ganancia_total_evento": ganancia_total_evento,
+                "gasto_general":gasto
+            }
+
+            ganancia_por_evento.append(ganancia_general)
+        
+
+        return JsonResponse(ganancia_por_evento, safe=False)
+                
+
+class ValoresPIETotal(APIView):
+    def get(self,request):
+        total_boletos = 0
+        total_precio = 0
+        ganancia_total_eventos = 0
+        gasto_total_eventos = 0
+        ganancia_total_posible = 0
+        ordenCompras = OrdenCompra.objects.all()
+        eventos = Evento.objects.filter(eliminado=False)
+        vende = Vende.objects.first()
+        boletos = Boleto.objects.all()
+        
+
+        for ordenCompra in ordenCompras:
+            ganancia_total_eventos+=ordenCompra.valor_total
+        
+        for evento in eventos:
+            gasto_total_eventos+=evento.gasto
+
+        for boleto in boletos:
+            total_boletos+=boleto.stock
+            total_precio+=boleto.precio
+            
+        ganancia_total_posible += total_boletos * total_precio
+      
+
+        ganancia_porcentaje = round (float(ganancia_total_eventos * 100) / float(ganancia_total_posible),2)
+        gasto_total_eventos=round(float(gasto_total_eventos)-float(ganancia_total_eventos),2)
+
+
+        valoresPIE = {
+            "ganancia_total_eventos": ganancia_total_eventos,
+            "gasto_total_eventos": gasto_total_eventos,
+            "iva": vende.iva,
+            "ganancia_porcentaje": ganancia_porcentaje
+        }
+
+        return JsonResponse(valoresPIE, safe=False)
+                
+        
+
+        
+
+
+class GananciaEvento(APIView):
+    def get(self,request,id_evento):
+        evento = Evento.objects.filter(id_evento=id_evento).first()
+        boleto = Boleto.objects.filter(id_evento=id_evento).first()
+        vende = Vende.objects.filter(id_boleto=boleto.id_boleto).first()
+        numeroBoletosVendidos = boleto.stock - vende.stock_actual
+        ganancia = numeroBoletosVendidos * boleto.precio
+        ganancia_posible = boleto.stock * boleto.precio
+        porcentajeBoletosVendidos = 100 - (vende.stock_actual * 100) / boleto.stock
+        porcentajeGananciaTotal = (ganancia * 100) / ganancia_posible
+        perdida = evento.gasto - ganancia
+        #print(perdida)
+        if (perdida < 0):
+            perdida = 0
+        evento_serializer = EventSerializer(evento)
+
+        data = {
+            'ganancia_total': ganancia,
+            'ganancia_posible': ganancia_posible,
+            'numero_boletos_vendidos':numeroBoletosVendidos,
+            'porcentaje_boletos':porcentajeBoletosVendidos,
+            'porcentajeGananciaTotal':porcentajeGananciaTotal,
+            'evento':evento_serializer.data,
+            'perdida':perdida
+        }
+
+        return Response(data)
+
+
+
+
+
+
+class GananciaGeneralEventos(APIView):
+    def get(self, request):
+        eventos = Evento.objects.all()        
+
 
 class BorradoLogicoOrganizer(APIView):
     def post(self,request,id_organizador):
@@ -862,7 +1057,161 @@ def validar_correo(correo):
 def validar_cedular_repetida(cedula):
     # Verificar si el correo ya existe en cualquiera de los modelos
     if Asistente.objects.filter(ci=cedula).exists() or \
+       Administrador.objects.filter(ci=cedula).exists() or \
        Organizador.objects.filter(ci=cedula).exists():
         return {'existe': True}
     else:
         return {'existe': False}
+
+class TotalGeneradoPorOrganizador(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if not token:
+            raise AuthenticationFailed('No inicio sesión correctamente')
+
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('No inicio sesión')
+
+        id_organizador = payload['id']
+        try:
+            organizador = Organizador.objects.get(pk=id_organizador)
+        except Organizador.DoesNotExist:
+            return Response({'error': 'Organizador no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+        total = 0
+        ventas = Vende.objects.filter(id_organizador=organizador.id_organizador)
+
+        for venta in ventas:
+            contiene_registros = Contiene.objects.filter(id_boleto=venta.id_boleto)
+            for contiene in contiene_registros:
+                orden = OrdenCompra.objects.get(num_orden=contiene.num_orden.num_orden)
+                total += orden.valor_total
+
+        return Response({'total_generado': total})
+
+class TotalCantidadOrganizador(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if not token:
+            raise AuthenticationFailed('No inicio sesión correctamente')
+
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('No inicio sesión')
+
+        id_organizador = payload['id']
+        try:
+            organizador = Organizador.objects.get(pk=id_organizador)
+        except Organizador.DoesNotExist:
+            return Response({'error': 'Organizador no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+        total_generado = 0
+        ventas = Vende.objects.filter(id_organizador=organizador.id_organizador)
+
+        for venta in ventas:
+            contiene_registros = Contiene.objects.filter(id_boleto=venta.id_boleto)
+            for contiene in contiene_registros:
+                total_generado += contiene.cantidad_total
+
+        return Response({'total_cantidad_generada': total_generado})
+
+class CantidadSobranteOrg(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
+
+        if not token:
+            raise AuthenticationFailed('No inició sesión correctamente')
+
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('No inició sesión')
+
+        id_organizador = payload['id']
+        try:
+            organizador = Organizador.objects.get(pk=id_organizador)
+        except Organizador.DoesNotExist:
+            return Response({'error': 'Organizador no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+        total_generado = 0
+
+        # Obtener la cantidad de boletos vendidos por boleto y por organizador
+        ventas_por_boleto = Vende.objects.filter(id_organizador=organizador.id_organizador).values('id_boleto').annotate(total_boletos=Sum('stock_actual'))
+
+        for venta in ventas_por_boleto:
+            total_generado += venta['total_boletos']
+
+        return Response({'total_sobrante': total_generado})
+
+@api_view(['POST'])
+def validate_qr_code(request):
+    # Obtener el código escaneado desde los datos de la solicitud
+    scanned_code = request.data.get('code')
+
+    try:
+        # Intentar obtener un objeto Contiene que coincida con el código escaneado
+        contiene = Contiene.objects.get(boleto_cdg=scanned_code)
+
+        # Si se encuentra, el código QR es válido, devolver una respuesta con estado 200
+        return Response({'valid': True, 'details': contiene.id_contiene}, status=status.HTTP_200_OK)
+
+    except Contiene.DoesNotExist:
+        # Si no se encuentra, el código QR es inválido, devolver una respuesta con estado 400
+        return Response({'valid': False}, status=status.HTTP_400_BAD_REQUEST)
+
+class CompraBoletoView(APIView):
+    """
+    Vista para manejar la compra de boletos y actualizar el límite del evento.
+    """
+    def post(self, request, *args, **kwargs):
+        serializer = ContieneSerializer(data=request.data)
+        if serializer.is_valid():
+            contiene = serializer.save()
+
+            # Obtener el evento relacionado y actualizar el límite
+            evento = contiene.id_boleto.id_evento
+            if evento.limite >= contiene.cantidad_total:
+                evento.limite -= contiene.cantidad_total
+                evento.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response({"error": "No hay suficientes boletos disponibles."}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class EventoList(generics.ListAPIView):
+    queryset = Evento.objects.all()
+    serializer_class = EventSerializer
+
+    def list(self, request, *args, **kwargs):
+        # Filtrar por tipo, nombre, fecha (mes y año) si se proporcionan en los parámetros de la URL
+        tipo = self.request.query_params.get('tipo', None)
+        nombre = self.request.query_params.get('nombre', None)
+        mes = self.request.query_params.get('mes', None)
+        anio = self.request.query_params.get('anio', None)
+        ordenamiento = self.request.query_params.get('ordenamiento', None)
+
+        queryset = self.get_queryset()
+
+        if tipo:
+            queryset = queryset.filter(tipo=tipo)
+        if nombre:
+            queryset = queryset.filter(nombre_evento__icontains=nombre)
+        if mes:
+            queryset = queryset.filter(fecha__month=mes)
+        if anio:
+            queryset = queryset.filter(fecha__year=anio)
+        
+            # Ordenar por mes
+        if ordenamiento == 'asc':
+           queryset = queryset.order_by('fecha__month')
+        elif ordenamiento == 'desc':
+           queryset = queryset.order_by('-fecha__month')
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)

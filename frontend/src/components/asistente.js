@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { UncontrolledCarousel } from "reactstrap";
 import EditarPerfil from "./Asistente/editarPerfil";
 import NavBarAsis from "./Asistente/navbaras";
-import Footer from "./footer";
+import FooterHP from "./otros/footerHP";
 import "./styles/inicio.css";
 
 const Asistente = () => {
@@ -87,9 +87,9 @@ const Asistente = () => {
   return (
     <div>
       <NavBarAsis />  
-      <div className="inicio-container">
-        <div className="container mt-5">
-          <div className="col-md-6 offset-md-3">
+      <div style={{ padding: '50px 0 0 0'}} className="inicio-container">
+        <div>
+          <div >
 
             {asistenteData && (
               <h1 className="welcome-message text-center" style={{ color: 'black', fontFamily: 'Cambria', fontWeight: 'bold'}}>
@@ -97,11 +97,12 @@ const Asistente = () => {
               </h1>
             )}
 
-            <div className="col-md-10 offset-md-1">
+            <div className="col-md-10 offset-md-1 carrucel-asistente">
               <br />
               <UncontrolledCarousel
                 items={carouselItems}
                 interval={2500}
+                className="fixed-carousel2"
               />
             </div>
 
@@ -115,7 +116,8 @@ const Asistente = () => {
           </div>
         </div>
       </div>
-      <Footer />  
+      <br></br>
+      <FooterHP />  
     </div>
   );
 };

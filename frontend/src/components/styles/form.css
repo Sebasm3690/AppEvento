@@ -89,3 +89,23 @@
     font-size: 16px;
   }
 }
+
+@media screen and (max-width: 600px) {
+  .custom-form {
+    margin: 20px 10px; /* Añade un margen horizontal para evitar que el formulario toque los bordes de la pantalla */
+    max-width: 100%; /* Permite que el formulario se expanda al 100% del ancho en pantallas pequeñas */
+  }
+
+  .form-title {
+    font-size: 24px; /* Reducción adicional del tamaño del título para pantallas muy pequeñas */
+  }
+
+  .form-control {
+    font-size: 14px; /* Ajusta el tamaño de la fuente de los inputs para mejorar la legibilidad */
+  }
+
+  .btn-primary, .btn-register {
+    font-size: 14px; /* Reduce el tamaño de la fuente de los botones */
+    padding: 8px 16px; /* Ajusta el relleno para que los botones no sean demasiado grandes */
+  }
+}

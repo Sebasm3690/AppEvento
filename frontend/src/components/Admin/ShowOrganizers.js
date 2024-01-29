@@ -306,7 +306,6 @@ const CrudOrganizers = ({ adminObj }) => {
                     >
                       <img src={"https://cdn-icons-png.flaticon.com/512/8188/8188360.png"} alt="Editar" width={'25px'} />
                       <span style={{ margin: '0 3px'}}></span>
-                      EDITAR
                     </Button>
                     <span style={{ margin: "0 10px" }}></span>
                     <Button
@@ -322,7 +321,6 @@ const CrudOrganizers = ({ adminObj }) => {
                         width={"25px"}
                       />
                       <span style={{ margin: "0 3px" }}></span>
-                      DAR DE BAJA
                     </Button>
                   </td>
                 </tr>
@@ -373,7 +371,7 @@ const CrudOrganizers = ({ adminObj }) => {
           </FormGroup>
 
           <FormGroup>
-            <label>Correo:</label>
+            <label>Correo Electrónico:</label>
             <input
               className="form-control"
               name="correo"
@@ -396,10 +394,14 @@ const CrudOrganizers = ({ adminObj }) => {
         </ModalBody>
 
         <ModalFooter>
-          <Button color="primary" onClick={() => validar(2)}>
+          <Button 
+            style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+            color="primary" onClick={() => validar(2)}>
             EDITAR
           </Button>
-          <Button color="danger" onClick={() => setShowModal(false)}>
+          <Button 
+            style={{ backgroundColor: '#D32F2F', borderColor: '#D32F2F', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+            color="danger" onClick={() => setShowModal(false)}>
             CANCELAR
           </Button>
         </ModalFooter>
@@ -467,10 +469,14 @@ const CrudOrganizers = ({ adminObj }) => {
         </ModalBody>
 
         <ModalFooter>
-          <Button color="primary" onClick={() => validar(1)}>
+          <Button 
+            style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+            color="primary" onClick={() => validar(1)}>
             REGISTRAR
           </Button>
-          <Button color="danger" onClick={() => setShowModalInsert(false)}>
+          <Button 
+            style={{ backgroundColor: '#D32F2F', borderColor: '#D32F2F', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+            color="danger" onClick={() => setShowModalInsert(false)}>
             CANCELAR
           </Button>
         </ModalFooter>
@@ -519,12 +525,12 @@ const CrudOrganizers = ({ adminObj }) => {
                     <td>{organizer.correo}</td>
                     <td>
                       <button
-                        className="btn btn-success"
+                        style={{ backgroundColor: '#4CAF50 ', borderColor: '#4CAF50', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
                         onClick={() =>
                           recuperar_organizador(organizer.id_organizador)
                         }
                       >
-                        Recuperar
+                        RECUPERAR
                       </button>
                     </td>
                   </tr>

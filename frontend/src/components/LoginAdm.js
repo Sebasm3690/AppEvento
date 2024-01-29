@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import NavBar from "./navbar";
 import Footer from "./footer";
+import { FaUser, FaEnvelope, FaLock, FaIdCard } from 'react-icons/fa';
 
 const LoginAdm = () => {
   const [username, setUsername] = useState("");
@@ -42,7 +43,7 @@ const LoginAdm = () => {
   return (
     <div>
         <NavBar />
-      <div className="container mt-5"
+      <div 
         style={{
           paddingTop: '50px'
         }}
@@ -52,7 +53,7 @@ const LoginAdm = () => {
             backgroundImage: 'url(https://images.unsplash.com/photo-1589810264340-0ce27bfbf751?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHZlcnRpY2FsJTIwd2FsbHBhcGVyfGVufDB8fDB8fHww)',
             backgroundSize: 'cover',  // Ajusta el tamaño de la imagen
             width: '100%',  // Ancho del div
-            height: '450px',  // Altura del div
+            height: '540px',  // Altura del div
             borderRadius: '30px',
           }}>
             <center>
@@ -64,22 +65,28 @@ const LoginAdm = () => {
               }}
             >
               <div className="form-group">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Correo electrónico"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
+                <label>
+                  <FaUser />
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Usuario"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
+                </label>
               </div>
               <div className="form-group">
-                <input
-                  type="password"
-                  className="form-control"
-                  placeholder="Contraseña"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
+                <label>
+                  <FaLock />
+                  <input
+                    type="password"
+                    className="form-control"
+                    placeholder="Contraseña"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </label>
               </div>
               {error && <p className="error-message">{error}</p>}
               <button
