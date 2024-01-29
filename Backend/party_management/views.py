@@ -244,7 +244,7 @@ class ordenCompraDashboard (APIView):
             total_mes=Sum('valor_total')
         ).order_by('año', 'mes')
 
-        total_anual = sum(venta['total_mes'] for venta in ventas_mensuales) #Se pone venta["total_mes"] para solo obtener solo el total_mes de cada elemento
+        total_anual = round(sum(venta['total_mes'] for venta in ventas_mensuales),2) #Se pone venta["total_mes"] para solo obtener solo el total_mes de cada elemento
         
 
         
