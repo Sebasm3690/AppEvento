@@ -61,12 +61,6 @@ body {
   width: 40%;
 }
 
-/* Contenedor principal */
-.container {
-  display: flex;
-  flex-wrap:wrap;
-}
-
 /* Contenedor del carrusel */
 .carrucel-container {
   padding: 0.2%;
@@ -81,17 +75,36 @@ body {
 
 .carrucel-asistente {
   max-height: 890px; 
-
+  
 }
 
-/* Contenedor de información */
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Centrar contenedores */
+}
+
 .info-container {
-  text-align: center; /* Alineación del texto al centro */
+  text-align: center;
   padding: 20px;
-  margin: 20px auto; /* Centrado con margen automático */
+  margin: 20px;
+  flex: 1;  /* Permite que los contenedores crezcan y se encogen de manera flexible */
   max-width: 600px; /* Tamaño máximo para pantallas grandes */
-  background-color: #67B0E0; /* Color de fondo */
-  border-radius: 50px; /* Bordes redondeados */
+  min-width: 300px; /* Tamaño mínimo para evitar que sean demasiado pequeños */
+  background-color: #67B0E0;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  transition: transform 0.3s ease; /* Animación al hacer hover */
+}
+
+.info-container:hover {
+  transform: scale(1.05); /* Efecto de hover */
+}
+
+.image-container img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px; /* Bordes redondeados en las imágenes */
 }
 
 /* Estilos para pantallas grandes (mayores de 1800px) */

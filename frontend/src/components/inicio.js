@@ -55,32 +55,32 @@ function Inicio() {
         />
       </div>
       {/* Contenedor de información */}
-      <div className="container" >
-        <div className="info-container" style={{ flex: 1, maxWidth: 450, margin: 20 }}>
-          <h1>¡Bienvenido a PartyConnect!</h1>
-          <p>En PartyConnect, estamos comprometidos a transformar la manera en que planificas, participas y disfrutas de eventos. Nuestra plataforma intuitiva te ofrece la libertad de explorar una amplia variedad de eventos emocionantes, desde fiestas y conciertos hasta conferencias y reuniones sociales. Conéctate con organizadores talentosos, descubre experiencias únicas y crea recuerdos duraderos.</p>
-          <div>
-            <img src="https://i.imgur.com/zMMGfiV.png" alt="PartyConnect" style={{ width: '100%', height: 'auto' }} /> 
-          </div>
-        </div>
+      <div className="container">
+  <div className="info-container">
+    <h1>¡Bienvenido a PartyConnect!</h1>
+    <p>En PartyConnect, estamos comprometidos a transformar la manera en que planificas, participas y disfrutas de eventos. Nuestra plataforma intuitiva te ofrece la libertad de explorar una amplia variedad de eventos emocionantes, desde fiestas y conciertos hasta conferencias y reuniones sociales. Conéctate con organizadores talentosos, descubre experiencias únicas y crea recuerdos duraderos.</p>
+    <div className="image-container">
+      <img src="https://i.imgur.com/zMMGfiV.png" alt="PartyConnect" /> 
+    </div>
+  </div>
 
-        <div className="info-container" style={{ flex: 1, maxWidth: 600, margin: 20 }}>
-          <h1>Descubre Características Únicas</h1>
-          <p>Explora las características que hacen que PartyConnect sea única. Desde una interfaz intuitiva hasta eventos diversos, estamos aquí para ofrecerte experiencias inolvidables.</p>
-          <div>
-            <img src="https://cdn-icons-png.flaticon.com/512/6823/6823088.png" alt="Características Únicas" style={{ width: '100%', height: 'auto' }} /> 
-          </div>
-        </div>
+  <div className="info-container">
+    <h1>Descubre Características Únicas</h1>
+    <p>Explora las características que hacen que PartyConnect sea única. Desde una interfaz intuitiva hasta eventos diversos, estamos aquí para ofrecerte experiencias inolvidables.</p>
+    <div className="image-container">
+      <img src="https://cdn-icons-png.flaticon.com/512/6823/6823088.png" alt="Características Únicas" /> 
+    </div>
+  </div>
 
-        <div className="info-container" style={{ flex: 1, maxWidth: 600, margin: 20 }}>
-          <h1>¡Descubre Cómo Usar PartyConnect!</h1>
-          <p>Aprende a sacar el máximo provecho de nuestra plataforma con nuestra guía rápida. Descubre funciones ocultas y consejos para optimizar tu experiencia.</p>
-          <div>
-            <img src="https://cdn-icons-png.flaticon.com/512/6214/6214152.png" alt="Guía de Uso" style={{ width: '100%', height: 'auto' }} /> 
-          </div>
-        </div>
+  <div className="info-container">
+    <h1>¡Descubre Cómo Usar PartyConnect!</h1>
+    <p>Aprende a sacar el máximo provecho de nuestra plataforma con nuestra guía rápida. Descubre funciones ocultas y consejos para optimizar tu experiencia.</p>
+    <div className="image-container">
+      <img src="https://cdn-icons-png.flaticon.com/512/6214/6214152.png" alt="Guía de Uso" /> 
+    </div>
+  </div>
+</div>
 
-      </div>
       <FooterHP />
     </div>
   );
