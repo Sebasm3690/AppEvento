@@ -13,21 +13,27 @@ const QRScanner = ({ show, handleClose }) => {
 
   useEffect(() => {
     const handleCamera = async () => {
+      console.log('handleCamera called');
+      
       if (show) {
-        // La modal se ha abierto, enciende la cámara
+        // The modal is opened, turn on the camera
         if (qrReaderRef.current) {
+          console.log('Opening camera');
           await qrReaderRef.current.openImageDialog();
+          setIsCameraOn(true);
         }
       } else {
-        // La modal se ha cerrado, apaga la cámara
-        if (qrReaderRef.current) {
+        // The modal is closed, turn off the camera
+        if (qrReaderRef.current && isCameraOn) {
+          console.log('Closing camera');
           qrReaderRef.current.closeImageDialog();
+          setIsCameraOn(false);
         }
       }
     };
   
     handleCamera();
-  }, [show]);
+  }, [show, isCameraOn]);
 
   const extractCodeFromText = (text) => {
     const codeMatch = text.match(/Codigo: ([^,]+)/);
@@ -86,10 +92,6 @@ const QRScanner = ({ show, handleClose }) => {
         console.error('No se pudo extraer el código del escaneo.');
         setValidationResult('Código inválido');
       }
-    }
-
-    if (!!error) {
-      console.error('Error de escaneo:', error);
     }
   };
 

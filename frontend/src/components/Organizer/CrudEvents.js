@@ -281,9 +281,15 @@ const CrudEvents = ({ organizerObj }) => {
   /*Imagen*/
   const [imagen, setImagen] = useState(null);
   const [eventImages, setEventImages] = useState({});
-
+  const [isCameraOn, setIsCameraOn] = useState(false);
   const handleOpen = () => setShowModalQr(true);
-  const handleClose = () => setShowModalQr(false);
+  const handleClose = () => {
+    setShowModalQr(false);
+    setIsCameraOn(false); // Apagar la cámara si no lo has hecho ya
+    window.location.reload(); // Recargar la página
+  };
+
+  
 
   /*Mapa*/
   const [mostrarMapa, setMostrarMapa] = useState(false);
@@ -954,18 +960,20 @@ const CrudEvents = ({ organizerObj }) => {
             DASHBOARD GENERAL
           </button>
           <span style={{ margin: "0 10px" }}></span>
-          <Button variant="primary" onClick={handleOpen}
-            className="btn btn-primary"
-            style={{
-              backgroundColor: "#3498db",
-              borderColor: "#3498db",
-              padding: "10px 20px",
-              borderRadius: "8px",
-            }}
-          >
-            ESCÁNER QR
-          </Button>
-          <QRScanner show={showModalQr} handleClose={handleClose} />
+          <Button
+        variant="primary"
+        onClick={handleOpen}
+        className="btn btn-primary"
+        style={{
+          backgroundColor: "#3498db",
+          borderColor: "#3498db",
+          padding: "10px 20px",
+          borderRadius: "8px",
+        }}
+      >
+        ESCÁNER QR
+      </Button>
+      <QRScanner show={showModalQr} handleClose={handleClose} />
         </div>
 
         <Table className="table-custom table-borderless table-responsive">
