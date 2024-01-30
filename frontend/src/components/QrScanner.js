@@ -12,17 +12,21 @@ const QRScanner = ({ show, handleClose }) => {
   const qrReaderRef = useRef(null);
 
   useEffect(() => {
-    if (show) {
-      // La modal se ha abierto, enciende la cámara
-      if (qrReaderRef.current) {
-        qrReaderRef.current.openImageDialog();
+    const handleCamera = async () => {
+      if (show) {
+        // La modal se ha abierto, enciende la cámara
+        if (qrReaderRef.current) {
+          await qrReaderRef.current.openImageDialog();
+        }
+      } else {
+        // La modal se ha cerrado, apaga la cámara
+        if (qrReaderRef.current) {
+          qrReaderRef.current.closeImageDialog();
+        }
       }
-    } else {
-      // La modal se ha cerrado, apaga la cámara
-      if (qrReaderRef.current) {
-        qrReaderRef.current.closeImageDialog();
-      }
-    }
+    };
+  
+    handleCamera();
   }, [show]);
 
   const extractCodeFromText = (text) => {
@@ -64,7 +68,7 @@ const QRScanner = ({ show, handleClose }) => {
       setScannedData(extractedData);
       if (extractedData && Object.values(extractedData).every(value => !!value)) {
         console.log('Exito al obtener los datos')
-        setValidationResult('Aqui estan los datos del asistente!')
+        setValidationResult('')
       } else {
         console.error('No se pudo extraer la información del escaneo.');
         setValidationResult('Código inválido');
