@@ -273,79 +273,77 @@ const CrudOrganizers = ({ adminObj }) => {
           </Button>
         </div>
 
-        <Table className="table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>Apellido</th>
-              <th>Cédula de Identidad</th>
-              <th>Correo</th>
-              <th>ID Admin</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {organizers
-              .filter((organizer) => !organizer.eliminado)
-              .filter((organizer) => organizer.id_admin === adminObj.id_admin)
-              .map((organizer) => (
-                <tr key={organizer.id_organizador}>
-                  <td>{organizer.id_organizador}</td>
-                  <td>{organizer.nombre}</td>
-                  <td>{organizer.apellido}</td>
-                  <td>{organizer.ci}</td>
-                  <td>{organizer.correo}</td>
-                  <td>{organizer.id_admin}</td>
-                  <td>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    
-                      <Button
-                        style={{
-                          color: "#fff",
-                          padding: "7px 14px",
-                          borderRadius: "8px",
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          backgroundColor: '#ffc107' // Color para el botón warning
-                        }}
-                        onClick={() =>
-                          handleEditarUsuario(organizer.id_organizador)
-                        }
-                        className="btn btn-warning"
-                      >
-                        <img src={"https://cdn-icons-png.flaticon.com/512/8188/8188360.png"} alt="Editar" width={'25px'} />
-                        <span style={{ margin: '0 3px'}}></span>
-                      </Button>
-                      <Button
-                        style={{
-                          color: "#fff",
-                          padding: "7px 14px",
-                          borderRadius: "8px",
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          backgroundColor: '#dc3545' // Color para el botón warning
-                        }}
-                        className="btn btn-danger"
-                        onClick={() =>
-                          handleEliminarUsuario(organizer.id_organizador)
-                        }
-                      >
-                        <img
-                          src="https://cdn-icons-png.flaticon.com/512/2340/2340337.png"
-                          alt="Editar"
-                          width={"25px"}
-                        />
-                        <span style={{ margin: "0 3px" }}></span>
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </Table>
+          <Table className="table-custom table-borderless table-responsive">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Cédula de Identidad</th>
+                <th>Correo</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {organizers
+                .filter((organizer) => !organizer.eliminado)
+                .filter((organizer) => organizer.id_admin === adminObj.id_admin)
+                .map((organizer) => (
+                  <tr key={organizer.id_organizador}>
+                    <td data-title="ID Organizador">{organizer.id_organizador}</td>
+                    <td data-title="Nombre">{organizer.nombre}</td>
+                    <td data-title="Apellido">{organizer.apellido}</td>
+                    <td data-title="Cédula de Identidad">{organizer.ci}</td>
+                    <td data-title="Correo">{organizer.correo}</td>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      
+                        <Button
+                          style={{
+                            color: "#fff",
+                            padding: "7px 14px",
+                            borderRadius: "8px",
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: '#ffc107' // Color para el botón warning
+                          }}
+                          onClick={() =>
+                            handleEditarUsuario(organizer.id_organizador)
+                          }
+                          className="btn btn-warning"
+                        >
+                          <img src={"https://cdn-icons-png.flaticon.com/512/8188/8188360.png"} alt="Editar" width={'25px'} />
+                          <span style={{ margin: '0 3px'}}></span>
+                        </Button>
+                        <Button
+                          style={{
+                            color: "#fff",
+                            padding: "7px 14px",
+                            borderRadius: "8px",
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: '#dc3545' 
+                          }}
+                          className="btn btn-danger"
+                          onClick={() =>
+                            handleEliminarUsuario(organizer.id_organizador)
+                          }
+                        >
+                          <img
+                            src="https://cdn-icons-png.flaticon.com/512/2340/2340337.png"
+                            alt="Editar"
+                            width={"25px"}
+                          />
+                          <span style={{ margin: "0 3px" }}></span>
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </Table>
       </Container>
 
       <Modal isOpen={showModal}>
