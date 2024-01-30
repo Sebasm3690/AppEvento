@@ -1,0 +1,51 @@
+.responsive-form {
+    max-width: 600px;
+    margin: auto;
+  }
+  
+  .form-header {
+    text-align: center;
+    padding-bottom: 20px;
+  }
+  
+  .form-title {
+    margin-bottom: 1rem;
+  }
+  
+  @media (max-width: 768px) {
+    .responsive-form {
+      width: 90%;
+    }
+  
+    .form-title {
+      font-size: 1.5rem;
+    }
+  }
+  
+.form-footer {
+    text-align: center;
+    padding-top: 20px;
+}
+
+.btn-primary, .btn-secondary {
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin: 0 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #3498db;
+}
+
+.btn-secondary {
+    background-color: #bb2d3b;
+}
+
+input[type="text"], input[type="email"], input[type="password"] {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+  

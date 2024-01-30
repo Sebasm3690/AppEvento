@@ -1,0 +1,35 @@
+.table-container {
+    padding: 50px 15px; /* Espaciado más pequeño y responsivo */
+  }
+  
+  .display-4 {
+    margin-bottom: 1rem;
+  }
+  
+  .custom-table {
+    font-size: 1rem; /* Un tamaño de fuente más adaptable */
+  }
+  
+  @media (max-width: 768px) {
+    .custom-table {
+      font-size: 0.8rem; /* Fuente más pequeña en pantallas estrechas */
+    }
+  }
+  
+  /* Utilizar Bootstrap para hacer la tabla responsiva */
+  .table-responsive {
+    overflow-x: auto; /* Permite a la tabla desplazarse horizontalmente en pantallas pequeñas */
+  }
+  
+  .link-negro {
+    text-decoration: none;
+    color: #fff; /* Asegúrate de que los links sean legibles */
+  }
+  
+  /* Botones con un diseño más responsivo */
+  .btn {
+    margin: 5px 0; /* Espacio vertical para botones en pantallas pequeñas */
+    padding: 10px; /* Padding uniforme */
+    border-radius: 8px; /* Bordes redondeados */
+  }
+  

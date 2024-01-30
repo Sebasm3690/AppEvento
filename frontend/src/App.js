@@ -105,7 +105,7 @@ function App() {
           path="/correo-confirmado"
           element={<ConfirmationPage />}
         ></Route>
-       <Route
+        <Route
             path="/eventosHP/"
             element={<EventoHP></EventoHP>}
         ></Route>
@@ -118,7 +118,6 @@ function App() {
         path="/escanearqr/"
         element={<QRScanner></QRScanner>}
         ></Route>
-
       </Routes>
     </BrowserRouter>
   );

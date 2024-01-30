@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { show_alerta } from "../../functions";
 import NavBarAsis from "../Asistente/navbaras";
 import Footer from "../footer";
+import '../styles/editarperfil.css'
 
 const EditarPerfil = () => {
   const [asistenteData, setAsistenteData] = useState(null);
@@ -146,86 +147,78 @@ const EditarPerfil = () => {
     <div>
       <NavBarAsis />
       <div className="container mt-5">
-        <div className="col-md-6 offset-md-3">
+        <div className="responsive-form">
           {asistenteData && (
             <>
-              <div style={{padding: '5px 0px 20px 0px'}}>
-                <center >
-                  <h1 className="mb-3">Editando Perfil de {asistenteData.nombre} {asistenteData.apellido}</h1>
-                </center>
+              <div className="form-header">
+                <h1 className="form-title">Editando Perfil de {asistenteData.nombre} {asistenteData.apellido}</h1>
               </div>
-
-              <div>
-                <form>
-                  <div className="mb-3">
-                    <label htmlFor="ci" className="form-label" style={{fontWeight: 'bold'}}>Número de Cédula</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="ci"
-                      name="ci"
-                      value={formData.ci}
-                      onChange={handleChange}
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label htmlFor="nombre" className="form-label" style={{fontWeight: 'bold'}}>Nombre</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="nombre"
-                      name="nombre"
-                      value={formData.nombre}
-                      onChange={handleChange}
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label htmlFor="apellido" className="form-label" style={{fontWeight: 'bold'}}>Apellido</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="apellido"
-                      name="apellido"
-                      value={formData.apellido}
-                      onChange={handleChange}
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label htmlFor="email" className="form-label" style={{fontWeight: 'bold'}}>Correo Electrónico</label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label htmlFor="password" className="form-label" style={{fontWeight: 'bold'}}>Contraseña</label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      id="password"
-                      name="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </form>
-                <center>
-                  <button className="btn btn-primary" onClick={handleSaveEdit}
-                    style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
-                  >GUARDAR</button>
-                  <span className="mx-2"></span>
-                  <button className="btn btn-secondary" onClick={() => { window.location.href = '/asistente'; }}
-                    style={{ backgroundColor: '#bb2d3b', borderColor: '#bb2d3b', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
-                  >CANCELAR</button>
-                </center>
+  
+              <form>
+                <div className="mb-3">
+                  <label htmlFor="ci" className="form-label">Número de Cédula</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="ci"
+                    name="ci"
+                    value={formData.ci}
+                    onChange={handleChange}
+                  />
+                </div>
+  
+                <div className="mb-3">
+                  <label htmlFor="nombre" className="form-label">Nombre</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="nombre"
+                    name="nombre"
+                    value={formData.nombre}
+                    onChange={handleChange}
+                  />
+                </div>
+  
+                <div className="mb-3">
+                  <label htmlFor="apellido" className="form-label">Apellido</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="apellido"
+                    name="apellido"
+                    value={formData.apellido}
+                    onChange={handleChange}
+                  />
+                </div>
+  
+                <div className="mb-3">
+                  <label htmlFor="email" className="form-label">Correo Electrónico</label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                  />
+                </div>
+  
+                <div className="mb-3">
+                  <label htmlFor="password" className="form-label">Contraseña</label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    id="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                  />
+                </div>
+              </form>
+              <div className="form-footer">
+                <button className="btn btn-primary" onClick={handleSaveEdit}>GUARDAR</button>
+                <span className="mx-2"></span>
+                <button className="btn btn-secondary" onClick={() => { window.location.href = '/asistente'; }}>CANCELAR</button>
               </div>
             </>
           )}
@@ -233,7 +226,7 @@ const EditarPerfil = () => {
       </div>
       <Footer />
     </div>
-  );
+  );  
 };
 
 export default EditarPerfil;

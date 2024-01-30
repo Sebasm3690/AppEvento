@@ -1,0 +1,37 @@
+/* EventoDetail.css */
+.event-detail-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: auto;
+  }
+  
+  .event-detail-header {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .event-detail-info {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+  
+  .event-detail-link {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 10px;
+  }
+  
+  @media (max-width: 768px) {
+    .event-detail-header {
+      font-size: 1.5rem;
+    }
+  
+    .event-detail-info {
+      font-size: 0.9rem;
+    }
+  }
+  
