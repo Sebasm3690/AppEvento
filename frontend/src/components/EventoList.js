@@ -100,7 +100,7 @@ function EventosList() {
               onChange={(e) => setNombreBusqueda(e.target.value)}
             />
           </div>
-          <div className="col-sm-12 col-md-4">
+          <div className="col-sm-12 col-md-3">
             <select
               className="custom-select"
               value={tipo}
@@ -111,7 +111,7 @@ function EventosList() {
               <option value="Privado">Privado</option>
             </select>
           </div>
-          <div className="col-sm-12 col-md-4">
+          <div className="col-sm-12 col-md-3">
             <select
               className="custom-select"
               value={tipomes}
@@ -122,10 +122,8 @@ function EventosList() {
               <option value="Mesmam">Mes (De menor a mayor)</option>
             </select>
           </div>
-        </div>
-        <div >
-          <div className="https://cdn-icons-png.flaticon.com/512/64/64673.png">
-            <button onClick={buscarEventos}>
+          <div className="col-sm-12 col-md-2">
+            <button className="btn btn-primary" onClick={buscarEventos}>
               <img
                 src="https://cdn-icons-png.flaticon.com/512/64/64673.png"
                 alt="Buscar"
@@ -134,33 +132,37 @@ function EventosList() {
             </button>
           </div>
         </div>
-        <div className="row mt-3">
-          {eventos
-            .filter((evento) => !evento.eliminado)
-            .map((evento) => (
-              <div key={evento.id_evento} className="col-lg-3 col-md-4 col-sm-6 mb-4">
-                <div className="card h-100">
-                  <img src={evento.imagen} className="card-img-top" alt={evento.nombre_evento} />
-                  <div className="card-body d-flex flex-column">
-                    <h5 className="card-title text-center">{evento.nombre_evento}</h5>
-                    <p className="card-text">{evento.descripcion}</p>
-                    <p className="card-text">{evento.ubicacion}</p>
-                    <p className="card-text">
-                      <small className="text-muted">{evento.fecha}</small>
-                    </p>
-                    <div className="mt-auto">
-                      <button
-                        className="btn btn-primary w-100"
-                        onClick={() => handleMostrarDatos(evento)}
-                      >
-                        Ver Más Detalles
-                      </button>
+
+        <div className="container">
+          <div className="row justify-content-center mt-3">
+            {eventos
+              .filter((evento) => !evento.eliminado)
+              .map((evento) => (
+                <div key={evento.id_evento} className="evento-column mb-4 d-flex justify-content-center">
+                  <div className="card h-100" style={{ maxWidth: '300px' }}> {/* Establecer un ancho máximo para la tarjeta */}
+                    <img src={evento.imagen} className="card-img-top" alt={evento.nombre_evento} />
+                    <div className="card-body d-flex flex-column">
+                      <h5 className="card-title text-center">{evento.nombre_evento}</h5>
+                      <p className="card-text">{evento.descripcion}</p>
+                      <p className="card-text">{evento.ubicacion}</p>
+                      <p className="card-text">
+                        <small className="text-muted">{evento.fecha}</small>
+                      </p>
+                      <div className="mt-auto">
+                        <button
+                          className="btn btn-primary w-100"
+                          onClick={() => handleMostrarDatos(evento)}
+                        >
+                          Ver Más Detalles
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+          </div>
         </div>
+
       </div>
       <Modal isOpen={showModal}>
       <ModalHeader>

@@ -1,16 +1,20 @@
 // Login.js
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "./navbar";
 import Footer from "./footer";
 import Dashboard from "./DashboardAdm";
 import { FaUser, FaEnvelope, FaLock, FaIdCard } from 'react-icons/fa';
+import { show_alerta } from "../functions";
 
 const LoginOrganizador = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loginAttempts, setLoginAttempts] = useState(0);
+  const [showInvalidCredentialsMessage, setShowInvalidCredentialsMessage] = useState(true); // Controla si se muestra el mensaje de credenciales incorrectas
   const navigate = useNavigate();
+  const timerRef = useRef(null);
 
   const loginUser = async () => {
     try {
@@ -38,8 +42,49 @@ const LoginOrganizador = () => {
     } catch (err) {
       console.error("Error al iniciar sesión:", err);
       setError("Credenciales incorrectas");
+      setShowInvalidCredentialsMessage(true); // Mostrar el mensaje de credenciales incorrectas
+      setLoginAttempts((prevAttempts) => prevAttempts + 1);
+      if (loginAttempts === 2) {
+        disableLoginButton();
+        startTimer();
+        show_alerta("Demasiados intentos fallidos. Por favor, inténtelo de nuevo después de 10 segundos", "error");
+      }
     }
   };
+
+  const disableLoginButton = () => {
+    const loginButton = document.getElementById("loginButton");
+    if (loginButton) {
+      loginButton.disabled = true;
+    }
+  };
+
+  const enableLoginButton = () => {
+    const loginButton = document.getElementById("loginButton");
+    if (loginButton) {
+      loginButton.disabled = false;
+    }
+  };
+
+  const startTimer = () => {
+    timerRef.current = setTimeout(() => {
+      enableLoginButton();
+      setShowInvalidCredentialsMessage(false); // Desactivar el mensaje de credenciales incorrectas
+      setLoginAttempts(0); 
+    }, 10000);
+  };
+
+  const clearTimer = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      clearTimer();
+    };
+  }, []);
 
   return (
     <div>
@@ -103,9 +148,10 @@ const LoginOrganizador = () => {
                   />
                 </label>
               </div>
-              {error && <p className="error-message">{error}</p>}
+              {showInvalidCredentialsMessage && error && <p className="error-message">{error}</p>}
               <button
                 type="button"
+                id="loginButton"
                 style={{
                   backgroundColor: "#3498db",
                   borderColor: "#3498db",
