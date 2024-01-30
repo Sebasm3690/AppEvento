@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import './styles/EventoDetail.css'
 
 function EventoDetail() {
   const [evento, setEvento] = useState([]);
@@ -26,22 +27,22 @@ function EventoDetail() {
   if (!evento) return <p>Cargando...</p>;
 
   return (
-    <div key={evento.id_evento}>
-      <h1>{evento.nombre_evento}</h1>
-      <p>
+    <div className="event-detail-container" key={evento.id_evento}>
+      <h1 className="event-detail-header">{evento.nombre_evento}</h1>
+      <p className="event-detail-info">
         <strong>Fecha:</strong> {new Date(evento.fecha).toLocaleDateString()}
       </p>
-      <p>
+      <p className="event-detail-info">
         <strong>Hora:</strong> {evento.hora}
       </p>
-      <p>
+      <p className="event-detail-info">
         <strong>Ubicación:</strong> {evento.ubicacion}
       </p>
-      <p>
+      <p className="event-detail-info">
         <strong>Descripción:</strong> {evento.descripcion}
       </p>
 
-      <Link to={`/verboletos/${evento.id_evento}`}>Comprar</Link>
+      <Link to={`/verboletos/${evento.id_evento}`} className="event-detail-link">Comprar</Link>
     </div>
   );
 }

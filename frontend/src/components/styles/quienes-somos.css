@@ -58,3 +58,32 @@
   color: #555;
   margin-bottom: 15px;
 }
+
+quienes-somos-sections {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%; /* Ajustado para mejor fluidez */
+  align-items: flex-start;
+  flex-wrap: wrap; /* Permite que los elementos se ajusten en pantalla pequeña */
+}
+
+@media (max-width: 768px) {
+  .quienes-somos-sections {
+    flex-direction: column; /* Coloca los elementos en una columna en pantallas pequeñas */
+    align-items: center; /* Centra los elementos */
+  }
+
+  .quienes-somos-desarrolladores, .contactanos {
+    width: 100%; /* Asegura que tomen todo el ancho disponible */
+    margin-bottom: 20px; /* Espaciado entre secciones */
+  }
+
+  .quienes-somos-title, .quienes-somos-subtitle {
+    font-size: 24px; /* Reduce el tamaño de fuente para títulos en pantallas pequeñas */
+  }
+
+  .desarrolladores-list li, .quienes-somos-content {
+    font-size: 16px; /* Reduce el tamaño de fuente para el contenido y lista */
+  }
+}

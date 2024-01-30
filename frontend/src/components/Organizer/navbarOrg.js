@@ -4,6 +4,7 @@ import "../styles/navbar.css";
 
 function NavBar() {
     const [adminData, setAdminData] = useState(null);
+    const [isNavExpanded, setIsNavExpanded] = useState(false);
 
   useEffect(() => {
     fetchAdminData();
@@ -60,12 +61,20 @@ function NavBar() {
           />
         </Link>
         </div>
-        <div className="centered-panel">
+          <button 
+          className="navbar-toggler" 
+          onClick={() => setIsNavExpanded(!isNavExpanded)}
+          aria-expanded={isNavExpanded}
+          aria-label="Toggle navigation"
+        >
+          &#9776;
+        </button>
+        <div className={`centered-panel ${isNavExpanded ? "show" : ""}`}>
           <Link to="/organizador" className="navbar-brand">
             PANEL ORGANIZADOR
           </Link>
         </div>
-        <div className="navbar-right">
+        <div className={`navbar-right ${isNavExpanded ? "show" : ""}`}>
           <Link to="/loginas" className="navbar-link" onClick={handleLogout}>
             CERRAR SESIÓN
           </Link>

@@ -1,0 +1,46 @@
+.titulo-eventos {
+    padding: 50px 15px 10px;
+  }
+  
+  .search-filters {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 0 15px;
+    flex-wrap: wrap;
+  }
+  
+  .eventos-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0 15px;
+  }
+  
+  .evento-card {
+    width: calc(100% / 4 - 20px); /* Cuatro tarjetas por fila con un poco de margen */
+    margin: 10px;
+  }
+  
+  /* Adaptar el número de tarjetas por fila según el tamaño de la pantalla */
+  @media (max-width: 1200px) {
+    .evento-card {
+      width: calc(100% / 3 - 20px); /* Tres tarjetas por fila */
+    }
+  }
+  
+  @media (max-width: 992px) {
+    .evento-card {
+      width: calc(100% / 2 - 20px); /* Dos tarjetas por fila */
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .evento-card {
+      width: 100%; /* Una tarjeta por fila */
+    }
+  }
+  
+  /* Estilos para botones y otros elementos aquí */
+  
+  

@@ -3,6 +3,7 @@ import CrudEvents from "./Organizer/CrudEvents";
 import { Link } from "react-router-dom";
 import NavBarOrg from "./Organizer/navbarOrg";
 import Footer from "./footer";
+import FooterHP from "./otros/footerHP";
 
 const Organizador = () => {
   const [adminData, setAdminData] = useState(null);
@@ -63,7 +64,7 @@ const Organizador = () => {
           <p>Cargando datos del organizador...</p>
         )}
       </div>
-      <Footer />
+      <FooterHP />
     </div>
   );
 };

@@ -10,19 +10,17 @@ const ConfirmationPage = () => {
   return (
     <>
       <NavBar />
-      <div style={{ marginTop: '-20px', height: 'calc(100vh - 110px)', display: 'grid', placeItems: 'center' }}>
-        <Card className="d-flex justify-content-center mx-auto fiesta-animation" style={{ backgroundColor: '#f2f2f2' }}>
-          <CardBody className="text-center">
-            <h1>Correo confirmado exitosamente</h1>
-            <p>¡Tu correo ha sido confirmado correctamente!</p>
-            <p>
-              Ir a{" "}
-              <Link to="/loginAs/" className="btn btn-primary">
-                Iniciar Sesión
-              </Link>
-            </p>
-          </CardBody>
-        </Card>
+      <div style={{ marginTop: '-100px', height: 'calc(100vh - 110px)', display: 'grid', placeItems: 'center' }}>
+        <CardBody className="text-center confirmation-card">
+          <h1 className="confirmation-title">CORREO CONFIRMADO EXITOSAMENTE</h1>
+          <p className="confirmation-message">¡Tu correo ha sido confirmado correctamente!</p>
+          <p className="confirmation-action">
+            Ir a{" "}
+            <Link to="/loginAs/" className="btn btn-primary custom-button">
+              INICIAR SESIÓN
+            </Link>
+          </p>
+        </CardBody>
       </div>
       <Footer />
     </>
