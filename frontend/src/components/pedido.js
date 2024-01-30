@@ -185,6 +185,9 @@ function BoletosList() {
                           className="img-fluid"
                         />
                       )} */}
+                      <div className="tipo-boleto1">
+                        <strong>Tipo de boleto:</strong> {boleto.tipoBoleto}
+                      </div>
                       <div className="form-check checkbox-container">
                         <br></br>
                         <input
