@@ -1,16 +1,16 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import Logo from './otros/logo'
-import './styles/footer.css'; 
+import Logo from '../otros/logo'
+import '../styles/footerHP.css'; 
 
-function Footer() {
+function FooterHP() {
   return (
-    <footer className="footer">
-      <div className="containerf">
+    <footer className="footerHP">
+      <div className="containerfHP">
         <p>&copy; 2024 PartyConnect. Todos los derechos reservados.</p>
       </div>
     </footer>
   );
 }
 
-export default Footer;
+export default FooterHP;

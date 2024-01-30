@@ -39,7 +39,7 @@ body {
 .navbar-link:hover {
   /* background-color: rgba(255, 255, 255, 0.1); */
   color: #333;
-  text-decoration: overline; 
+  text-decoration:overline; 
 }
 
 .navbar-btn {
@@ -120,4 +120,68 @@ body {
 .centered-panel:hover{
   color: #333;
   text-decoration: overline; 
+}
+
+.navbar-toggler {
+  background-color: transparent;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  display: none;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .navbar-toggler {
+    display: block;
+  }
+
+  .navbar-right {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background-color: #67B0E0;
+    z-index: 1;
+  }
+
+  .navbar-right.show {
+    display: flex;
+  }
+}
+
+@media (max-width: 758px) {
+  .centered-panel, .navbar-right {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background-color: #67B0E0;
+    z-index: 1;
+  }
+
+  .centered-panel.show, .navbar-right.show {
+    display: flex;
+  }
+}
+
+.navbar-toggler {
+  background-color: #fff; /* Color de fondo */
+  color: #2980b9; /* Color del ícono de hamburguesa */
+  border: 1px solid #2980b9; /* Borde del botón */
+  border-radius: 4px; /* Bordes redondeados */
+  padding: 10px 15px; /* Espaciado interno */
+  font-size: 18px; /* Tamaño del ícono */
+  cursor: pointer; /* Cursor en forma de mano al pasar el ratón */
+  transition: all 0.3s ease; /* Transición suave para cambios de estilo */
+}
+
+.navbar-toggler:hover {
+  background-color: #2980b9; /* Color de fondo al pasar el ratón */
+  color: #fff; /* Color del ícono al pasar el ratón */
+  border-color: #fff; /* Color del borde al pasar el ratón */
 }

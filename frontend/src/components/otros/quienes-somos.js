@@ -1,6 +1,6 @@
 import React from 'react';
 import NavBar from '../navbar';
-import Footer from '../footer';
+import FooterHP from '../otros/footerHP';
 import './../styles/quienes-somos.css';
 
 function QuienesSomos() {
@@ -14,8 +14,7 @@ function QuienesSomos() {
             Bienvenido a PartyConnect, la plataforma que transforma la manera en que experimentas eventos. Nos dedicamos a conectar personas a través de experiencias increíbles, facilitando la organización y participación en eventos que generan recuerdos inolvidables.
           </p>
         </div>
-        <br></br>
-        <div className="quienes-somos-sections ">
+        
           <div className="quienes-somos-desarrolladores ">
             <h2 className="quienes-somos-subtitle">Triggers</h2>
             <br></br>
@@ -29,7 +28,7 @@ function QuienesSomos() {
 
           <div className="contactanos ">
             <br></br>
-            <h2>Contáctanos</h2>
+            <h2 className="quienes-somos-subtitle">Contáctanos</h2>
             <br></br>
             <a href="mailto:francisco.alvarez@espoch.edu.ec">
               <img src="https://img.shields.io/badge/Correo%20Electrónico-francisco.alvarez%40espoch.edu.ec-blue?style=for-the-badge&logo=email&logoColor=white&labelColor=101010" alt="Correo Electrónico"/>
@@ -50,10 +49,9 @@ function QuienesSomos() {
               <img src="https://img.shields.io/badge/Correo%20Electrónico-styven.padilla%40espoch.edu.ec-pink?style=for-the-badge&logo=email&logoColor=white&labelColor=101010" alt="Correo Electrónico" />
             </a>
           </div>
-        </div>
       </div>
 
-      <Footer />
+      <FooterHP />
     </div>
   );
 }

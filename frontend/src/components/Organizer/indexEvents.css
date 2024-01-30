@@ -55,3 +55,107 @@
   flex-direction: column;
   align-items: center;
 }
+
+/* Estilos para dispositivos móviles */
+@media (max-width: 768px) {
+  /* Oculta los encabezados de la tabla en la vista móvil */
+  .table-custom thead tr {
+    display: none;
+  }
+
+  /* Estilos para los datos de la tabla para asegurar que se muestren adecuadamente */
+  .table-custom tbody, .table-custom tr, .table-custom td {
+    display: block;
+    width: 100%;
+  }
+
+  /* Asegura que los títulos de las celdas (atributo data-title) se muestren adecuadamente sobre los datos */
+  .table-custom td::before {
+    content: attr(data-title);
+    font-weight: bold;
+    width: 50%;
+    display: inline-block;
+    margin-right: 10px;
+    color: #333; /* Color para los títulos de las celdas */
+  }
+
+  /* Alinea la imagen correctamente en la vista móvil */
+  .table-custom td img {
+    display: block; /* Asegura que la imagen no sea inline */
+    max-width: 100px; /* Tamaño máximo para la imagen */
+    height: auto;
+    margin: 10px auto; /* Centra la imagen */
+  }
+
+  /* Ajusta los estilos para los botones dentro de las celdas */
+  .table-custom td > button, .table-custom td > .btn {
+    display: block; /* Asegura que los botones sean block para ocupar su propio espacio */
+    width: auto; /* El ancho será el necesario según el contenido */
+    margin: 10px 0; /* Espacio antes y después de los botones */
+  }
+
+  /* Ajustes para el input de archivo */
+  .table-custom td > input[type="file"] {
+    max-width: 250px; /* O el tamaño que prefieras */
+    margin: 10px auto; /* Esto centrará los botones si tienen un ancho máximo */
+    display: block;
+  }
+
+  table-custom td > button,
+  .table-custom td > .btn,
+  .table-custom td > input[type="file"] {
+    width: 100%;
+    margin-top: 5px; /* Margen superior para separarlos de otros elementos */
+  }
+
+  /* Añade estilos para cuando el usuario pase el cursor sobre los botones si estás en una pantalla que permite hover */
+  .table-custom td > button:hover,
+  .table-custom td > .btn:hover {
+    opacity: 0.8;
+  }
+
+  /* Ajusta el tamaño de la fuente para dispositivos móviles para mejorar la legibilidad */
+  .table-custom td {
+    font-size: 14px; /* Ajusta según la necesidad */
+  }
+
+  /* Añade un poco de padding alrededor de los elementos para que no se sientan apretados */
+  .table-custom {
+    padding: 5px;
+  }
+
+  /* Mejora la visualización de las imágenes para evitar que sean demasiado grandes en dispositivos móviles */
+  .table-custom td img {
+    max-width: 80%; /* O un tamaño fijo, dependiendo de tus necesidades */
+    height: auto;
+    display: block;
+    margin: 10px auto;
+  }
+}
+
+/* Estilos base para elementos select con clase .custom-select */
+.custom-select {
+  width: 100%; /* Ocupar el ancho completo del contenedor */
+  padding: 10px; /* Espaciado interno para que no esté pegado al borde */
+  margin: 8px 0; /* Margen externo para separar los inputs entre sí */
+  display: inline-block; /* Para que respete el ancho y el margen */
+  border: 1px solid #ccc; /* Borde de color gris claro como en el segundo formulario */
+  box-sizing: border-box; /* Para que el padding no afecte el ancho total del input */
+  border-color: #2980b9;
+  border-radius: 5px;
+}
+
+.custom-select:focus {
+  outline: none; /* Elimina el contorno predeterminado al enfocar */
+  border-color: #2980b9; /* Cambia el color del borde cuando está enfocado */
+  }
+  
+  /* Estilos para la opción por defecto que simula un placeholder en .custom-select */
+  .custom-select option[value=""][disabled] {
+  display: none; /* Oculta la opción 'placeholder' en la lista desplegable */
+  }
+  
+  /* Estilos para opciones dentro de .custom-select */
+  .custom-select option {
+  padding: 8px; /* Espaciado interno para las opciones */
+  }

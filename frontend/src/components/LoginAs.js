@@ -1,6 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { show_alerta } from "../functions";
 import NavBar from "./navbar";
 import Footer from "./footer";
 import "./styles/form.css";
@@ -10,9 +9,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [loginAttempts, setLoginAttempts] = useState(0); // Contador de intentos de inicio de sesión
   const navigate = useNavigate();
-  const timerRef = useRef(null);
 
   const handleLogin = async () => {
     try {
@@ -34,61 +31,25 @@ function Login() {
         localStorage.setItem("jwt", data.jwt);
         window.location.href = "/asistente";
       } else if (data.error === "Correo no confirmado") {
+        // Muestra una alerta si el correo no está confirmado
         alert("Su correo no se ha confirmado, verifiquelo de nuevo");
         window.location.href = "/asistente";
+      } else if (data.error === "Correo no confirmado") {
+        // Muestra una alerta si el correo no está confirmado
+        alert("Su correo no se ha confirmado, verifiquelo de nuevo");
       } else {
-        setLoginAttempts((prevAttempts) => prevAttempts + 1);
         throw new Error("Credenciales incorrectas");
       }
     } catch (err) {
       console.error("Error al iniciar sesión:", err);
       setError("Error al iniciar sesión");
-      if (loginAttempts === 2) {
-        disableLoginButton();
-        startTimer();
-        show_alerta("Demasiados intentos fallidos. Por favor, inténtelo de nuevo después de 10 segundos", "error");
-      }
     }
   };
-
-  const disableLoginButton = () => {
-    const loginButton = document.getElementById("loginButton");
-    if (loginButton) {
-      loginButton.disabled = true;
-    }
-  };
-
-  const enableLoginButton = () => {
-    const loginButton = document.getElementById("loginButton");
-    if (loginButton) {
-      loginButton.disabled = false;
-    }
-  };
-
-  const startTimer = () => {
-    timerRef.current = setTimeout(() => {
-      enableLoginButton();
-      setLoginAttempts(0); 
-    }, 10000);
-  };
-
-  const clearTimer = () => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-  };
-
-  useEffect(() => {
-    return () => {
-      clearTimer();
-    };
-  }, []);
 
   return (
     <div>
       <NavBar />
       <div
-        className="container mt-5"
         style={{
           paddingTop: "50px",
         }}
@@ -100,7 +61,7 @@ function Login() {
                 "url(https://images.unsplash.com/photo-1589810264340-0ce27bfbf751?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHZlcnRpY2FsJTIwd2FsbHBhcGVyfGVufDB8fDB8fHww)",
               backgroundSize: "cover", // Ajusta el tamaño de la imagen
               width: "100%", // Ancho del div
-              height: "600px", // Altura del div
+              height: "640px", // Altura del div
               borderRadius: "30px",
             }}
           >
@@ -124,26 +85,31 @@ function Login() {
               }}
             >
               <div className="form-group">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Correo electrónico"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
+                <label>
+                  <FaEnvelope />
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Correo Electrónico"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </label>
               </div>
               <div className="form-group">
-                <input
-                  type="password"
-                  className="form-control"
-                  placeholder="Contraseña"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
+                <label>
+                  <FaLock />
+                  <input
+                    type="password"
+                    className="form-control"
+                    placeholder="Contraseña"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </label>
               </div>
               {error && <p className="text-danger">{error}</p>}
               <button
-                id="loginButton"
                 type="button"
                 style={{
                   backgroundColor: "#3498db",

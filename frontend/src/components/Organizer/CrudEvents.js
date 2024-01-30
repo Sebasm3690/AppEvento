@@ -154,9 +154,10 @@ const MapaDirecciones = ({ setUbicacion, ubicacion }) => {
       <div className="container">
         <div className="row">
           <div className="col-md-12">
-            <h2 style={{ textAlign: "center" }}>
+            <br></br>
+            <h4 style={{ textAlign: "center" }}>
               Dirección de la Ubicación del Evento
-            </h2>
+            </h4>
             <br />
             <form
               className="form-inline"
@@ -169,7 +170,7 @@ const MapaDirecciones = ({ setUbicacion, ubicacion }) => {
                   type="text"
                   name="find"
                   id="find"
-                  placeholder="Pais/Ciudad, Direccion"
+                  placeholder="País/Ciudad, Dirección"
                   value={ubicacion}
                   onChange={(e) => {
                     setFind(e.target.value);
@@ -177,7 +178,7 @@ const MapaDirecciones = ({ setUbicacion, ubicacion }) => {
                   }}
                 />
               </div>
-              <input className="btn btn-primary" type="submit" value="Buscar" />
+              <input className="btn btn-primary" type="submit" value="BUSCAR" style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}/>
             </form>
             <br />
             <div style={{ textAlign: "center" }}>
@@ -894,8 +895,8 @@ const CrudEvents = ({ organizerObj }) => {
         <div style={{ paddingBlockEnd: "50px" }}>
           <button
             style={{
-              backgroundColor: "#2980b9",
-              borderColor: "#2980b9",
+              backgroundColor: "#3498db",
+              borderColor: "#3498db",
               padding: "10px 20px",
               borderRadius: "8px",
             }}
@@ -905,14 +906,14 @@ const CrudEvents = ({ organizerObj }) => {
             NUEVO EVENTO
           </button>
 
-          <span style={{ margin: "0 40px" }}></span>
+          <span style={{ margin: "0 10px" }}></span>
           {events.some(
             (evento) =>
               evento.eliminado === false &&
               boletos.some((boleto) => evento.id_evento === boleto.id_evento)
           ) && (
             <button
-              className="btn btn-info"
+              className="btn btn-primary"
               style={{
                 backgroundColor: "#3498db",
                 borderColor: "#3498db",
@@ -925,45 +926,54 @@ const CrudEvents = ({ organizerObj }) => {
               AGREGAR IMPUESTOS
             </button>
           )}
-          <span style={{ margin: "0 40px" }}></span>
+          <span style={{ margin: "0 10px" }}></span>
           <button
             style={{
-              backgroundColor: "#6aabb5",
-              borderColor: "#6aabb5",
+              backgroundColor: "#3498db",
+              borderColor: "#3498db",
               padding: "10px 20px",
               borderRadius: "8px",
             }}
-            className="btn btn-success"
+            className="btn btn-primary"
             onClick={() => setShowModalRecuperar(true)}
           >
             {/*Recuperar evento*/}
             HISTÓRICO
           </button>
+          <span style={{ margin: "0 10px" }}></span>
           <button
             style={{
-              backgroundColor: "#2980b9",
-              borderColor: "#2980b9",
+              backgroundColor: "#3498db",
+              borderColor: "#3498db",
               padding: "10px 20px",
               borderRadius: "8px",
             }}
             className="btn btn-primary"
             onClick={() => navigate("/dashboardGeneral/")}
           >
-            VER DASHBOARD GENERAL
+            DASHBOARD GENERAL
           </button>
-          <Button variant="primary" onClick={handleOpen}>
-        Abrir Escáner QR
-      </Button>
-      <QRScanner show={showModalQr} handleClose={handleClose} />
+          <span style={{ margin: "0 10px" }}></span>
+          <Button variant="primary" onClick={handleOpen}
+            className="btn btn-primary"
+            style={{
+              backgroundColor: "#3498db",
+              borderColor: "#3498db",
+              padding: "10px 20px",
+              borderRadius: "8px",
+            }}
+          >
+            ESCÁNER QR
+          </Button>
+          <QRScanner show={showModalQr} handleClose={handleClose} />
         </div>
 
-        <Table className="table table-borderless">
+        <Table className="table-custom table-borderless table-responsive">
           <thead className="">
             <tr>
               <th>Nombre</th>
               <th>Fecha</th>
               <th>Hora</th>
-              <th>Gasto del evento</th>
               <th>Ubicación</th>
               <th>Descripción</th>
               <th>Tipo</th>
@@ -981,14 +991,13 @@ const CrudEvents = ({ organizerObj }) => {
               //.filter((event) => new Date() > new Date(event.fecha))
               .map((event) => (
                 <tr key={event.id_evento}>
-                  <td>{event.nombre_evento}</td>
-                  <td>{event.fecha}</td>
-                  <td>{event.hora}</td>
-                  <td>{event.gasto}</td>
-                  <td>{event.ubicacion}</td>
-                  <td>{event.descripcion}</td>
-                  <td>{event.tipo}</td>
-                  <td>{event.limite}</td>
+                  <td data-title="Evento">{event.nombre_evento}</td>
+                  <td data-title="Fecha">{event.fecha}</td>
+                  <td data-title="Hora">{event.hora}</td>
+                  <td data-title="Ubicación">{event.ubicacion}</td>
+                  <td data-title="Descripción">{event.descripcion}</td>
+                  <td data-title="Tipo">{event.tipo}</td>
+                  <td data-title="Límite">{event.limite}</td>
 
                   <td>
                     <img
@@ -998,100 +1007,107 @@ const CrudEvents = ({ organizerObj }) => {
                       style={{ maxWidth: "95px" }}
                     />
                     <input
-                      className="form-control"
+                      id={`file-input-${event.id_evento}`}
                       name={`imagen-${event.id_evento}`}
                       type="file"
                       accept="image/*"
                       onChange={(e) => handleImageChange(e, event.id_evento)}
-                      style={{
-                        marginTop: "3px",
-                        maxWidth: "99px",
-                        padding: "7px, 14px",
-                        borderRadius: "8px",
-                      }}
+                      style={{ display: 'none' }} // Oculta el input de archivo                
                     />
+                    <label
+                      htmlFor={`file-input-${event.id_evento}`}
+                      className="btn btn-primary file-upload-label"
+                      style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                    >
+                      Seleccionar
+                    </label>
                   </td>
 
                   <td>
-                    <button
-                      style={{
-                        color: "#fff",
-                        padding: "7px 14px",
-                        borderRadius: "8px",
-                      }}
-                      onClick={() => handleEditarEvento(event.id_evento)}
-                      className="btn btn-warning"
-                    >
-                      <img
-                        src={
-                          "https://cdn-icons-png.flaticon.com/512/1827/1827933.png"
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <button
+                        style={{
+                          color: "#fff",
+                          padding: "7px 14px",
+                          borderRadius: "8px",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: '#ffc107' // Color para el botón warning
+                        }}
+                        onClick={() => handleEditarEvento(event.id_evento)}
+                        className="btn"
+                      >
+                        <img
+                          src="https://cdn-icons-png.flaticon.com/512/1827/1827933.png"
+                          alt="Editar"
+                          width={"25px"}
+                        />
+                      </button>
+                      <button
+                        style={{
+                          color: "#fff",
+                          padding: "7px 14px",
+                          borderRadius: "8px",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: '#dc3545' // Color para el botón danger
+                        }}
+                        onClick={() => {
+                          setShowConfirmModalDelete(true);
+                          setId(event.id_evento);
+                        }}
+                        className="btn"
+                      >
+                        <img
+                          src="https://cdn-icons-png.flaticon.com/512/3221/3221845.png"
+                          alt="Eliminar"
+                          width={"25px"}
+                        />
+                      </button>
+                      <button
+                        style={{
+                          backgroundColor: "#17A2B8",
+                          color: "#fff",
+                          padding: "7px 14px",
+                          borderRadius: "8px",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                        type="button"
+                        className="btn"
+                        onClick={() => mostrarOrdenCompra(event.id_evento)}
+                      >
+                        <img
+                          src="https://cdn-icons-png.flaticon.com/512/46/46155.png"
+                          alt="Orden de Compra"
+                          width={"25px"}
+                        />
+                      </button>
+                      <button
+                        style={{
+                          backgroundColor: "#3498db",
+                          color: "#fff",
+                          padding: "7px 14px",
+                          borderRadius: "8px",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                        onClick={() =>
+                          navigate(`/dashboardGrafico/${event.id_evento}`)
                         }
-                        alt="Editar"
-                        width={"25px"}
-                      />
-                      <span style={{ margin: "0 0px" }}></span>
-                    </button>
-                    <span style={{ margin: "0 3px" }}></span>
-                    <button
-                      style={{
-                        color: "#fff",
-                        padding: "7px 14px",
-                        borderRadius: "8px",
-                      }}
-                      className="btn btn-danger"
-                      onClick={() => {
-                        setShowConfirmModalDelete(true);
-                        setId(event.id_evento);
-                      }}
-                    >
-                      <img
-                        src={
-                          "https://cdn-icons-png.flaticon.com/512/3221/3221845.png"
-                        }
-                        alt="Editar"
-                        width={"25px"}
-                      />
-                      <span style={{ margin: "0 0px" }}></span>
-                    </button>
-                    <span style={{ margin: "0 0px" }}></span>
-
-                    <button
-                      style={{
-                        backgroundColor: "#17A2B8",
-                        color: "#fff",
-                        padding: "7px 14px",
-                        borderRadius: "8px",
-                      }}
-                      type="button"
-                      class="btn btn-primary"
-                      onClick={() => mostrarOrdenCompra(event.id_evento)}
-                    >
-                      <img
-                        src={
-                          "https://cdn-icons-png.flaticon.com/512/46/46155.png"
-                        }
-                        alt="Editar"
-                        width={"25px"}
-                      />
-                      <span style={{ margin: "0 0px" }}></span>
-                      <span class="badge bg-secondary"></span>
-                    </button>
-                  </td>
-                  <td>
-                    <Button
-                      style={{
-                        backgroundColor: "#2980b9",
-                        borderColor: "#2980b9",
-                        padding: "10px 20px",
-                        borderRadius: "8px",
-                      }}
-                      className="btn btn-primary"
-                      onClick={() =>
-                        navigate(`/dashboardGrafico/${event.id_evento}`)
-                      }
-                    >
-                      VER DASHBOARD
-                    </Button>
+                        className="btn"
+                      >
+                        <img
+                          src="https://cdn-icons-png.flaticon.com/512/5637/5637125.png"
+                          alt="Gráfico"
+                          width={"25px"}
+                        />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -1183,6 +1199,7 @@ const CrudEvents = ({ organizerObj }) => {
               name="gasto"
               type="number"
               onChange={(e) => setGasto(e.target.value)}
+              style={{ width: "50%" }}
               value={gasto}
             />
           </FormGroup>
@@ -1201,12 +1218,13 @@ const CrudEvents = ({ organizerObj }) => {
           <FormGroup>
             <label>Tipo:</label>
             <select
-              className="form-control"
+              id="tipo"
+              className="custom-select"
               name="tipo"
               value={tipo}
               onChange={(e) => setTipo(e.target.value)}
             >
-              <option value="">Seleccione un tipo</option>
+              <option value="" disabled selected>Seleccione un tipo</option>
               <option value="Publico">Público</option>
               <option value="Privado">Privado</option>
             </select>
@@ -1231,6 +1249,7 @@ const CrudEvents = ({ organizerObj }) => {
               type="number"
               onChange={(e) => setLimite(Number(e.target.value))}
               value={limite}
+              style={{ width: "50%" }}
             />
           </FormGroup>
 
@@ -1238,18 +1257,28 @@ const CrudEvents = ({ organizerObj }) => {
         </ModalBody>
 
         <ModalFooter>
-          <Button
-            color="primary"
-            onClick={() => {
-              validar(2);
-              setStep((s) => s + 1);
-            }}
-          >
-            Siguiente
-          </Button>
-          <Button color="danger" onClick={() => setShowModal(false)}>
-            Cancelar
-          </Button>
+          <div className="container">
+            <div className="row justify-content-center">
+              <div className="col-md-6">
+                <Button
+                  style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                  onClick={() => {
+                    validar(2);
+                    setStep((s) => s + 1);
+                  }}
+                >
+                  SIGUIENTE
+                </Button>
+              </div>
+              <div className="col-md-6">
+                <Button color="danger" onClick={() => setShowModal(false)}
+                  style={{ backgroundColor: '#D32F2F', borderColor: '#D32F2F', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                >
+                  CANCELAR
+                </Button>
+              </div>
+            </div>
+          </div>
         </ModalFooter>
       </Modal>
       {/*-------------Insertar Evento---------------- */}
@@ -1257,11 +1286,13 @@ const CrudEvents = ({ organizerObj }) => {
       <Modal isOpen={showModalInsert}>
         <div style={{ marginTop: "50px" }}>
           <button
-            className="close"
+            type="button"
+            className="close" 
+            aria-label="close"
             style={{ position: "absolute", left: "16px", top: "16px" }}
             onClick={() => setShowModalInsert(false)}
           >
-            &times;
+          <span aria-hidden="true">&times;</span>
           </button>
 
           <div className="active"></div>
@@ -1321,6 +1352,7 @@ const CrudEvents = ({ organizerObj }) => {
               className="form-control"
               name="gasto"
               type="number"
+              style={{ width: "50%" }}
               onChange={(e) => setGasto(e.target.value)}
             />
           </FormGroup>
@@ -1338,7 +1370,8 @@ const CrudEvents = ({ organizerObj }) => {
           <FormGroup>
             <label>Tipo:</label>
             <select
-              className="form-control"
+              id='tipo'
+              className="custom-select"
               name="tipo"
               value={tipo}
               onChange={(e) => setTipo(e.target.value)}
@@ -1355,7 +1388,7 @@ const CrudEvents = ({ organizerObj }) => {
               className="form-control"
               name="limite"
               type="number"
-              style={{ width: "18%" }}
+              style={{ width: "50%" }}
               onChange={(e) => setLimite(Number(e.target.value))}
             />
           </FormGroup>
@@ -1382,11 +1415,11 @@ const CrudEvents = ({ organizerObj }) => {
         <ModalFooter>
           <Button
             className="buttons"
-            style={{ background: "#7950f2", color: "#fff" }}
+            style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
             color="primary"
             onClick={() => setShowConfirmModal(true)}
           >
-            Siguiente
+            SIGUIENTE
           </Button>
         </ModalFooter>
       </Modal>
@@ -1463,7 +1496,7 @@ const CrudEvents = ({ organizerObj }) => {
           <FormGroup>
             <label>Tipo:</label>
             <select
-              className="form-control"
+              className="custom-select"
               name="tipo"
               value={tipoBoleto}
               onChange={(e) => setTipoBoleto(e.target.value)}
@@ -1487,13 +1520,13 @@ const CrudEvents = ({ organizerObj }) => {
 
         <ModalFooter>
           <Button
-            color="primary"
+            style={{ backgroundColor: '#2980b9', borderColor: '#2980b9', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
             onClick={() => {
               validarBoletoEditar();
               setStep((s) => s - 1);
             }}
           >
-            Finalizar
+            FINALIZAR
           </Button>
         </ModalFooter>
       </Modal>
@@ -1578,22 +1611,19 @@ const CrudEvents = ({ organizerObj }) => {
 
           </ModalBody>
 
-<ModalFooter>
-  <Button
-    color="primary"
-    style={{
-      background: "#7950f2",
-      color: "#fff",
-    }}
-    onClick={() => {
-      setTipoBoleto("Normal");
-      validarBoletoIngresar(1);
-    }}
-  >
-    Siguiente
-  </Button>
-</ModalFooter>
-</Modal>
+          <ModalFooter>
+            <Button
+              color="primary"
+              style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+              onClick={() => {
+                setTipoBoleto("Normal");
+                validarBoletoIngresar(1);
+              }}
+            >
+              SIGUIENTE
+            </Button>
+          </ModalFooter>
+          </Modal>
 
 {/*----------------Modal Ingresar Boleto VIP-------------------*/}
 
@@ -1677,16 +1707,13 @@ const CrudEvents = ({ organizerObj }) => {
         <ModalFooter>
           <Button
             color="primary"
-            style={{
-              background: "#7950f2",
-              color: "#fff",
-            }}
+            style={{ backgroundColor: '#2980b9', borderColor: '#2980b9', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
             onClick={() => {
               setTipoBoleto("VIP");
               validarBoletoIngresar(2);
             }}
           >
-            Finalizar
+            FINALIZAR
           </Button>
         </ModalFooter>
       </Modal>
@@ -1716,31 +1743,57 @@ const CrudEvents = ({ organizerObj }) => {
         </ModalBody>
 
         <ModalFooter>
-          <Button color="primary" onClick={() => validarImpuestoEditar()}>
-            Finalizar
-          </Button>
-          <Button
-            color="btn btn-danger"
-            onClick={() => setShowModalImpuestosIngresar(false)}
-          >
-            Cancelar
-          </Button>
+          <div className="container">
+            <div className="row justify-content-center">
+              <div className="col-md-6">
+                <Button
+                  className="btn btn-primary"
+                  onClick={() => validarImpuestoEditar()}
+                  style={{
+                    backgroundColor: '#2980b9',
+                    borderColor: '#2980b9',
+                    color: '#fff',
+                    padding: '10px 20px',
+                    borderRadius: '8px'
+                  }}
+                >
+                  FINALIZAR
+                </Button>
+              </div>
+              <div className="col-md-6">
+                <Button
+                  className="btn btn-primary"
+                  style={{
+                    backgroundColor: '#D32F2F',
+                    borderColor: '#D32F2F',
+                    color: '#fff',
+                    padding: '10px 20px',
+                    borderRadius: '8px'
+                  }}
+                  onClick={() => setShowModalImpuestosIngresar(false)}
+                >
+                  CANCELAR
+                </Button>
+              </div>
+            </div>
+          </div>
         </ModalFooter>
+
       </Modal>
 
       {/*----------------Recuperar evento-------------------*/}
       <Modal isOpen={showModalRecuperar} size="lg" style={estiloModal}>
         <ModalHeader>
           <div>
-            <h3>HISTÓRICO</h3>
             <Button
               type="button"
               className="close" // Agregar la clase "float-right" para alinear a la derecha
               aria-label="close"
               onClick={() => setShowModalRecuperar(false)}
-            >
+              >
               <span aria-hidden="true">&times;</span>
             </Button>
+            <h3>HISTÓRICO</h3>
           </div>
         </ModalHeader>
 
@@ -1801,11 +1854,12 @@ const CrudEvents = ({ organizerObj }) => {
                   </Button>*/}
                       <td>
                         <Button
+                          style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
                           className="btn btn-info"
                           onClick={() => mostrarOrdenCompra(event.id_evento)}
                         >
-                          Ver Orden de compra
-                        </Button>{" "}
+                          ORDEN COMPRA
+                        </Button>{" "} <br></br><br></br>
                         <Button
                           style={{
                             backgroundColor: "#2980b9",
@@ -1813,7 +1867,6 @@ const CrudEvents = ({ organizerObj }) => {
                             padding: "10px 20px",
                             borderRadius: "8px",
                           }}
-                          className="btn btn-primary"
                           onClick={() =>
                             navigate(`/dashboardGrafico/${event.id_evento}`)
                           }
@@ -2017,13 +2070,14 @@ const CrudEvents = ({ organizerObj }) => {
 
       <Modal isOpen={showConfirmModal}>
         <ModalHeader>
-          <h3>Confirmación</h3>
+          <h3>CONFIRMACIÓN</h3>
         </ModalHeader>
         <ModalBody>
           <p>¿Estás seguro de ingresar estos valores?</p>
         </ModalBody>
         <ModalFooter>
           <Button
+            style={{ backgroundColor: '#4CAF50  ', borderColor: '#4CAF50 ', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
             className="btn btn-success"
             onClick={() => {
               setShowConfirmModal(false);
@@ -2033,6 +2087,7 @@ const CrudEvents = ({ organizerObj }) => {
             Sí
           </Button>
           <Button
+            style={{ backgroundColor: '#D32F2F ', borderColor: '#D32F2F', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
             className="btn btn-error"
             onClick={() => setShowConfirmModal(false)}
           >
@@ -2045,7 +2100,7 @@ const CrudEvents = ({ organizerObj }) => {
 
       <Modal isOpen={showConfirmModalDelete}>
         <ModalHeader>
-          <h3>Confirmación</h3>
+          <h3>CONFIRMACIÓN</h3>
         </ModalHeader>
         <ModalBody>
           <p>¿Estás seguro de dar de baja dicho evento?</p>
@@ -2053,6 +2108,7 @@ const CrudEvents = ({ organizerObj }) => {
         <ModalFooter>
           <Button
             className="btn btn-success"
+            style={{ backgroundColor: '#4CAF50  ', borderColor: '#4CAF50 ', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
             onClick={() => {
               setShowConfirmModalDelete(false);
               handleEliminarEvento(id);
@@ -2062,6 +2118,7 @@ const CrudEvents = ({ organizerObj }) => {
           </Button>
           <Button
             className="btn btn-error"
+            style={{ backgroundColor: '#D32F2F  ', borderColor: '#D32F2F ', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
             onClick={() => setShowConfirmModalDelete(false)}
           >
             No
