@@ -241,3 +241,26 @@ body {
 .carousel-caption:hover {
   background: rgba(0, 0, 0, 0.7); 
 }
+
+.close {
+  font-size: 1.5rem; /* Tamaño más grande para el símbolo '×' */
+  font-weight: bold; /* Más peso para que destaque */
+  line-height: 1; /* Alineación vertical con respecto a la línea */
+  color: #000; /* Color oscuro para que se vea en fondos claros */
+  text-shadow: 0 1px 0 #fff; /* Sombra sutil para mejorar contraste */
+  opacity: .5; /* Semi-transparencia para no dominar el diseño */
+}
+
+.float-right {
+  float: right; /* Alinea el botón a la derecha */
+  margin-right: 20px; /* Margen derecho para no pegar al borde del contenedor */
+}
+
+/* Para que al pasar el mouse sobre el botón cambie la opacidad */
+.close:hover, 
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+  opacity: .75;
+}

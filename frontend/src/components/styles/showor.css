@@ -1,0 +1,30 @@
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="date"],
+input[type="time"],
+input[type="number"],
+input[type="money"] {
+  width: 100%; /* Ocupar el ancho completo del contenedor */
+  padding: 10px; /* Espaciado interno para que no esté pegado al borde */
+  margin: 8px 0; /* Margen externo para separar los inputs entre sí */
+  display: inline-block; /* Para que respete el ancho y el margen */
+  border: 1px solid #ccc; /* Borde de color gris claro como en el segundo formulario */
+  box-sizing: border-box; /* Para que el padding no afecte el ancho total del input */
+  border-color: #2980b9;
+}
+
+/* Para estilizar el botón de envío, si tienes uno, también podemos agregar: */
+input[type="submit"] {
+  background-color: #4CAF50; /* Color de fondo verde */
+  color: white; /* Texto en color blanco */
+  padding: 14px 20px; /* Espaciado interno más grande para el botón */
+  margin: 8px 0; /* El mismo margen que los inputs */
+  border: none; /* Sin borde */
+  cursor: pointer; /* Cambiar el cursor a tipo puntero al pasar sobre el botón */
+}
+
+input[type="submit"]:hover {
+  background-color: #45a049; /* Un verde un poco más oscuro al pasar el mouse por encima */
+}
+

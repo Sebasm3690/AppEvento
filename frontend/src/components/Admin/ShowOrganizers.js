@@ -11,6 +11,7 @@ import {
   ModalFooter,
 } from "reactstrap";
 import { show_alerta } from "../../functions";
+import '../styles/showor.css'
 //import "./indexAdmin.css";
 
 export default function ShowOrganizers({ adminObj }) {
@@ -297,31 +298,49 @@ const CrudOrganizers = ({ adminObj }) => {
                   <td>{organizer.correo}</td>
                   <td>{organizer.id_admin}</td>
                   <td>
-                    <Button
-                    style={{color: '#fff', padding: '7px 14px', borderRadius: '8px' }}
-                      onClick={() =>
-                        handleEditarUsuario(organizer.id_organizador)
-                      }
-                      className="btn btn-warning"
-                    >
-                      <img src={"https://cdn-icons-png.flaticon.com/512/8188/8188360.png"} alt="Editar" width={'25px'} />
-                      <span style={{ margin: '0 3px'}}></span>
-                    </Button>
-                    <span style={{ margin: "0 10px" }}></span>
-                    <Button
-                      style={{ padding: '7px 14px', borderRadius: '8px' }}
-                      className="btn btn-danger"
-                      onClick={() =>
-                        handleEliminarUsuario(organizer.id_organizador)
-                      }
-                    >
-                      <img
-                        src="https://cdn-icons-png.flaticon.com/512/2340/2340337.png"
-                        alt="Editar"
-                        width={"25px"}
-                      />
-                      <span style={{ margin: "0 3px" }}></span>
-                    </Button>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    
+                      <Button
+                        style={{
+                          color: "#fff",
+                          padding: "7px 14px",
+                          borderRadius: "8px",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: '#ffc107' // Color para el botón warning
+                        }}
+                        onClick={() =>
+                          handleEditarUsuario(organizer.id_organizador)
+                        }
+                        className="btn btn-warning"
+                      >
+                        <img src={"https://cdn-icons-png.flaticon.com/512/8188/8188360.png"} alt="Editar" width={'25px'} />
+                        <span style={{ margin: '0 3px'}}></span>
+                      </Button>
+                      <Button
+                        style={{
+                          color: "#fff",
+                          padding: "7px 14px",
+                          borderRadius: "8px",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: '#dc3545' // Color para el botón warning
+                        }}
+                        className="btn btn-danger"
+                        onClick={() =>
+                          handleEliminarUsuario(organizer.id_organizador)
+                        }
+                      >
+                        <img
+                          src="https://cdn-icons-png.flaticon.com/512/2340/2340337.png"
+                          alt="Editar"
+                          width={"25px"}
+                        />
+                        <span style={{ margin: "0 3px" }}></span>
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -394,17 +413,26 @@ const CrudOrganizers = ({ adminObj }) => {
         </ModalBody>
 
         <ModalFooter>
-          <Button 
-            style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
-            color="primary" onClick={() => validar(2)}>
-            EDITAR
-          </Button>
-          <Button 
-            style={{ backgroundColor: '#D32F2F', borderColor: '#D32F2F', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
-            color="danger" onClick={() => setShowModal(false)}>
-            CANCELAR
-          </Button>
+          <div className="container">
+            <div className="row justify-content-center">
+              <div className="col-md-6">
+                <Button 
+                  style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                  color="primary" onClick={() => validar(2)}>
+                  EDITAR
+                </Button>
+              </div>
+              <div className="col-md-6">
+                <Button 
+                  style={{ backgroundColor: '#D32F2F', borderColor: '#D32F2F', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                  color="primary" onClick={() => setShowModal(false)}>
+                  CANCELAR
+                </Button>
+              </div>
+            </div>
+          </div>
         </ModalFooter>
+
       </Modal>
 
       {/*------------------------------------- */}
@@ -469,16 +497,24 @@ const CrudOrganizers = ({ adminObj }) => {
         </ModalBody>
 
         <ModalFooter>
-          <Button 
-            style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
-            color="primary" onClick={() => validar(1)}>
-            REGISTRAR
-          </Button>
-          <Button 
-            style={{ backgroundColor: '#D32F2F', borderColor: '#D32F2F', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
-            color="danger" onClick={() => setShowModalInsert(false)}>
-            CANCELAR
-          </Button>
+          <div className="container">
+            <div className="row justify-content-center">
+              <div className="col-md-6">
+                <Button 
+                  style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                  color="primary" onClick={() => validar(1)}>
+                  REGISTRAR
+                </Button>
+              </div>
+              <div className="col-md-6">
+                <Button 
+                  style={{ backgroundColor: '#D32F2F', borderColor: '#D32F2F', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                  color="primary" onClick={() => setShowModalInsert(false)}>
+                  CANCELAR
+                </Button>
+              </div>
+            </div>
+          </div>
         </ModalFooter>
       </Modal>
 
@@ -487,16 +523,16 @@ const CrudOrganizers = ({ adminObj }) => {
       <Modal isOpen={showModalRecuperar} size="lg">
         <ModalHeader>
           <div>
-            <h3>RECUPERAR ORGANIZADORES</h3>
             <Button
               type="button"
-              className="close" // Agregar la clase "float-right" para alinear a la derecha
+              className="close" 
               aria-label="close"
               style={botonDerechaStyles}
               onClick={() => setShowModalRecuperar(false)}
-            >
+              >
               <span aria-hidden="true">&times;</span>
             </Button>
+            <h3>RECUPERAR ORGANIZADORES</h3>
           </div>
         </ModalHeader>
 
