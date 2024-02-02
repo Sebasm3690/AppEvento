@@ -6,6 +6,7 @@ import NavBar from "./navbar";
 import Footer from "./footer";
 import { FaUser, FaEnvelope, FaLock, FaIdCard } from 'react-icons/fa';
 import "./styles/formRegistro.css";
+import { show_alerta } from '../functions';
 
 // Función para validar la cédula
 function validarCedula(cedula) {
@@ -51,7 +52,7 @@ const Registro = () => {
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/register', data);
       console.log(response.data);
-      alert('Gracias por tu registro, confirma tu correo para continuar');
+      show_alerta('Gracias por tu registro, confirma tu correo para continuar', "success");
       navigate("/loginAs/");
     } catch (error) {
       if (error.response && error.response.data && error.response.data.error) {
@@ -71,7 +72,12 @@ const Registro = () => {
   return (
     <div>
       <NavBar />
-      <div className="container mt-5">
+      <div
+        style={{
+          paddingTop: "50px",
+          paddingBottom: "50px"
+        }}
+      >
         <div className="col-md-6 offset-md-3">
           <div style={{
             backgroundImage: 'url(https://images.unsplash.com/photo-1589810264340-0ce27bfbf751?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHZlcnRpY2FsJTIwd2FsbHBhcGVyfGVufDB8fDB8fHww)',
@@ -106,7 +112,7 @@ const Registro = () => {
               <div className="mb-3">
                 <label>
                   <FaEnvelope />
-                  <input {...register('email', { required: 'Campo requerido', pattern: { value: /^\S+@\S+$/i, message: 'Correo electrónico inválido' } })} className="form-control" placeholder="Email"/>
+                  <input {...register('email', { required: 'Campo requerido', pattern: { value: /^\S+@\S+$/i, message: 'Correo electrónico inválido' } })} className="form-control" placeholder="Correo Electrónico"/>
                 </label>
                 {errors.email && <p className="text-danger">{errors.email.message}</p>}
               </div>

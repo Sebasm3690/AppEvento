@@ -108,8 +108,11 @@ function BoletosList() {
   const handleRealizarPedido = async (cantidad) => {
     var boletosSeleccionados = boletos.find((boleto) => boleto.isChecked);
     const boletosSeleccionados1 = boletos.filter((boleto) => boleto.isChecked);
-    if(boletosSeleccionados1.length === 0){
-      show_alerta("Debe seleccionar al menos un boleto para continuar", "warning");
+    if (boletosSeleccionados1.length === 0) {
+      show_alerta(
+        "Debe seleccionar al menos un boleto para continuar",
+        "warning"
+      );
       return;
     }
 
@@ -169,7 +172,7 @@ function BoletosList() {
                   const imagenEvento = eventoCorrespondiente
                     ? eventoCorrespondiente.imagen
                     : null;
-  
+
                   return (
                     <li key={boleto.id_boleto}>
                       {imagenEvento && (
@@ -195,8 +198,11 @@ function BoletosList() {
                               )
                             );
                           }}
-                        /> 
-                        <label className="form-check-label" htmlFor={`checkbox-${boleto.id_boleto}`}>
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor={`checkbox-${boleto.id_boleto}`}
+                        >
                           Seleccione la opción
                         </label>
                       </div>
@@ -239,7 +245,10 @@ function BoletosList() {
               .filter((boleto) => parseInt(boleto.id_evento) === parseInt(id))
               .map((boleto, index) => (
                 <div key={boleto.id_boleto}>
-                  <div className="precio-stock-container" style={{ backgroundColor: '#6aabb5' }}>
+                  <div
+                    className="precio-stock-container"
+                    style={{ backgroundColor: "#6aabb5" }}
+                  >
                     <div className="precio-label">
                       <strong>Precio:</strong> ${boleto.precio}
                     </div>
@@ -253,11 +262,20 @@ function BoletosList() {
               {boletos.some((boleto) => boleto.isChecked) && (
                 <p className="total-pagar">Total a Pagar: ${total}</p>
               )}
-              <p className="total-llevar">Total de boletos a llevar: {totalBoletosSeleccionados}</p>
+              <p className="total-llevar">
+                Total de boletos a llevar: {totalBoletosSeleccionados}
+              </p>
               <div className="button-container">
                 {boletos.filter((boleto) => boleto.isChecked) && (
-                  <button onClick={() => handleRealizarPedido(cantidad)}
-                    style={{ backgroundColor: '#92c7a3', borderColor: '#92c7a3', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                  <button
+                    onClick={() => handleRealizarPedido(cantidad)}
+                    style={{
+                      backgroundColor: "#92c7a3",
+                      borderColor: "#92c7a3",
+                      color: "#fff",
+                      padding: "10px 20px",
+                      borderRadius: "8px",
+                    }}
                   >
                     REALIZAR COMPRA
                   </button>
@@ -270,6 +288,5 @@ function BoletosList() {
       <Footer />
     </div>
   );
-  
 }
 export default BoletosList;

@@ -1183,3 +1183,35 @@ class CompraBoletoView(APIView):
                 return Response({"error": "No hay suficientes boletos disponibles."}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class EventoList(generics.ListAPIView):
+    queryset = Evento.objects.all()
+    serializer_class = EventSerializer
+
+    def list(self, request, *args, **kwargs):
+        # Filtrar por tipo, nombre, fecha (mes y año) si se proporcionan en los parámetros de la URL
+        tipo = self.request.query_params.get('tipo', None)
+        nombre = self.request.query_params.get('nombre', None)
+        mes = self.request.query_params.get('mes', None)
+        anio = self.request.query_params.get('anio', None)
+        ordenamiento = self.request.query_params.get('ordenamiento', None)
+
+        queryset = self.get_queryset()
+
+        if tipo:
+            queryset = queryset.filter(tipo=tipo)
+        if nombre:
+            queryset = queryset.filter(nombre_evento__icontains=nombre)
+        if mes:
+            queryset = queryset.filter(fecha__month=mes)
+        if anio:
+            queryset = queryset.filter(fecha__year=anio)
+        
+            # Ordenar por mes
+        if ordenamiento == 'asc':
+           queryset = queryset.order_by('fecha__month')
+        elif ordenamiento == 'desc':
+           queryset = queryset.order_by('-fecha__month')
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)

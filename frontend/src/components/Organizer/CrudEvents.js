@@ -15,6 +15,8 @@ import {
 } from "reactstrap";
 import { show_alerta } from "../../functions";
 import QRScanner from "../QrScanner";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 import "../Organizer/indexEvents.css";
 
@@ -151,9 +153,10 @@ const MapaDirecciones = ({ setUbicacion, ubicacion }) => {
       <div className="container">
         <div className="row">
           <div className="col-md-12">
-            <h2 style={{ textAlign: "center" }}>
+            <br></br>
+            <h4 style={{ textAlign: "center" }}>
               Dirección de la Ubicación del Evento
-            </h2>
+            </h4>
             <br />
             <form
               className="form-inline"
@@ -174,7 +177,18 @@ const MapaDirecciones = ({ setUbicacion, ubicacion }) => {
                   }}
                 />
               </div>
-              <input className="btn btn-primary" type="submit" value="Buscar" />
+              <input
+                className="btn btn-primary"
+                type="submit"
+                value="BUSCAR"
+                style={{
+                  backgroundColor: "#3498db",
+                  borderColor: "#3498db",
+                  color: "#fff",
+                  padding: "10px 20px",
+                  borderRadius: "8px",
+                }}
+              />
             </form>
             <br />
             <div style={{ textAlign: "center" }}>
@@ -260,6 +274,7 @@ const CrudEvents = ({ organizerObj }) => {
   const [showModal, setShowModal] = useState(false);
   const [showModalInsert, setShowModalInsert] = useState(false);
   const [showModalBoleto, setShowModalBoleto] = useState(false);
+  const [showModalBoletoVIP, setShowModalBoletoVIP] = useState(false);
   const [showModalBoletoIngresar, setShowModalBoletoIngresar] = useState(false);
   const [showModalImpuestosIngresar, setShowModalImpuestosIngresar] =
     useState(false);
@@ -309,20 +324,43 @@ const CrudEvents = ({ organizerObj }) => {
     }
   };
 
-  const handleEditarBoleto = () => {
+  const handleEditarBoleto = (option) => {
+    //alert(option);
+    //alert(typeof option);
     setShowModalBoleto(true);
-    const boletosEvento = boletos.find((boleto) => boleto.id_evento === id); //Se muestran solo los boletos que corresponden a dicho evento
-    const vendeBoleto = ventas.find(
-      (venta) => venta.id_boleto === boletosEvento.id_boleto
-    );
 
-    if (boletosEvento) {
-      //alert("Si se encontró");
-      setIdBoleto(boletosEvento.id_boleto);
-      setStock(boletosEvento.stock);
-      setTipoBoleto(boletosEvento.tipoBoleto);
-      setPrecio(vendeBoleto.precio_actual);
-      setShowModalBoleto(true);
+    let boletosEvento;
+    let vendeBoleto;
+
+    if (option === 1) {
+      const boletosEvento = boletos.find(
+        (boleto) => boleto.id_evento === id && boleto.tipoBoleto === "Normal"
+      ); //Se muestran solo los boletos que corresponden a dicho evento
+      const vendeBoleto = ventas.find(
+        (venta) => venta.id_boleto === boletosEvento.id_boleto
+      );
+      if (boletosEvento) {
+        setIdBoleto(boletosEvento.id_boleto);
+        setStock(boletosEvento.stock);
+        setTipoBoleto(boletosEvento.tipoBoleto);
+        setPrecio(vendeBoleto.precio_actual);
+        setShowModalBoleto(true);
+      }
+    } else {
+      const boletosEvento = boletos.find(
+        (boleto) => boleto.id_evento === id && boleto.tipoBoleto === "VIP"
+      ); //Se muestran solo los boletos que corresponden a dicho evento
+      const vendeBoleto = ventas.find(
+        (venta) => venta.id_boleto === boletosEvento.id_boleto
+      );
+      if (boletosEvento) {
+        setShowModalBoleto(false);
+        setIdBoleto(boletosEvento.id_boleto);
+        setStock(boletosEvento.stock);
+        setTipoBoleto(boletosEvento.tipoBoleto);
+        setPrecio(vendeBoleto.precio_actual);
+        setShowModalBoletoVIP(true);
+      }
     }
   };
 
@@ -504,6 +542,7 @@ const CrudEvents = ({ organizerObj }) => {
         console.log("Respuesta del servidor:", response.data);
         show_alerta("El boleto ha sido editado exitosamente", "success");
         setShowModalBoleto(false);
+        op === 1 && handleEditarBoleto(2);
       })
       .catch((error) => {
         console.error("Error al realizar la solicitud PUT:", error);
@@ -551,10 +590,9 @@ const CrudEvents = ({ organizerObj }) => {
 
     if (option === 2 && stock + stockVIP > limite) {
       show_alerta(
-        "El maximo de boletos VIP ingresados puede ser de hasta" +
-          limite -
-          (stock + stockVIP) +
-          "boletos",
+        "El maximo de boletos VIP ingresados puede ser de hasta " +
+          (limite - stock) +
+          " boletos",
         "warning"
       );
       return;
@@ -730,38 +768,42 @@ const CrudEvents = ({ organizerObj }) => {
           console.error("Error al realizar la solicitud POST:", error);
         });
     } else {
-      parametros = {
-        nombre_evento: nombre.trim(),
-        fecha: fecha,
-        hora: hora,
-        gasto: gasto,
-        ubicacion: ubicacion.trim(),
-        descripcion: descripcion.trim(),
-        tipo: tipo.trim(),
-        limite: limite,
-        //image,
-        id_organizador: id_organizador,
-      };
-      //metodo = "PUT";
+      if (op === 2) {
+        parametros = {
+          nombre_evento: nombre.trim(),
+          fecha: fecha,
+          hora: hora,
+          gasto: gasto,
+          ubicacion: ubicacion.trim(),
+          descripcion: descripcion.trim(),
+          tipo: tipo.trim(),
+          limite: limite,
+          //image,
+          id_organizador: id_organizador,
+        };
+        //metodo = "PUT";
 
-      axios
-        .put(urlEditar, parametros)
-        .then((response) => {
-          console.log("Respuesta del servidor:", response.data);
-          show_alerta("El evento ha sido actualizado exitosamente", "success");
-        })
-        .catch((error) => {
-          console.error("Error al realizar la solicitud PUT:", error);
-        });
-      setShowModal(false);
-      handleEditarBoleto();
+        axios
+          .put(urlEditar, parametros)
+          .then((response) => {
+            console.log("Respuesta del servidor:", response.data);
+            show_alerta(
+              "El evento ha sido actualizado exitosamente",
+              "success"
+            );
+          })
+          .catch((error) => {
+            console.error("Error al realizar la solicitud PUT:", error);
+          });
+        setShowModal(false);
+        handleEditarBoleto(1);
+      }
     }
     //enviarSolicitud(metodo, parametros);
   };
 
   const mostrarOrdenCompra = async (id_evento) => {
     //Aqui guarda el Id de orden compra con el set, para luego mostrar en la tabla filtrando la ordenCompra y solamente mostrando las que posean el ID de las ordenes compras que coincidan con el evento, boleto y contiene
-    setShowModalOrdenCompra(true);
     var boletoEvento = boletos.find((boleto) => boleto.id_evento === id_evento);
 
     if (!boletoEvento) {
@@ -788,6 +830,7 @@ const CrudEvents = ({ organizerObj }) => {
     }*/
 
     setOrdenCompraFiltradas(ordenCompraContiene);
+    generatePDF(ordenCompraContiene);
     //setContienesFiltrados(contieneBoletos);
   };
 
@@ -798,6 +841,76 @@ const CrudEvents = ({ organizerObj }) => {
       (contiene) => contiene.num_orden === num_orden
     );
     setContienesFiltrados(contieneOrdenCompra);
+  };
+
+  const generatePDF = async (ordersData) => {
+    const pdf = new jsPDF();
+
+    ordersData.forEach((order) => {
+      // Datos de la orden de compra
+      const orderDetails = [
+        ["Número de Orden", order.num_orden],
+        ["Fecha", order.fecha],
+        ["Valor Total", `${order.valor_total}$`],
+        ["IVA", `${iva}%`],
+      ];
+
+      // Detalles del boleto (contiene)
+      const contieneOrdenCompra = contienes.filter(
+        (contiene) => contiene.num_orden === order.num_orden
+      );
+      const ticketDetails = contieneOrdenCompra.map((contiene) => [
+        "Código del Boleto",
+        contiene.boleto_cdg,
+        "Boletos Comprados",
+        contiene.cantidad_total,
+      ]);
+
+      // Detalles del asistente
+      const asistenteDetails = asistentes.find(
+        (asistente) => asistente.id_asistente === order.id_asistente
+      );
+      const assistantDetails = [
+        ["ID del Asistente", asistenteDetails?.id_asistente ?? ""],
+        ["Nombre", asistenteDetails?.nombre ?? ""],
+        ["Apellido", asistenteDetails?.apellido ?? ""],
+        ["Correo", asistenteDetails?.email ?? ""],
+        ["CI", asistenteDetails?.ci ?? ""],
+      ];
+
+      // Agregar tablas al PDF
+      pdf.text("Datos de la Orden de Compra", 14, 15);
+      pdf.autoTable({
+        head: [["Campo", "Valor"]],
+        body: orderDetails,
+        startY: 20,
+      });
+
+      const ticketDetailsStartY = pdf.lastAutoTable.finalY + 10;
+      pdf.text("Detalles del Boleto", 14, ticketDetailsStartY);
+      pdf.autoTable({
+        head: [["Campo", "Valor"]],
+        body: ticketDetails,
+        startY: ticketDetailsStartY + 5,
+      });
+
+      const assistantDetailsStartY = pdf.lastAutoTable.finalY + 10;
+      pdf.text("Detalles del Asistente", 14, assistantDetailsStartY);
+      pdf.autoTable({
+        head: [["Campo", "Valor"]],
+        body: assistantDetails,
+        startY: assistantDetailsStartY + 5,
+      });
+
+      // Separador para la siguiente orden
+      pdf.addPage();
+    });
+
+    // Eliminar la última página en blanco
+    const numberOfPages = pdf.internal.getNumberOfPages();
+    pdf.deletePage(numberOfPages);
+
+    pdf.save("detalle_ordenes_compras.pdf");
   };
 
   var ver_asistente = (ordenCompra) => {
@@ -822,8 +935,8 @@ const CrudEvents = ({ organizerObj }) => {
         <div style={{ paddingBlockEnd: "50px" }}>
           <button
             style={{
-              backgroundColor: "#2980b9",
-              borderColor: "#2980b9",
+              backgroundColor: "#3498db",
+              borderColor: "#3498db",
               padding: "10px 20px",
               borderRadius: "8px",
             }}
@@ -833,14 +946,14 @@ const CrudEvents = ({ organizerObj }) => {
             NUEVO EVENTO
           </button>
 
-          <span style={{ margin: "0 40px" }}></span>
+          <span style={{ margin: "0 10px" }}></span>
           {events.some(
             (evento) =>
               evento.eliminado === false &&
               boletos.some((boleto) => evento.id_evento === boleto.id_evento)
           ) && (
             <button
-              className="btn btn-info"
+              className="btn btn-primary"
               style={{
                 backgroundColor: "#3498db",
                 borderColor: "#3498db",
@@ -853,45 +966,56 @@ const CrudEvents = ({ organizerObj }) => {
               AGREGAR IMPUESTOS
             </button>
           )}
-          <span style={{ margin: "0 40px" }}></span>
+          <span style={{ margin: "0 10px" }}></span>
           <button
             style={{
-              backgroundColor: "#6aabb5",
-              borderColor: "#6aabb5",
+              backgroundColor: "#3498db",
+              borderColor: "#3498db",
               padding: "10px 20px",
               borderRadius: "8px",
             }}
-            className="btn btn-success"
+            className="btn btn-primary"
             onClick={() => setShowModalRecuperar(true)}
           >
             {/*Recuperar evento*/}
             HISTÓRICO
           </button>
+          <span style={{ margin: "0 10px" }}></span>
           <button
             style={{
-              backgroundColor: "#2980b9",
-              borderColor: "#2980b9",
+              backgroundColor: "#3498db",
+              borderColor: "#3498db",
               padding: "10px 20px",
               borderRadius: "8px",
             }}
             className="btn btn-primary"
             onClick={() => navigate("/dashboardGeneral/")}
           >
-            VER DASHBOARD GENERAL
+            DASHBOARD GENERAL
           </button>
-          <Button variant="primary" onClick={handleOpen}>
-            Abrir Escáner QR
+          <span style={{ margin: "0 10px" }}></span>
+          <Button
+            variant="primary"
+            onClick={handleOpen}
+            className="btn btn-primary"
+            style={{
+              backgroundColor: "#3498db",
+              borderColor: "#3498db",
+              padding: "10px 20px",
+              borderRadius: "8px",
+            }}
+          >
+            ESCÁNER QR
           </Button>
           <QRScanner show={showModalQr} handleClose={handleClose} />
         </div>
 
-        <Table className="table table-borderless">
+        <Table className="table-custom table-borderless table-responsive">
           <thead className="">
             <tr>
               <th>Nombre</th>
               <th>Fecha</th>
               <th>Hora</th>
-              <th>Gasto del evento</th>
               <th>Ubicación</th>
               <th>Descripción</th>
               <th>Tipo</th>
@@ -909,14 +1033,13 @@ const CrudEvents = ({ organizerObj }) => {
               //.filter((event) => new Date() > new Date(event.fecha))
               .map((event) => (
                 <tr key={event.id_evento}>
-                  <td>{event.nombre_evento}</td>
-                  <td>{event.fecha}</td>
-                  <td>{event.hora}</td>
-                  <td>{event.gasto}</td>
-                  <td>{event.ubicacion}</td>
-                  <td>{event.descripcion}</td>
-                  <td>{event.tipo}</td>
-                  <td>{event.limite}</td>
+                  <td data-title="Evento">{event.nombre_evento}</td>
+                  <td data-title="Fecha">{event.fecha}</td>
+                  <td data-title="Hora">{event.hora}</td>
+                  <td data-title="Ubicación">{event.ubicacion}</td>
+                  <td data-title="Descripción">{event.descripcion}</td>
+                  <td data-title="Tipo">{event.tipo}</td>
+                  <td data-title="Límite">{event.limite}</td>
 
                   <td>
                     <img
@@ -926,18 +1049,26 @@ const CrudEvents = ({ organizerObj }) => {
                       style={{ maxWidth: "95px" }}
                     />
                     <input
-                      className="form-control"
+                      id={`file-input-${event.id_evento}`}
                       name={`imagen-${event.id_evento}`}
                       type="file"
                       accept="image/*"
                       onChange={(e) => handleImageChange(e, event.id_evento)}
+                      style={{ display: "none" }} // Oculta el input de archivo
+                    />
+                    <label
+                      htmlFor={`file-input-${event.id_evento}`}
+                      className="btn btn-primary file-upload-label"
                       style={{
-                        marginTop: "3px",
-                        maxWidth: "99px",
-                        padding: "7px, 14px",
+                        backgroundColor: "#3498db",
+                        borderColor: "#3498db",
+                        color: "#fff",
+                        padding: "10px 20px",
                         borderRadius: "8px",
                       }}
-                    />
+                    >
+                      Seleccionar
+                    </label>
                   </td>
 
                   <td>
@@ -1004,13 +1135,11 @@ const CrudEvents = ({ organizerObj }) => {
                       <span style={{ margin: "0 0px" }}></span>
                       <span class="badge bg-secondary"></span>
                     </button>
-                  </td>
-                  <td>
                     <Button
                       style={{
-                        backgroundColor: "#2980b9",
-                        borderColor: "#2980b9",
-                        padding: "10px 20px",
+                        backgroundColor: "#3498db",
+                        color: "#fff",
+                        padding: "7px 14px",
                         borderRadius: "8px",
                       }}
                       className="btn btn-primary"
@@ -1018,7 +1147,15 @@ const CrudEvents = ({ organizerObj }) => {
                         navigate(`/dashboardGrafico/${event.id_evento}`)
                       }
                     >
-                      VER DASHBOARD
+                      <img
+                        src={
+                          "https://cdn-icons-png.flaticon.com/512/5637/5637125.png"
+                        }
+                        alt="Editar"
+                        width={"25px"}
+                      />
+                      <span style={{ margin: "0 0px" }}></span>
+                      <span class="badge bg-secondary"></span>
                     </Button>
                   </td>
                 </tr>
@@ -1034,7 +1171,7 @@ const CrudEvents = ({ organizerObj }) => {
           <button
             className="close"
             style={{ position: "absolute", left: "16px", top: "16px" }}
-            onClick={() => setShowModal(false)}
+            onClick={() => setShowModalInsert(false)}
           >
             &times;
           </button>
@@ -1043,9 +1180,9 @@ const CrudEvents = ({ organizerObj }) => {
           <div className="numbers">
             <div className={step >= 1 ? "active" : ""}>1</div>
             <div className={step >= 2 ? "active" : ""}>2</div>
+            <div className={step >= 3 ? "active" : ""}>3</div>
           </div>
         </div>
-
         <ModalHeader
           style={{
             display: "flex",
@@ -1111,6 +1248,7 @@ const CrudEvents = ({ organizerObj }) => {
               name="gasto"
               type="number"
               onChange={(e) => setGasto(e.target.value)}
+              style={{ width: "50%" }}
               value={gasto}
             />
           </FormGroup>
@@ -1135,8 +1273,8 @@ const CrudEvents = ({ organizerObj }) => {
               onChange={(e) => setTipo(e.target.value)}
             >
               <option value="">Seleccione un tipo</option>
-              <option value="Tipo1">Público</option>
-              <option value="Tipo2">Privado</option>
+              <option value="Publico">Público</option>
+              <option value="Privado">Privado</option>
             </select>
           </FormGroup>
 
@@ -1159,6 +1297,7 @@ const CrudEvents = ({ organizerObj }) => {
               type="number"
               onChange={(e) => setLimite(Number(e.target.value))}
               value={limite}
+              style={{ width: "50%" }}
             />
           </FormGroup>
 
@@ -1167,16 +1306,32 @@ const CrudEvents = ({ organizerObj }) => {
 
         <ModalFooter>
           <Button
-            color="primary"
+            style={{
+              backgroundColor: "#3498db",
+              borderColor: "#3498db",
+              color: "#fff",
+              padding: "10px 20px",
+              borderRadius: "8px",
+            }}
             onClick={() => {
               validar(2);
               setStep((s) => s + 1);
             }}
           >
-            Siguiente
+            SIGUIENTE
           </Button>
-          <Button color="danger" onClick={() => setShowModal(false)}>
-            Cancelar
+          <Button
+            color="danger"
+            onClick={() => setShowModal(false)}
+            style={{
+              backgroundColor: "#D32F2F",
+              borderColor: "#D32F2F",
+              color: "#fff",
+              padding: "10px 20px",
+              borderRadius: "8px",
+            }}
+          >
+            CANCELAR
           </Button>
         </ModalFooter>
       </Modal>
@@ -1249,6 +1404,7 @@ const CrudEvents = ({ organizerObj }) => {
               className="form-control"
               name="gasto"
               type="number"
+              style={{ width: "50%" }}
               onChange={(e) => setGasto(e.target.value)}
             />
           </FormGroup>
@@ -1272,8 +1428,8 @@ const CrudEvents = ({ organizerObj }) => {
               onChange={(e) => setTipo(e.target.value)}
             >
               <option value="">Seleccione un tipo</option>
-              <option value="Tipo1">Público</option>
-              <option value="Tipo2">Privado</option>
+              <option value="Publico">Público</option>
+              <option value="Privado">Privado</option>
             </select>
           </FormGroup>
 
@@ -1283,7 +1439,7 @@ const CrudEvents = ({ organizerObj }) => {
               className="form-control"
               name="limite"
               type="number"
-              style={{ width: "18%" }}
+              style={{ width: "50%" }}
               onChange={(e) => setLimite(Number(e.target.value))}
             />
           </FormGroup>
@@ -1310,11 +1466,17 @@ const CrudEvents = ({ organizerObj }) => {
         <ModalFooter>
           <Button
             className="buttons"
-            style={{ background: "#7950f2", color: "#fff" }}
+            style={{
+              backgroundColor: "#3498db",
+              borderColor: "#3498db",
+              color: "#fff",
+              padding: "10px 20px",
+              borderRadius: "8px",
+            }}
             color="primary"
             onClick={() => setShowConfirmModal(true)}
           >
-            Siguiente
+            SIGUIENTE
           </Button>
         </ModalFooter>
       </Modal>
@@ -1330,7 +1492,7 @@ const CrudEvents = ({ organizerObj }) => {
           <button
             className="close"
             style={{ position: "absolute", left: "16px", top: "16px" }}
-            onClick={() => setShowModalBoleto(false)}
+            onClick={() => setShowModalInsert(false)}
           >
             &times;
           </button>
@@ -1339,6 +1501,7 @@ const CrudEvents = ({ organizerObj }) => {
           <div className="numbers">
             <div className={step >= 1 ? "active" : ""}>1</div>
             <div className={step >= 2 ? "active" : ""}>2</div>
+            <div className={step >= 3 ? "active" : ""}>3</div>
           </div>
         </div>
 
@@ -1350,7 +1513,7 @@ const CrudEvents = ({ organizerObj }) => {
           }}
         >
           <div>
-            <h3>EDITAR BOLETO</h3>
+            <h3>Editar boleto normal</h3>
           </div>
         </ModalHeader>
 
@@ -1392,13 +1555,13 @@ const CrudEvents = ({ organizerObj }) => {
             <label>Tipo:</label>
             <select
               className="form-control"
-              name="tipo"
-              value={tipoBoleto}
+              name="tipoBoleto"
               onChange={(e) => setTipoBoleto(e.target.value)}
+              value={tipoBoleto}
             >
               <option value="">Seleccione un tipo</option>
-              <option value="Tipo1">VIP</option>
-              <option value="Tipo2">Normal</option>
+              <option value="VIP">VIP</option>
+              <option value="Normal">Normal</option>
             </select>
           </FormGroup>
           <FormGroup>
@@ -1415,13 +1578,134 @@ const CrudEvents = ({ organizerObj }) => {
 
         <ModalFooter>
           <Button
-            color="primary"
+            style={{
+              backgroundColor: "#2980b9",
+              borderColor: "#2980b9",
+              color: "#fff",
+              padding: "10px 20px",
+              borderRadius: "8px",
+            }}
             onClick={() => {
-              validarBoletoEditar();
-              setStep((s) => s - 1);
+              validarBoletoEditar(1);
+              setStep((s) => s + 1);
             }}
           >
-            Finalizar
+            SIGUIENTE
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+      {/* Modal Boleto Editar VIP*/}
+
+      <Modal isOpen={showModalBoletoVIP}>
+        <div style={{ marginTop: "50px" }}>
+          <button
+            className="close"
+            style={{ position: "absolute", left: "16px", top: "16px" }}
+            onClick={() => setShowModalBoleto(false)}
+          >
+            &times;
+          </button>
+
+          <div className="active"></div>
+          <div className="numbers">
+            <div className={step >= 1 ? "active" : ""}>1</div>
+            <div className={step >= 2 ? "active" : ""}>2</div>
+            <div className={step >= 2 ? "active" : ""}>3</div>
+          </div>
+        </div>
+
+        <ModalHeader
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <div>
+            <h3>EDITAR BOLETO VIP</h3>
+          </div>
+        </ModalHeader>
+
+        {/* Vista previa de la imagen }
+
+        {image && (
+          <img
+            src={image}
+            alt="Imagen de vista previa"
+            style={{ maxWidth: "100%", height: "auto" }}
+          />
+        )}
+
+        {----------------------------*/}
+
+        <ModalBody>
+          <FormGroup>
+            <label>ID:</label>
+            <input
+              className="form-control"
+              readOnly
+              type="text"
+              name="id_evento" //e es nuestro evento o lo que ingresa el usuario, con target apuntamos al valor ingresado por el usuario y se actualiza el objeto gracias al método set
+              value={idBoleto}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <label>Stock:</label>
+            <input
+              className="form-control"
+              name="nombre_evento"
+              type="text"
+              onChange={(e) => setStock(e.target.value)}
+              value={stock}
+            />
+          </FormGroup>
+          <FormGroup>
+            <label>Tipo:</label>
+            <select
+              className="form-control"
+              name="tipoBoleto"
+              onChange={(e) => setTipoBoleto(e.target.value)}
+              value={tipoBoleto}
+            >
+              <option value="">Seleccione un tipo</option>
+              <option value="VIP">VIP</option>
+              <option value="Normal">Normal</option>
+            </select>
+          </FormGroup>
+          <FormGroup>
+            <label>Precio:</label>
+            <input
+              className="form-control"
+              name="precio"
+              type="money"
+              onChange={(e) => setPrecio(e.target.value)}
+              value={precio}
+            />
+          </FormGroup>
+        </ModalBody>
+
+        <ModalFooter>
+          <Button
+            style={{
+              backgroundColor: "#2980b9",
+              borderColor: "#2980b9",
+              color: "#fff",
+              padding: "10px 20px",
+              borderRadius: "8px",
+            }}
+            onClick={() => {
+              validarBoletoEditar(2);
+              setStep((s) => s - 2);
+              setShowModalBoletoVIP(false);
+            }}
+            /*onClick={() => {
+              validarBoletoEditar();
+              setStep((s) => s - 1);
+            }}*/
+          >
+            FINALIZAR
           </Button>
         </ModalFooter>
       </Modal>
@@ -1509,15 +1793,18 @@ const CrudEvents = ({ organizerObj }) => {
           <Button
             color="primary"
             style={{
-              background: "#7950f2",
+              backgroundColor: "#3498db",
+              borderColor: "#3498db",
               color: "#fff",
+              padding: "10px 20px",
+              borderRadius: "8px",
             }}
             onClick={() => {
               setTipoBoleto("Normal");
               validarBoletoIngresar(1);
             }}
           >
-            Siguiente
+            SIGUIENTE
           </Button>
         </ModalFooter>
       </Modal>
@@ -1558,15 +1845,15 @@ const CrudEvents = ({ organizerObj }) => {
 
         {/* Vista previa de la imagen }
 
-        {image && (
-          <img
-            src={image}
-            alt="Imagen de vista previa"
-            style={{ maxWidth: "100%", height: "auto" }}
-          />
-        )}
+{image && (
+  <img
+    src={image}
+    alt="Imagen de vista previa"
+    style={{ maxWidth: "100%", height: "auto" }}
+  />
+)}
 
-        {----------------------------*/}
+{----------------------------*/}
 
         <ModalBody>
           <FormGroup>
@@ -1579,17 +1866,17 @@ const CrudEvents = ({ organizerObj }) => {
             />
           </FormGroup>
           {/*<FormGroup>
-            <label>Tipo:</label>
-            <select
-              className="form-control"
-              name="tipo"
-              onChange={(e) => setTipoBoleto(e.target.value)}
-            >
-              <option value="">Seleccione un tipo</option>
-              <option value="Tipo1">VIP</option>
-              <option value="Tipo2">Normal</option>
-            </select>
-      </FormGroup>*/}
+    <label>Tipo:</label>
+    <select
+      className="form-control"
+      name="tipo"
+      onChange={(e) => setTipoBoleto(e.target.value)}
+    >
+      <option value="">Seleccione un tipo</option>
+      <option value="Tipo1">VIP</option>
+      <option value="Tipo2">Normal</option>
+    </select>
+</FormGroup>*/}
           <FormGroup>
             <label>Precio:</label>
             <input
@@ -1605,15 +1892,18 @@ const CrudEvents = ({ organizerObj }) => {
           <Button
             color="primary"
             style={{
-              background: "#7950f2",
+              backgroundColor: "#2980b9",
+              borderColor: "#2980b9",
               color: "#fff",
+              padding: "10px 20px",
+              borderRadius: "8px",
             }}
             onClick={() => {
               setTipoBoleto("VIP");
               validarBoletoIngresar(2);
             }}
           >
-            Finalizar
+            FINALIZAR
           </Button>
         </ModalFooter>
       </Modal>
@@ -1643,14 +1933,31 @@ const CrudEvents = ({ organizerObj }) => {
         </ModalBody>
 
         <ModalFooter>
-          <Button color="primary" onClick={() => validarImpuestoEditar()}>
-            Finalizar
+          <Button
+            className="btn btn-primary"
+            onClick={() => validarImpuestoEditar()}
+            style={{
+              backgroundColor: "#2980b9",
+              borderColor: "#2980b9",
+              color: "#fff",
+              padding: "10px 20px",
+              borderRadius: "8px",
+            }}
+          >
+            FINALIZAR
           </Button>
           <Button
-            color="btn btn-danger"
+            className="btn btn-primary"
+            style={{
+              backgroundColor: "#D32F2F",
+              borderColor: "#D32F2F",
+              color: "#fff",
+              padding: "10px 20px",
+              borderRadius: "8px",
+            }}
             onClick={() => setShowModalImpuestosIngresar(false)}
           >
-            Cancelar
+            CANCELAR
           </Button>
         </ModalFooter>
       </Modal>
@@ -1659,7 +1966,6 @@ const CrudEvents = ({ organizerObj }) => {
       <Modal isOpen={showModalRecuperar} size="lg" style={estiloModal}>
         <ModalHeader>
           <div>
-            <h3>HISTÓRICO</h3>
             <Button
               type="button"
               className="close" // Agregar la clase "float-right" para alinear a la derecha
@@ -1668,6 +1974,7 @@ const CrudEvents = ({ organizerObj }) => {
             >
               <span aria-hidden="true">&times;</span>
             </Button>
+            <h3>HISTÓRICO</h3>
           </div>
         </ModalHeader>
 
@@ -1728,11 +2035,20 @@ const CrudEvents = ({ organizerObj }) => {
                   </Button>*/}
                       <td>
                         <Button
+                          style={{
+                            backgroundColor: "#3498db",
+                            borderColor: "#3498db",
+                            color: "#fff",
+                            padding: "10px 20px",
+                            borderRadius: "8px",
+                          }}
                           className="btn btn-info"
                           onClick={() => mostrarOrdenCompra(event.id_evento)}
                         >
-                          Ver Orden de compra
+                          ORDEN COMPRA
                         </Button>{" "}
+                        <br></br>
+                        <br></br>
                         <Button
                           style={{
                             backgroundColor: "#2980b9",
@@ -1740,7 +2056,6 @@ const CrudEvents = ({ organizerObj }) => {
                             padding: "10px 20px",
                             borderRadius: "8px",
                           }}
-                          className="btn btn-primary"
                           onClick={() =>
                             navigate(`/dashboardGrafico/${event.id_evento}`)
                           }
@@ -1944,13 +2259,20 @@ const CrudEvents = ({ organizerObj }) => {
 
       <Modal isOpen={showConfirmModal}>
         <ModalHeader>
-          <h3>Confirmación</h3>
+          <h3>CONFIRMACIÓN</h3>
         </ModalHeader>
         <ModalBody>
           <p>¿Estás seguro de ingresar estos valores?</p>
         </ModalBody>
         <ModalFooter>
           <Button
+            style={{
+              backgroundColor: "#4CAF50  ",
+              borderColor: "#4CAF50 ",
+              color: "#fff",
+              padding: "10px 20px",
+              borderRadius: "8px",
+            }}
             className="btn btn-success"
             onClick={() => {
               setShowConfirmModal(false);
@@ -1960,6 +2282,13 @@ const CrudEvents = ({ organizerObj }) => {
             Sí
           </Button>
           <Button
+            style={{
+              backgroundColor: "#D32F2F ",
+              borderColor: "#D32F2F",
+              color: "#fff",
+              padding: "10px 20px",
+              borderRadius: "8px",
+            }}
             className="btn btn-error"
             onClick={() => setShowConfirmModal(false)}
           >
@@ -1972,7 +2301,7 @@ const CrudEvents = ({ organizerObj }) => {
 
       <Modal isOpen={showConfirmModalDelete}>
         <ModalHeader>
-          <h3>Confirmación</h3>
+          <h3>CONFIRMACIÓN</h3>
         </ModalHeader>
         <ModalBody>
           <p>¿Estás seguro de dar de baja dicho evento?</p>
@@ -1980,6 +2309,13 @@ const CrudEvents = ({ organizerObj }) => {
         <ModalFooter>
           <Button
             className="btn btn-success"
+            style={{
+              backgroundColor: "#4CAF50  ",
+              borderColor: "#4CAF50 ",
+              color: "#fff",
+              padding: "10px 20px",
+              borderRadius: "8px",
+            }}
             onClick={() => {
               setShowConfirmModalDelete(false);
               handleEliminarEvento(id);
@@ -1989,6 +2325,13 @@ const CrudEvents = ({ organizerObj }) => {
           </Button>
           <Button
             className="btn btn-error"
+            style={{
+              backgroundColor: "#D32F2F  ",
+              borderColor: "#D32F2F ",
+              color: "#fff",
+              padding: "10px 20px",
+              borderRadius: "8px",
+            }}
             onClick={() => setShowConfirmModalDelete(false)}
           >
             No

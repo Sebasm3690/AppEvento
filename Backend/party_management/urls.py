@@ -70,4 +70,5 @@ urlpatterns = [
     path('api/cantidadsoborg/', CantidadSobranteOrg.as_view(), name='cantidad_sobrante'),
     path('validate_qr/', validate_qr_code, name='validate_qr'),
     path('compra-boleto/', CompraBoletoView.as_view(), name='compra-boleto'),
+    path('api/eventoslist/', EventoList.as_view(), name='evento-list'),
 ]

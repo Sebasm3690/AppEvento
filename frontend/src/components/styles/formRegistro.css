@@ -46,3 +46,30 @@
 .btn-primary:hover {
   background-color: #1c5988;
 }
+
+@media screen and (max-width: 768px) {
+  .custom-form {
+    width: 80%; /* Aumenta el ancho para ocupar más espacio en tabletas */
+    padding: 20px; /* Ajusta el relleno para un mejor equilibrio */
+  }
+
+  .btn-primary {
+    padding: 12px 20px; /* Reduce el relleno del botón para adaptarse a pantallas más pequeñas */
+  }
+}
+
+/* Estilos para pantallas de hasta 480px de ancho (móviles) */
+@media screen and (max-width: 480px) {
+  .custom-form {
+    width: 95%; /* Permite que el formulario ocupe casi todo el ancho en dispositivos móviles */
+    padding: 15px; /* Reduce aún más el relleno para pantallas pequeñas */
+  }
+
+  .custom-form label svg {
+    margin-right: 10px; /* Reduce el margen del ícono para espacios más estrechos */
+  }
+
+  .btn-primary {
+    padding: 10px 15px; /* Relleno aún más pequeño para los botones en pantallas de móviles */
+  }
+}

@@ -50,7 +50,6 @@ function Login() {
     <div>
       <NavBar />
       <div
-        className="container mt-5"
         style={{
           paddingTop: "50px",
         }}
@@ -62,7 +61,7 @@ function Login() {
                 "url(https://images.unsplash.com/photo-1589810264340-0ce27bfbf751?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHZlcnRpY2FsJTIwd2FsbHBhcGVyfGVufDB8fDB8fHww)",
               backgroundSize: "cover", // Ajusta el tamaño de la imagen
               width: "100%", // Ancho del div
-              height: "600px", // Altura del div
+              height: "640px", // Altura del div
               borderRadius: "30px",
             }}
           >
@@ -86,22 +85,28 @@ function Login() {
               }}
             >
               <div className="form-group">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Correo electrónico"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
+                <label>
+                  <FaEnvelope />
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Correo Electrónico"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </label>
               </div>
               <div className="form-group">
-                <input
-                  type="password"
-                  className="form-control"
-                  placeholder="Contraseña"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
+                <label>
+                  <FaLock />
+                  <input
+                    type="password"
+                    className="form-control"
+                    placeholder="Contraseña"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </label>
               </div>
               {error && <p className="text-danger">{error}</p>}
               <button
