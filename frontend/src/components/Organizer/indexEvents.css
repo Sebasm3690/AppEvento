@@ -133,3 +133,29 @@
   }
 }
 
+/* Estilos base para elementos select con clase .custom-select */
+.custom-select {
+  width: 100%; /* Ocupar el ancho completo del contenedor */
+  padding: 10px; /* Espaciado interno para que no esté pegado al borde */
+  margin: 8px 0; /* Margen externo para separar los inputs entre sí */
+  display: inline-block; /* Para que respete el ancho y el margen */
+  border: 1px solid #ccc; /* Borde de color gris claro como en el segundo formulario */
+  box-sizing: border-box; /* Para que el padding no afecte el ancho total del input */
+  border-color: #2980b9;
+  border-radius: 5px;
+}
+
+.custom-select:focus {
+  outline: none; /* Elimina el contorno predeterminado al enfocar */
+  border-color: #2980b9; /* Cambia el color del borde cuando está enfocado */
+  }
+  
+  /* Estilos para la opción por defecto que simula un placeholder en .custom-select */
+  .custom-select option[value=""][disabled] {
+  display: none; /* Oculta la opción 'placeholder' en la lista desplegable */
+  }
+  
+  /* Estilos para opciones dentro de .custom-select */
+  .custom-select option {
+  padding: 8px; /* Espaciado interno para las opciones */
+  }

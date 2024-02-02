@@ -1,0 +1,25 @@
+.qr-container {
+    padding: 50px 15px;
+  }
+  
+  .display-4 {
+    margin-bottom: 1rem;
+  }
+  
+  .qr-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .qr-image-container img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  @media (max-width: 768px) {
+    .qr-image-container {
+      flex-direction: column;
+    }
+  }
+  

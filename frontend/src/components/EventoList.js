@@ -4,7 +4,9 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import NavBarAsis from "./Asistente/navbaras";
 import Footer from "./footer";
+import FooterHP from "./otros/footerHP";
 import "./styles/inicio.css";
+import "./styles/EventosList.css"
 
 import {
   Button,
@@ -86,79 +88,88 @@ function EventosList() {
 
   return (
     <>
-     <NavBarAsis />
-     <h1 className="display-4 text-center mb-4"
-      style={{ padding: '50px 700px 10px 700px'}}
-     >LISTADO DE EVENTOS</h1>
-      <div style={{ display: 'flex', justifyContent: 'center', margin: '20px' }}>
-        {/* Campo de Búsqueda y Filtros */}
-        <input
-          type="text"
-          placeholder="Buscar por nombre..."
-          value={nombre}
-          onChange={(e) => setNombreBusqueda(e.target.value)}
-        />
-        <select value={tipo} onChange={(e) => setTipo(e.target.value)}>
-          <option value="">Todos los tipos</option>
-          <option value="Publico">Público</option>
-          <option value="Privado">Privado</option>
-        </select>
-        <select value={tipomes} onChange={(e) => setTipomes(e.target.value)}>
-          <option value="Todo">Todo el año</option>
-          <option value="Mesmenm">Mes (De mayor a menor)</option>
-          <option value="Mesmam">Mes (De menor a mayor)</option>
-        </select>
-        <button onClick={buscarEventos}>Buscar</button>
-      </div>
-      <div
-        style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
-      >
-        {eventos
-          .filter((evento) => evento.eliminado !== true)
-          .map((evento) => (
-            <div
-              key={evento.id_evento}
-              style={{ width: "20%", margin: "10px" }}
-            >
-              <div className="card">
-                <img
-                  src= {evento.imagen}
-                  className="card-img-top"
-                  alt="..."
-                />
-                <div className="card-body">
-                  <center>
-                    <h5 className="card-title">{evento.nombre_evento}</h5>
-                  </center>
-                  <p className="card-text">{evento.descripcion}</p>
-                  <p className="card-text">{evento.ubicacion}</p>
-                  <p className="card-text">
-                    <small className="text-muted">{evento.fecha}</small>
-                  </p>
-                  <center>
-                    <Button
-                      color="primary"
-                      style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
-                      onClick={(e) => handleMostrarDatos(evento)}
-                      >
-                        VER MAS DETALLES
-                    </Button>
-                  </center>
-                </div>
-              </div>
-            </div>
-          ))}
-      </div>
-      {/*Ventana modal*/}
-
-      <Modal isOpen={showModal}>
-        <ModalHeader>
-          <div>
-            <center>
-              <h3>INFORMACIÓN DEL EVENTO</h3>
-            </center>
+      <NavBarAsis />
+      <div className="container my-4">
+        <div className="row mb-3">
+          <div className="col-sm-12 col-md-4">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Buscar por nombre..."
+              value={nombre}
+              onChange={(e) => setNombreBusqueda(e.target.value)}
+            />
           </div>
-        </ModalHeader>
+          <div className="col-sm-12 col-md-3">
+            <select
+              className="custom-select"
+              value={tipo}
+              onChange={(e) => setTipo(e.target.value)}
+            >
+              <option value="">Todos los tipos</option>
+              <option value="Publico">Público</option>
+              <option value="Privado">Privado</option>
+            </select>
+          </div>
+          <div className="col-sm-12 col-md-3">
+            <select
+              className="custom-select"
+              value={tipomes}
+              onChange={(e) => setTipomes(e.target.value)}
+            >
+              <option value="Todo">Todo el año</option>
+              <option value="Mesmenm">Mes (De mayor a menor)</option>
+              <option value="Mesmam">Mes (De menor a mayor)</option>
+            </select>
+          </div>
+          <div className="col-sm-12 col-md-2">
+            <button className="btn btn-primary" onClick={buscarEventos}>
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/64/64673.png"
+                alt="Buscar"
+                width={"25px"}
+              />
+            </button>
+          </div>
+        </div>
+
+        <div className="container">
+          <div className="row justify-content-center mt-3">
+            {eventos
+              .filter((evento) => !evento.eliminado)
+              .map((evento) => (
+                <div key={evento.id_evento} className="evento-column mb-4 d-flex justify-content-center">
+                  <div className="card h-100" style={{ maxWidth: '300px' }}> {/* Establecer un ancho máximo para la tarjeta */}
+                    <img src={evento.imagen} className="card-img-top" alt={evento.nombre_evento} />
+                    <div className="card-body d-flex flex-column">
+                      <h5 className="card-title text-center">{evento.nombre_evento}</h5>
+                      <p className="card-text">{evento.descripcion}</p>
+                      <p className="card-text">{evento.ubicacion}</p>
+                      <p className="card-text">
+                        <small className="text-muted">{evento.fecha}</small>
+                      </p>
+                      <div className="mt-auto">
+                        <button
+                          className="btn btn-primary w-100"
+                          onClick={() => handleMostrarDatos(evento)}
+                        >
+                          Ver Más Detalles
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
+
+      </div>
+      <Modal isOpen={showModal}>
+      <ModalHeader>
+        <div style={{ textAlign: 'center' }}>
+          <h3 style={{ margin: 0 }}>INFORMACIÓN DEL EVENTO</h3>
+        </div>
+      </ModalHeader>
 
         {imagen && (
           <img
@@ -230,21 +241,28 @@ function EventosList() {
         </ModalBody>
 
         <ModalFooter>
-          <Link to={`/verboletos/${id_evento}`} className="btn btn-primary"
-            style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
-          >
-            COMPRAR BOLETOS
-          </Link>
-          <Button color="warning" onClick={() => setShowModal(false)}
-            style={{ backgroundColor: '#e8a726', borderColor: '#e8a726', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
-          >
-            CANCELAR
-          </Button>
+          <div className="row">
+            <div className="col-md-6">
+              <Link to={`/verboletos/${id_evento}`} className="btn btn-primary"
+                style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+              >
+                COMPRAR
+              </Link>
+            </div>
+            <div className="col-md-6">
+              <Button className="btn btn-primary" onClick={() => setShowModal(false)}
+                style={{ backgroundColor: '#d32f2f', borderColor: '#d32f2f', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+              >
+                CANCELAR
+              </Button>
+            </div>
+          </div>
         </ModalFooter>
       </Modal>
-      <Footer />  
+      <Footer />
     </>
   );
+  
 }
 
 export default EventosList;

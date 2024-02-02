@@ -11,6 +11,8 @@ import {
   ModalFooter,
 } from "reactstrap";
 import { show_alerta } from "../../functions";
+import '../styles/showor.css'
+//import Sidebar from './sidebar';
 //import "./indexAdmin.css";
 
 export default function ShowOrganizers({ adminObj }) {
@@ -259,74 +261,90 @@ const CrudOrganizers = ({ adminObj }) => {
     <>
       <Container>
         <div style={{ paddingBlockEnd: '50px'}}>
-          <button
-            style={{ backgroundColor: '#2980b9', borderColor: '#2980b9', padding: '10px 20px', borderRadius: '8px' }}
-            className="btn btn-primary"
-            onClick={() => setShowModalInsert(true)}
-          >
-            INSERTAR ORGANIZADOR
-          </button> 
-          <span style={{ margin: '0 40px' }}></span>
-          <Button style={{ backgroundColor: '#6aabb5', borderColor: '#6aabb5', color: '#fff', padding: '10px 20px', borderRadius: '8px' }} className="btn btn-primary" onClick={handleRecuperar}>
-            RECUPERAR ORGANIZADOR
-          </Button>
+            <button
+              style={{ backgroundColor: '#2980b9', borderColor: '#2980b9', padding: '10px 20px', borderRadius: '8px' }}
+              className="btn btn-primary"
+              onClick={() => setShowModalInsert(true)}
+            >
+              INSERTAR ORGANIZADOR
+            </button> 
+            <span style={{ margin: '0 40px' }}></span>
+            <Button style={{ backgroundColor: '#6aabb5', borderColor: '#6aabb5', color: '#fff', padding: '10px 20px', borderRadius: '8px' }} className="btn btn-primary" onClick={handleRecuperar}>
+              RECUPERAR ORGANIZADOR
+            </Button>
         </div>
 
-        <Table className="table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>Apellido</th>
-              <th>Cédula de Identidad</th>
-              <th>Correo</th>
-              <th>ID Admin</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {organizers
-              .filter((organizer) => !organizer.eliminado)
-              .filter((organizer) => organizer.id_admin === adminObj.id_admin)
-              .map((organizer) => (
-                <tr key={organizer.id_organizador}>
-                  <td>{organizer.id_organizador}</td>
-                  <td>{organizer.nombre}</td>
-                  <td>{organizer.apellido}</td>
-                  <td>{organizer.ci}</td>
-                  <td>{organizer.correo}</td>
-                  <td>{organizer.id_admin}</td>
-                  <td>
-                    <Button
-                    style={{color: '#fff', padding: '7px 14px', borderRadius: '8px' }}
-                      onClick={() =>
-                        handleEditarUsuario(organizer.id_organizador)
-                      }
-                      className="btn btn-warning"
-                    >
-                      <img src={"https://cdn-icons-png.flaticon.com/512/8188/8188360.png"} alt="Editar" width={'25px'} />
-                      <span style={{ margin: '0 3px'}}></span>
-                    </Button>
-                    <span style={{ margin: "0 10px" }}></span>
-                    <Button
-                      style={{ padding: '7px 14px', borderRadius: '8px' }}
-                      className="btn btn-danger"
-                      onClick={() =>
-                        handleEliminarUsuario(organizer.id_organizador)
-                      }
-                    >
-                      <img
-                        src="https://cdn-icons-png.flaticon.com/512/2340/2340337.png"
-                        alt="Editar"
-                        width={"25px"}
-                      />
-                      <span style={{ margin: "0 3px" }}></span>
-                    </Button>
-                  </td>
+            <Table className="table-custom table-borderless table-responsive">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                  <th>Cédula de Identidad</th>
+                  <th>Correo</th>
+                  <th></th>
                 </tr>
-              ))}
-          </tbody>
-        </Table>
+              </thead>
+              <tbody>
+                {organizers
+                  .filter((organizer) => !organizer.eliminado)
+                  .filter((organizer) => organizer.id_admin === adminObj.id_admin)
+                  .map((organizer) => (
+                    <tr key={organizer.id_organizador}>
+                      <td data-title="ID Organizador">{organizer.id_organizador}</td>
+                      <td data-title="Nombre">{organizer.nombre}</td>
+                      <td data-title="Apellido">{organizer.apellido}</td>
+                      <td data-title="Cédula de Identidad">{organizer.ci}</td>
+                      <td data-title="Correo">{organizer.correo}</td>
+                      <td>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        
+                          <Button
+                            style={{
+                              color: "#fff",
+                              padding: "7px 14px",
+                              borderRadius: "8px",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              backgroundColor: '#ffc107' // Color para el botón warning
+                            }}
+                            onClick={() =>
+                              handleEditarUsuario(organizer.id_organizador)
+                            }
+                            className="btn btn-warning"
+                          >
+                            <img src={"https://cdn-icons-png.flaticon.com/512/8188/8188360.png"} alt="Editar" width={'25px'} />
+                            <span style={{ margin: '0 3px'}}></span>
+                          </Button>
+                          <Button
+                            style={{
+                              color: "#fff",
+                              padding: "7px 14px",
+                              borderRadius: "8px",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              backgroundColor: '#dc3545' 
+                            }}
+                            className="btn btn-danger"
+                            onClick={() =>
+                              handleEliminarUsuario(organizer.id_organizador)
+                            }
+                          >
+                            <img
+                              src="https://cdn-icons-png.flaticon.com/512/2340/2340337.png"
+                              alt="Editar"
+                              width={"25px"}
+                            />
+                            <span style={{ margin: "0 3px" }}></span>
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </Table>
       </Container>
 
       <Modal isOpen={showModal}>
@@ -394,17 +412,26 @@ const CrudOrganizers = ({ adminObj }) => {
         </ModalBody>
 
         <ModalFooter>
-          <Button 
-            style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
-            color="primary" onClick={() => validar(2)}>
-            EDITAR
-          </Button>
-          <Button 
-            style={{ backgroundColor: '#D32F2F', borderColor: '#D32F2F', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
-            color="danger" onClick={() => setShowModal(false)}>
-            CANCELAR
-          </Button>
+          <div className="container">
+            <div className="row justify-content-center">
+              <div className="col-md-6">
+                <Button 
+                  style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                  color="primary" onClick={() => validar(2)}>
+                  EDITAR
+                </Button>
+              </div>
+              <div className="col-md-6">
+                <Button 
+                  style={{ backgroundColor: '#D32F2F', borderColor: '#D32F2F', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                  color="primary" onClick={() => setShowModal(false)}>
+                  CANCELAR
+                </Button>
+              </div>
+            </div>
+          </div>
         </ModalFooter>
+
       </Modal>
 
       {/*------------------------------------- */}
@@ -469,16 +496,24 @@ const CrudOrganizers = ({ adminObj }) => {
         </ModalBody>
 
         <ModalFooter>
-          <Button 
-            style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
-            color="primary" onClick={() => validar(1)}>
-            REGISTRAR
-          </Button>
-          <Button 
-            style={{ backgroundColor: '#D32F2F', borderColor: '#D32F2F', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
-            color="danger" onClick={() => setShowModalInsert(false)}>
-            CANCELAR
-          </Button>
+          <div className="container">
+            <div className="row justify-content-center">
+              <div className="col-md-6">
+                <Button 
+                  style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                  color="primary" onClick={() => validar(1)}>
+                  REGISTRAR
+                </Button>
+              </div>
+              <div className="col-md-6">
+                <Button 
+                  style={{ backgroundColor: '#D32F2F', borderColor: '#D32F2F', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                  color="primary" onClick={() => setShowModalInsert(false)}>
+                  CANCELAR
+                </Button>
+              </div>
+            </div>
+          </div>
         </ModalFooter>
       </Modal>
 
@@ -487,16 +522,16 @@ const CrudOrganizers = ({ adminObj }) => {
       <Modal isOpen={showModalRecuperar} size="lg">
         <ModalHeader>
           <div>
-            <h3>RECUPERAR ORGANIZADORES</h3>
             <Button
               type="button"
-              className="close" // Agregar la clase "float-right" para alinear a la derecha
+              className="close" 
               aria-label="close"
               style={botonDerechaStyles}
               onClick={() => setShowModalRecuperar(false)}
-            >
+              >
               <span aria-hidden="true">&times;</span>
             </Button>
+            <h3>RECUPERAR ORGANIZADORES</h3>
           </div>
         </ModalHeader>
 
