@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { show_alerta } from "../functions";
 import NavBarAsis from "./Asistente/navbaras";
 import Footer from "./footer";
+import FooterHP from "./otros/footerHP";
 import "./styles/boletos.css";
 function BoletosList() {
   const [cantidad, setCantidad] = useState(0);
@@ -185,64 +186,61 @@ function BoletosList() {
                           className="img-fluid"
                         />
                       )} */}
-                      <div className="tipo-boleto1">
-                        <strong>Tipo de boleto:</strong> {boleto.tipoBoleto}
+                                            <div style={{paddingTop: '15px', color: '#2980b9'}} className="tipo-boleto1">
+                        <h4>
+                          <strong>Tipo de boleto:</strong> {boleto.tipoBoleto}
+                        </h4>
                       </div>
                       <div className="form-check checkbox-container">
-                        <br></br>
                         <input
                           className="form-check-input"
                           type="checkbox"
                           checked={boleto.isChecked}
                           id={`checkbox-${boleto.id_boleto}`}
-                    onChange={() => {
-                      // Verificar si ya hay otro boleto seleccionado
-                      const otroBoletoSeleccionado = boletos.some(b => b.isChecked && b.id_boleto !== boleto.id_boleto);
-                      if (otroBoletoSeleccionado) {
-                        show_alerta("Solo puede seleccionar un tipo de boleto", "warning");
-                        return;
-                      }
-                      setBoletos((prevBoletos) =>
-                        prevBoletos.map((b) =>
-                          b.id_boleto === boleto.id_boleto
-                            ? { ...b, isChecked: !b.isChecked }
-                            : b
-                        )
-                      );
-                    }}
-                  />
+                          onChange={() => {
+                            // Verificar si ya hay otro boleto seleccionado
+                            const otroBoletoSeleccionado = boletos.some(b => b.isChecked && b.id_boleto !== boleto.id_boleto);
+                            if (otroBoletoSeleccionado) {
+                              show_alerta("Solo puede seleccionar un tipo de boleto", "warning");
+                              return;
+                            }
+                            setBoletos((prevBoletos) =>
+                              prevBoletos.map((b) =>
+                                b.id_boleto === boleto.id_boleto
+                                  ? { ...b, isChecked: !b.isChecked }
+                                  : b
+                              )
+                            );
+                          }}
+                        />
                         <label className="form-check-label" htmlFor={`checkbox-${boleto.id_boleto}`}>
-                          Seleccione la opción
+                          Elija esta opción para continuar:
                         </label>
                       </div>
                       {boleto.isChecked && (
                         <div className="input-group mt-3">
-                          <label
-                            className="input-group-text"
-                            htmlFor={`cantidad-${index}`}
-                          >
-                            Cantidad
-                          </label>
-                          <input
-                            type="number"
-                            className="form-control"
-                            id={`cantidad-${index}`}
-                            placeholder="Ingrese el Número de Boletos"
-                            min="1"
-                            max={nuevBoletos[index]}
-                            onChange={(e) => {
-                              const cantidad = parseInt(e.target.value, 10);
-                              setCantidad(e.target.value, 10);
-                              setBoletos((prevBoletos) =>
-                                prevBoletos.map((b) =>
-                                  b.id_boleto === boleto.id_boleto
-                                    ? { ...b, cantidad }
-                                    : b
-                                )
-                              );
-                            }}
-                          />
-                        </div>
+                        <input
+                          type="number"
+                          className="form-control"
+                          id={`cantidad-${index}`}
+                          placeholder="Cantidad a Adquirir"
+                          aria-label="Cantidad"
+                          aria-describedby={`cantidad-label-${index}`}
+                          min="1"
+                          max={nuevBoletos[index]}
+                          onChange={(e) => {
+                            const cantidad = parseInt(e.target.value, 10) || 0; // El || 0 es para manejar NaN cuando el input esté vacío
+                            setCantidad(cantidad);
+                            setBoletos((prevBoletos) =>
+                              prevBoletos.map((b) =>
+                                b.id_boleto === boleto.id_boleto
+                                  ? { ...b, cantidad }
+                                  : b
+                              )
+                            );
+                          }}
+                        />
+                      </div>
                       )}
                     </li>
                   );
@@ -250,27 +248,28 @@ function BoletosList() {
             </ul>
           </div>
           <div className="col-md-5">
-          {boletosConStock
-  .filter((boleto) => parseInt(boleto.id_evento) === parseInt(id))
-  .map((boleto, index) => (
-    <div key={boleto.id_boleto}>
-      <div className="precio-stock-container" style={{ backgroundColor: '#6aabb5' }}>
-        <div className="precio-label">
-        <strong>Tipo:</strong> {boleto.tipoBoleto}
-        <br></br>
-          <strong>Precio:</strong> ${boleto.precio}
-        </div>
-        <div className="stock-label">
-          <strong>Stock:</strong> {boleto.stock}
-        </div>
-      </div>
-    </div>
-))}
+            {boletosConStock
+              .filter((boleto) => parseInt(boleto.id_evento) === parseInt(id))
+              .map((boleto, index) => (
+                <div key={boleto.id_boleto}>
+                  <div className="precio-stock-container" style={{ backgroundColor: '#6aabb5' }}>
+                    <div className="precio-label">
+                    <strong>Tipo:</strong> {boleto.tipoBoleto}
+                    <br></br>
+                      <strong>Precio:</strong> ${boleto.precio}
+                    </div>
+                    <div className="stock-label">
+                      <strong>Stock:</strong> {boleto.stock}
+                    </div>
+                  </div>
+                  <br></br>
+                </div>
+            ))}
             <div className="text-center mt-3">
               {boletos.some((boleto) => boleto.isChecked) && (
-                <p className="total-pagar">Total a Pagar: ${total}</p>
+                <p style={{color:'#2980b9'}} className="total-pagar">Total a Pagar: ${total}</p>
               )}
-              <p className="total-llevar">Total de boletos a llevar: {totalBoletosSeleccionados}</p>
+              <p style={{color:'#2980b9'}} className="total-llevar">Total de boletos a llevar: {totalBoletosSeleccionados}</p>
               <div className="button-container">
                 {boletos.filter((boleto) => boleto.isChecked) && (
                   <button onClick={() => handleRealizarPedido(cantidad)}
