@@ -1,4 +1,21 @@
 .custom-form {
+<<<<<<< HEAD
+<<<<<<< HEAD
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 30px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  text-align: center;
+}
+
+.form-title {
+  font-size: 24px;
+  color: #333;
+=======
+=======
+>>>>>>> origin/dev
   max-width: 600px;
   margin: 0 auto;
   padding: 40px;
@@ -12,17 +29,61 @@
 .form-title {
   font-size: 32px; /* Hacemos el título aún más grande */
   color: #2c3e50;
+<<<<<<< HEAD
+>>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
+=======
+>>>>>>> origin/dev
   margin-bottom: 20px;
 }
 
 .form-group {
+<<<<<<< HEAD
+<<<<<<< HEAD
+  margin-bottom: 20px;
+=======
   margin-bottom: 25px;
+>>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
+=======
+  margin-bottom: 25px;
+>>>>>>> origin/dev
 }
 
 .form-control {
   width: 100%;
   padding: 15px;
   font-size: 16px;
+<<<<<<< HEAD
+<<<<<<< HEAD
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box; /* Añadido para mejorar el box model */
+}
+
+.btn-primary {
+  background-color: #2980b9;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 15px;
+  border: none;
+  border-radius: 4px;
+}
+
+.btn-primary:hover {
+  background-color: #265982;
+}
+
+.btn-register {
+  color: #2980b9;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.btn-register:hover {
+  color: #265982;
+=======
+=======
+>>>>>>> origin/dev
   border: 2px solid #bdc3c7;
   border-radius: 6px;
   box-sizing: border-box;
@@ -61,11 +122,22 @@
 
 .btn-register:hover {
   color: #2980b9;
+<<<<<<< HEAD
+>>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
+=======
+>>>>>>> origin/dev
 }
 
 .form-info {
   text-align: center;
   margin-top: 20px;
+<<<<<<< HEAD
+<<<<<<< HEAD
+  color: #777;
+}
+=======
+=======
+>>>>>>> origin/dev
   color: #7f8c8d;
 }
 
@@ -108,4 +180,9 @@
     font-size: 14px; /* Reduce el tamaño de la fuente de los botones */
     padding: 8px 16px; /* Ajusta el relleno para que los botones no sean demasiado grandes */
   }
+<<<<<<< HEAD
 }
+>>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
+=======
+}
+>>>>>>> origin/dev

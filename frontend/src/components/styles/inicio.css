@@ -1,3 +1,15 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
+body {
+  font-family: 'Roboto', sans-serif;
+  margin-top: 60px;
+}
+
+.inicio-container {
+  background-color: #333;
+=======
+=======
+>>>>>>> origin/dev
 /* Estilos generales */
 body {
   font-family: 'Roboto', sans-serif;
@@ -9,10 +21,19 @@ body {
 /* Contenedor principal de la página de inicio */
 .inicio-container {
   /*background-color: #333;*/
+<<<<<<< HEAD
+>>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
+=======
+>>>>>>> origin/dev
   padding: 20px;
   border-radius: 5px;
 }
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> origin/dev
 .custom-btn {
   font-size: 18px; /* Tamaño de la fuente del botón */
   padding: 12px 20px; /* Ajuste del relleno del botón */
@@ -27,11 +48,22 @@ body {
 }
 
 /* Contenedor de la aplicación */
+<<<<<<< HEAD
+>>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
+=======
+>>>>>>> origin/dev
 .app-container {
   margin-top: 60px;
 }
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
 /* Elemento dentro del contenedor de inicio */
+>>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
+=======
+/* Elemento dentro del contenedor de inicio */
+>>>>>>> origin/dev
 .inicio-item {
   margin-bottom: 15px;
   display: flex;
@@ -42,18 +74,105 @@ body {
   border-radius: 5px;
 }
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
 /* Información de rol */
+>>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
+=======
+/* Información de rol */
+>>>>>>> origin/dev
 .rol-info {
   flex-grow: 1;
 }
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+.inicio-button {
+  text-decoration: none;
+  color: #fff; 
+  background-color: #007bff;
+  padding: 10px 15px;
+  border: 1px solid #007bff; 
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.inicio-button:hover {
+  background-color: #0056b3; 
+}
+
+.bienvenida {
+  text-align: center;
+  background-color: #007bff; 
+  color: #fff; 
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.bienvenida h1 {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.bienvenida p {
+  font-size: 1.2em;
+  margin: 0;
+}
+
+.navbar {
+  background-color: #2980b9;
+  padding: 10px;
+}
+
+.navbar-left a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 24px;
+}
+
+.navbar-link {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 15px;
+  transition: color 0.3s;
+}
+
+.navbar-link:hover {
+  color: #000;
+}
+
+=======
 /* Contenedor de eventos */
+>>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
+=======
+/* Contenedor de eventos */
+>>>>>>> origin/dev
 .eventos-container {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+.content-container {
+  display: flex;
+  justify-content: space-around; /* O ajusta según tus preferencias */
+  width: 40%; /* Ajusta según sea necesario */
+}
+
+.info-container {
+  padding: 20px;
+  background-color: #f1f1f1;
+}
+
+.carrucel-container {
+  /* Ajusta según sea necesario */
+=======
+=======
+>>>>>>> origin/dev
 /* Contenedor de contenido */
 .content-container {
   display: flex;
@@ -263,4 +382,8 @@ body {
   text-decoration: none;
   cursor: pointer;
   opacity: .75;
+<<<<<<< HEAD
+>>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
+=======
+>>>>>>> origin/dev
 }

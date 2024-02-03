@@ -1,4 +1,49 @@
 .quienes-somos-container {
+<<<<<<< HEAD
+<<<<<<< HEAD
+    /*background-color: #f9f9f9;*/
+    padding: 100px;
+    text-align: center;
+  }
+  
+  .quienes-somos-title {
+    font-size: 32px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .quienes-somos-content {
+    font-size: 18px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 30px;
+  }
+  
+  .quienes-somos-desarrolladores {
+    margin-top: 40px;
+  }
+  
+  .quienes-somos-subtitle {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .desarrolladores-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .desarrolladores-list li {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 15px;
+  }
+  
+=======
+=======
+>>>>>>> origin/dev
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -86,4 +131,9 @@ quienes-somos-sections {
   .desarrolladores-list li, .quienes-somos-content {
     font-size: 16px; /* Reduce el tamaño de fuente para el contenido y lista */
   }
+<<<<<<< HEAD
 }
+>>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
+=======
+}
+>>>>>>> origin/dev

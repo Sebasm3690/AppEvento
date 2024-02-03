@@ -11,6 +11,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loginAttempts, setLoginAttempts] = useState(0); // Contador de intentos de inicio de sesión
+  const [showInvalidCredentialsMessage, setShowInvalidCredentialsMessage] = useState(true); // Controla si se muestra el mensaje de credenciales incorrectas
   const navigate = useNavigate();
   const timerRef = useRef(null);
 
@@ -46,6 +47,7 @@ function Login() {
     } catch (err) {
       console.error("Error al iniciar sesión:", err);
       setError("Error al iniciar sesión. Revisa tus Credenciales");
+      setShowInvalidCredentialsMessage(true); // Mostrar el mensaje de credenciales incorrectas
       setLoginAttempts((prevAttempts) => prevAttempts + 1);
       if (loginAttempts === 2) {
         disableLoginButton();
@@ -72,6 +74,7 @@ function Login() {
   const startTimer = () => {
     timerRef.current = setTimeout(() => {
       enableLoginButton();
+      setShowInvalidCredentialsMessage(false); // Desactivar el mensaje de credenciales incorrectas
       setLoginAttempts(0); 
     }, 10000);
   };
@@ -150,9 +153,10 @@ function Login() {
                   />
                 </label>
               </div>
-              {error && <p className="text-danger">{error}</p>}
+              {showInvalidCredentialsMessage && error && <p className="text-danger">{error}</p>}
               <button
                 type="button"
+                id="loginButton"
                 style={{
                   backgroundColor: "#3498db",
                   borderColor: "#3498db",

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./styles/dashboard.css";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 import { Chart as ChartJS } from "chart.js/auto";
 import { Bar, Chart, Doughnut, Line, Pie } from "react-chartjs-2";
 import { useAsyncError } from "react-router-dom";
@@ -11,7 +12,7 @@ import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 
 function DashboardGeneral() {
-  const id = 0;
+  const { id_organizador } = useParams();
   const [ganancia_eventos, setGananciaEventos] = useState([]);
   const [valoresPIE, setValoresPIE] = useState([]);
   const [ganancia_total_eventos, setGananciaTotal] = useState(0);
@@ -32,7 +33,7 @@ function DashboardGeneral() {
   const getGananciaEventosData = async () => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/ganancia_general`
+        `http://127.0.0.1:8000/ganancia_general/${id_organizador}/`
       );
       setGananciaEventos(response.data);
     } catch (error) {
@@ -51,7 +52,9 @@ function DashboardGeneral() {
 
   const getValoresPIE = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/valoresPIE/`);
+      const response = await axios.get(
+        `http://127.0.0.1:8000/valoresPIE/${id_organizador}`
+      );
       setValoresPIE(response.data);
       setGananciaTotal(response.data.ganancia_total_eventos);
       setGastoTotal(response.data.gasto_total_eventos);
@@ -142,7 +145,6 @@ function DashboardGeneral() {
     }
   };
 
-  
   const changeStyle1 = () => {
     if (
       style === "navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
@@ -156,58 +158,62 @@ function DashboardGeneral() {
   };
 
   const exportPDF = () => {
-    const contents = document.querySelectorAll('.print-content');
+    const contents = document.querySelectorAll(".print-content");
     const pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: 'a4'
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4",
     });
-  
+
     let combinedCanvasHeight = 0;
     let allCanvases = [];
-  
+
     const processContent = (content, index) => {
       return html2canvas(content, {
         scale: 1,
         useCORS: true,
         width: content.offsetWidth,
-        windowWidth: content.scrollWidth
+        windowWidth: content.scrollWidth,
       }).then((canvas) => {
         allCanvases[index] = canvas;
         combinedCanvasHeight += canvas.height;
       });
     };
-  
+
     const processAllContents = () => {
-      Promise.all(Array.from(contents).map((content, index) => processContent(content, index)))
+      Promise.all(
+        Array.from(contents).map((content, index) =>
+          processContent(content, index)
+        )
+      )
         .then(() => {
           // Agregar título
           pdf.setFontSize(18); // Ajustar tamaño de fuente según necesidad
-          pdf.text('AQUI TIENE SU REPORTE', 105, 15, { align: 'center' }); // Centrar el título en la página
-  
+          pdf.text("AQUI TIENE SU REPORTE", 105, 15, { align: "center" }); // Centrar el título en la página
+
           let yOffset = 25; // Iniciar después del título
-  
+
           allCanvases.forEach((canvas) => {
             const imgWidth = 190;
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            const imgData = canvas.toDataURL('image/png');
+            const imgData = canvas.toDataURL("image/png");
             const marginX = (210 - imgWidth) / 2;
-  
+
             if (yOffset + imgHeight > 297) {
               pdf.addPage();
               yOffset = 10; // Reajustar para la nueva página
             }
-  
-            pdf.addImage(imgData, 'PNG', marginX, yOffset, imgWidth, imgHeight);
+
+            pdf.addImage(imgData, "PNG", marginX, yOffset, imgWidth, imgHeight);
             yOffset += imgHeight;
           });
-          pdf.save('dashboard.pdf');
+          pdf.save("dashboard.pdf");
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error al generar el PDF: ", error);
         });
     };
-  
+
     processAllContents();
   };
 
@@ -249,12 +255,13 @@ function DashboardGeneral() {
                   <h1 className="h3 mb-0 text-gray-800">Dashboard</h1>
 
                   <a
-  href="javascript:void(0)"
-  className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
-  onClick={exportPDF}
->
-  <i className="fas fa-download fa-sm text-white-50"></i> Descargar Reporte
-</a>
+                    href="javascript:void(0)"
+                    className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                    onClick={exportPDF}
+                  >
+                    <i className="fas fa-download fa-sm text-white-50"></i>{" "}
+                    Descargar Reporte
+                  </a>
                 </div>
 
                 {/*  <!-- Content Row --> */}
@@ -279,7 +286,7 @@ function DashboardGeneral() {
                                   <div
                                     className="progress-bar bg-info a1"
                                     role="progressbar"
-                                    style={{ width: ganancia_porcentaje }}
+                                    style={{ width: `${ganancia_porcentaje}%` }}
                                   ></div>
                                 </div>
                               </div>
