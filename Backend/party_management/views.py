@@ -64,21 +64,14 @@ class OrganizerView(viewsets.ModelViewSet):
         correo = request.data.get('correo')  # Asegúrate de que 'correo' es el nombre correcto del campo en tu serializer
         cedula = request.data.get('ci')
 
-        if validar_cedular_repetida(cedula)['existe']:
-            return Response({'error': 'La cedula ya fue registrada por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
-
-        if validar_correo(correo)['existe']:
-            return Response({'error': 'El correo ya fue registrado por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
+        if not validar_cedula(cedula):
+            return Response({'error': 'La cedula proporcionada no es valida'}, status=status.HTTP_400_BAD_REQUEST) 
         
         try:
             return super().create(request, *args, **kwargs)
         except ValidationError as e:
             return Response({'error': e.message_dict}, status=status.HTTP_400_BAD_REQUEST)
     
-class AdminView(viewsets.ModelViewSet):
-    serializer_class = AdminSerializer
-    queryset = Administrador.objects.all()
-
 class TicketView(viewsets.ModelViewSet):
     serializer_class = TicketSerializer
     queryset = Boleto.objects.all()
@@ -108,14 +101,7 @@ class AdminView(viewsets.ModelViewSet):
         cedula = request.data.get('ci')
 
         if not validar_cedula(cedula):
-            return Response({'error': 'La cedula proporcionada no es valida'}, status=status.HTTP_400_BAD_REQUEST)
-
-        if validar_cedular_repetida(cedula)['existe']:
-            return Response({'error': 'La cedula ya fue registrada por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
-
-        if validar_correo(correo)['existe']:
-            return Response({'error': 'El correo ya fue registrado por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
-        
+            return Response({'error': 'La cedula proporcionada no es valida'}, status=status.HTTP_400_BAD_REQUEST) 
         try:
             return super().create(request, *args, **kwargs)
         except ValidationError as e:
@@ -133,70 +119,6 @@ class TicketView(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         correo = request.data.get('correo')  # Asegúrate de que 'correo' es el nombre correcto del campo en tu serializer
         cedula = request.data.get('ci')
-
-        if validar_cedular_repetida(cedula)['existe']:
-            return Response({'error': 'La cedula ya fue registrada por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
-
-        if validar_correo(correo)['existe']:
-            return Response({'error': 'El correo ya fue registrado por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        try:
-            return super().create(request, *args, **kwargs)
-        except ValidationError as e:
-            return Response({'error': e.message_dict}, status=status.HTTP_400_BAD_REQUEST)
-
-class AdminView(viewsets.ModelViewSet):
-    serializer_class = AdminSerializer
-    queryset = Administrador.objects.all()
-
-    def create(self, request, *args, **kwargs):
-        correo = request.data.get('correo')  # Asegúrate de que 'correo' es el nombre correcto del campo en tu serializer
-        cedula = request.data.get('ci')
-
-        if not validar_cedula(cedula):
-            return Response({'error': 'La cedula proporcionada no es valida'}, status=status.HTTP_400_BAD_REQUEST)
-
-        if validar_cedular_repetida(cedula)['existe']:
-            return Response({'error': 'La cedula ya fue registrada por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
-
-        if validar_correo(correo)['existe']:
-            return Response({'error': 'El correo ya fue registrado por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        try:
-            return super().create(request, *args, **kwargs)
-        except ValidationError as e:
-            return Response({'error': e.message_dict}, status=status.HTTP_400_BAD_REQUEST)
-
-class TicketView(viewsets.ModelViewSet):
-    serializer_class = TicketSerializer
-    queryset = Boleto.objects.all()
-
-    def create(self, request, *args, **kwargs):
-        correo = request.data.get('correo')  # Asegúrate de que 'correo' es el nombre correcto del campo en tu serializer
-        cedula = request.data.get('ci')
-
-        if validar_cedular_repetida(cedula)['existe']:
-            return Response({'error': 'La cedula ya fue registrada por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
-
-        if validar_correo(correo)['existe']:
-            return Response({'error': 'El correo ya fue registrado por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        try:
-            return super().create(request, *args, **kwargs)
-        except ValidationError as e:
-            return Response({'error': e.message_dict}, status=status.HTTP_400_BAD_REQUEST)
-
-
-class AdminView(viewsets.ModelViewSet):
-    serializer_class = AdminSerializer
-    queryset = Administrador.objects.all()
-
-    def create(self, request, *args, **kwargs):
-        correo = request.data.get('correo')  # Asegúrate de que 'correo' es el nombre correcto del campo en tu serializer
-        cedula = request.data.get('ci')
-
-        if not validar_cedula(cedula):
-            return Response({'error': 'La cedula proporcionada no es valida'}, status=status.HTTP_400_BAD_REQUEST)
 
         if validar_cedular_repetida(cedula)['existe']:
             return Response({'error': 'La cedula ya fue registrada por un organizador o asistente'}, status=status.HTTP_400_BAD_REQUEST)
@@ -583,20 +505,10 @@ class RegisterViewAs(APIView):
         password = request.data.get('password', '')
         correo = request.data.get('email', None)
 
-        if cedula:
-            if validar_cedular_repetida(cedula).get('existe'):
-                return Response({'error': 'La cedula ya fue registrada por un organizador o asistente'}, status=400)
-
-        # Validar correo
-        if correo:
-            if validar_correo(correo).get('existe'):
-                return Response({'error': 'El correo ya se encuentra registrado por un Organizador o Asistente'}, status=400)
-
-        # Validar clave
         try:
             is_password_strong(password)
         except ValidationError as e:
-            return Response({'error': str(e)}, status=400)
+            return Response({'error': e.message if hasattr(e, 'message') else e.messages[0]}, status=400)
 
         # Validar Cedula
         if not cedula or not validar_cedula(cedula):
@@ -743,6 +655,9 @@ class LoginViewOrg(APIView):
 
         if organizador  is None:
             raise AuthenticationFailed('User not found')
+        
+        if organizador.eliminado:
+            raise AuthenticationFailed('Su cuenta fue desactivada')
 
         if organizador :
             request.session['is_logged_in'] = True

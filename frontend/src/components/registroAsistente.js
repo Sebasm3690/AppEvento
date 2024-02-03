@@ -56,9 +56,10 @@ const Registro = () => {
       navigate("/loginAs/");
     } catch (error) {
       if (error.response && error.response.data && error.response.data.error) {
+        const errorMessage = Array.isArray(error.response.data.error) ? error.response.data.error[0] : error.response.data.error;
         setError('email', {
           type: 'manual',
-          message: error.response.data.error,
+          message: errorMessage,
         });
       } else {
         setError('email', {

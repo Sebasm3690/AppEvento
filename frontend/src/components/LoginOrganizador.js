@@ -29,6 +29,10 @@ const LoginOrganizador = () => {
         }),
       });
 
+      if(!response.ok){
+        throw response;
+      }
+
       const data = await response.json();
 
       if (data.jwt) {
@@ -40,7 +44,7 @@ const LoginOrganizador = () => {
       }
     } catch (err) {
       console.error("Error al iniciar sesión:", err);
-      setError("Credenciales incorrectas");
+      setError("Credenciales incorrectas o cuenta desactivada");
       setLoginAttempts((prevAttempts) => prevAttempts + 1);
       if (loginAttempts === 2) {
         disableLoginButton();
