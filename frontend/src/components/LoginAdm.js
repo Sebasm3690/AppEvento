@@ -1,4 +1,3 @@
-// Login.js
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import NavBar from "./navbar";
@@ -11,6 +10,7 @@ const LoginAdm = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loginAttempts, setLoginAttempts] = useState(0); // Contador de intentos de inicio de sesión
+  const [showInvalidCredentialsMessage, setShowInvalidCredentialsMessage] = useState(true); // Controla si se muestra el mensaje de credenciales incorrectas
   const navigate = useNavigate();
   const timerRef = useRef(null);
 
@@ -21,7 +21,7 @@ const LoginAdm = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // Para enviar y recibir cookies desde el servidor
+        credentials: "include",
         body: JSON.stringify({
           username: username,
           password: password,
@@ -32,14 +32,14 @@ const LoginAdm = () => {
 
       if (data.jwt) {
         localStorage.setItem("jwt", data.jwt);
-        // Redirecciona a otra página después de iniciar sesión
-        window.location.href = "/DashBoardAdm/"; // Ajusta según tu estructura de rutas
+        window.location.href = "/DashBoardAdm/";
       } else {
         throw new Error("Credenciales incorrectas");
       }
     } catch (err) {
       console.error("Error al iniciar sesión:", err);
       setError("Credenciales incorrectas");
+      setShowInvalidCredentialsMessage(true); // Mostrar el mensaje de credenciales incorrectas
       setLoginAttempts((prevAttempts) => prevAttempts + 1);
       if (loginAttempts === 2) {
         disableLoginButton();
@@ -66,6 +66,7 @@ const LoginAdm = () => {
   const startTimer = () => {
     timerRef.current = setTimeout(() => {
       enableLoginButton();
+      setShowInvalidCredentialsMessage(false); // Desactivar el mensaje de credenciales incorrectas
       setLoginAttempts(0);
     }, 10000); 
   };
@@ -130,9 +131,10 @@ const LoginAdm = () => {
                   />
                 </label>
               </div>
-              {error && <p className="error-message">{error}</p>}
+              {showInvalidCredentialsMessage && error && <p className="error-message">{error}</p>}
               <button
                 type="button"
+                id="loginButton"
                 style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
                 className="btn btn-primary btn-block"
                 onClick={loginUser}
