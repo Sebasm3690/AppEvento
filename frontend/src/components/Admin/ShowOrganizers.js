@@ -118,6 +118,27 @@ const CrudOrganizers = ({ adminObj }) => {
     }
   };
 
+  const handleEliminarUsuario = async (userId) => {
+    const hasEvents = await hasOrganizerCreatedEvents(userId);
+    if (hasEvents) {
+      show_alerta("El organizador no puede ser dado de baja porque ha creado eventos.", "error");
+      return;
+    }
+
+    try {
+      await axios.post(
+        `http://127.0.0.1:8000/borrado_logico_organizador/${userId}/`
+      );
+      show_alerta("El organizador ha sido dado de baja", "success");
+      setOrganizers((prevOrganizadores) =>
+        prevOrganizadores.filter((o) => o.id_organizador !== userId)
+      );
+    } catch (error) {
+      console.error("Error al intentar borrar al organizador:", error);
+      show_alerta("No se pudo eliminar al organizador, intenta de nuevo más tarde.", "error");
+    }
+  };
+
   const handleRecuperar = async () => {
     setShowModalRecuperar(true);
   };
