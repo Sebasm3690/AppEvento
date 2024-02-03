@@ -2,6 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import NavBarAsis from "./Asistente/navbaras";
+import Footer from "./footer";
+import './styles/GenerarQR.css'
 
 function GenerarQR({ match }) {
     const [qrImageUrl, setQRImageUrl] = useState(null);
@@ -31,15 +34,18 @@ function GenerarQR({ match }) {
         };
       }, [contieneId]);
 
-    return (
+      return (
         <div>
-            <h1>
-            Aqui tiene su boleto:
-            <br/>
-            {qrImageUrl && <img src={qrImageUrl} alt="Código QR" />}
-            </h1>
+          <NavBarAsis />
+          <div className="qr-container">
+            <h1 className="display-4 text-center mb-4">BOLETO QR</h1>     
+            <div className="qr-image-container">
+              {qrImageUrl && <img src={qrImageUrl} alt="Código QR" />}
+            </div>
+          </div>
+          <Footer />
         </div>
-    );
+      )
 }
 
 export default GenerarQR;

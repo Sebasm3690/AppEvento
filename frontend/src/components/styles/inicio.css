@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 body {
   font-family: 'Roboto', sans-serif;
   margin-top: 60px;
@@ -5,14 +6,48 @@ body {
 
 .inicio-container {
   background-color: #333;
+=======
+/* Estilos generales */
+body {
+  font-family: 'Roboto', sans-serif;
+  margin-top: 60px;
+  background-color: #f8f9fa;
+  margin: 0;
+}
+
+/* Contenedor principal de la página de inicio */
+.inicio-container {
+  /*background-color: #333;*/
+>>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
   padding: 20px;
   border-radius: 5px;
 }
 
+<<<<<<< HEAD
+=======
+.custom-btn {
+  font-size: 18px; /* Tamaño de la fuente del botón */
+  padding: 12px 20px; /* Ajuste del relleno del botón */
+  border-radius: 8px; /* Bordes redondeados */
+  background-color: #2980b9; /* Color de fondo del botón */
+  color: #ffffff; /* Color del texto del botón */
+  text-decoration: none; /* Quitar subrayado del enlace */
+}
+
+.custom-btn:hover {
+  background-color: #1c6fa9; /* Cambio de color al pasar el mouse */
+}
+
+/* Contenedor de la aplicación */
+>>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
 .app-container {
   margin-top: 60px;
 }
 
+<<<<<<< HEAD
+=======
+/* Elemento dentro del contenedor de inicio */
+>>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
 .inicio-item {
   margin-bottom: 15px;
   display: flex;
@@ -23,10 +58,15 @@ body {
   border-radius: 5px;
 }
 
+<<<<<<< HEAD
+=======
+/* Información de rol */
+>>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
 .rol-info {
   flex-grow: 1;
 }
 
+<<<<<<< HEAD
 .inicio-button {
   text-decoration: none;
   color: #fff; 
@@ -82,12 +122,16 @@ body {
   color: #000;
 }
 
+=======
+/* Contenedor de eventos */
+>>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
 .eventos-container {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
+<<<<<<< HEAD
 .content-container {
   display: flex;
   justify-content: space-around; /* O ajusta según tus preferencias */
@@ -101,4 +145,215 @@ body {
 
 .carrucel-container {
   /* Ajusta según sea necesario */
+=======
+/* Contenedor de contenido */
+.content-container {
+  display: flex;
+  justify-content: space-around;
+  width: 40%;
+}
+
+/* Contenedor del carrusel */
+.carrucel-container {
+  padding: 0.2%;
+  width: 99vw; /* Ajuste de ancho para que ocupe casi toda la pantalla */
+  margin: auto; /* Centra el carrusel */
+}
+
+.fixed-carousel {
+  max-height: 890px; /* Establece una altura máxima menor */
+  overflow: hidden; /* Oculta cualquier contenido que exceda la altura máxima */
+}
+
+.carrucel-asistente {
+  max-height: 890px; 
+  
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Centrar contenedores */
+}
+
+.info-container {
+  text-align: center;
+  padding: 20px;
+  margin: 20px;
+  flex: 1;  /* Permite que los contenedores crezcan y se encogen de manera flexible */
+  max-width: 600px; /* Tamaño máximo para pantallas grandes */
+  min-width: 300px; /* Tamaño mínimo para evitar que sean demasiado pequeños */
+  background-color: #67B0E0;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  transition: transform 0.3s ease; /* Animación al hacer hover */
+}
+
+.info-container:hover {
+  transform: scale(1.05); /* Efecto de hover */
+}
+
+.image-container img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px; /* Bordes redondeados en las imágenes */
+}
+
+/* Estilos para pantallas grandes (mayores de 1800px) */
+@media (min-width: 1800px) {
+  .carrusel-container {
+    /* Agrega estilos específicos para pantallas grandes */
+    padding: 1%;
+ 
+    /* Otros estilos... */
+  }
+
+  .fixed-carousel img {
+    width: auto; /* Ajusta el tamaño de la imagen de forma automática */
+    max-height: 890px; /* Altura máxima de la imagen */
+  }
+
+  .fixed-carousel2 img {
+    width: auto; /* Ajusta el tamaño de la imagen de forma automática */
+    max-height: 700px; /* Altura máxima de la imagen */
+  }
+}
+
+/* Estilos para tabletas (entre 768px y 992px) */
+@media (min-width: 992px) and (max-width: 1800px) {
+  .carrusel-container {
+    padding: 2%;
+  }
+
+  .fixed-carousel img {
+    width: auto; /* Ajusta el tamaño de la imagen de forma automática */
+    max-height: 550px; /* Altura máxima de la imagen */
+  }
+
+  .fixed-carousel2 img {
+    width: auto; /* Ajusta el tamaño de la imagen de forma automática */
+    max-height: 450px; /* Altura máxima de la imagen */
+  }
+}
+
+/* Estilos para tabletas (entre 768px y 992px) */
+@media (min-width: 768px) and (max-width: 992px) {
+  .carrusel-container {
+    /* Agrega estilos específicos para tabletas */
+    padding: 2%;
+  }
+
+  .fixed-carousel img {
+    width: auto; /* Ajusta el tamaño de la imagen de forma automática */
+    max-height: 350px; /* Altura máxima de la imagen */
+  }
+
+  .fixed-carousel2 img {
+    width: auto; /* Ajusta el tamaño de la imagen de forma automática */
+    max-height: 380px; /* Altura máxima de la imagen */
+  }
+}
+
+/* Estilos para móviles (menos de 768px) */
+@media (min-width: 250px) and  (max-width: 768px) {
+  .carrusel-container {
+    /* Agrega estilos específicos para móviles */
+    padding: 3%;
+  }
+
+  .fixed-carousel img {
+    width: 100%; /* Ajusta el tamaño de la imagen al 100% del contenedor */
+    max-height: 215px; /* Altura máxima de la imagen */
+  }
+
+  .fixed-carousel2 img {
+    width: auto; /* Ajusta el tamaño de la imagen de forma automática */
+    max-height: 300px; /* Altura máxima de la imagen */
+  }
+}
+
+/* Estilos para la tarjeta de confirmación */
+.confirmation-card {
+  padding: 40px;
+  background-color: #f7f7f7; /* Color de fondo suave */
+  border-radius: 15px; /* Bordes redondeados */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  margin-top: 50px; /* Espaciado superior */
+}
+
+.confirmation-title {
+  color: #2ecc71; /* Color verde para el éxito */
+  font-size: 2em; /* Tamaño de fuente grande */
+  margin-bottom: 20px; /* Espaciado debajo del título */
+}
+
+.confirmation-message {
+  color: #333; /* Color oscuro para el texto */
+  font-size: 1.2em; /* Tamaño de fuente del mensaje */
+  margin-bottom: 20px; /* Espaciado debajo del mensaje */
+}
+
+.confirmation-action .custom-button {
+  background-color: #3498db; /* Color azul para el botón */
+  border-color: #3498db; /* Color de borde para el botón */
+  color: #fff; /* Texto blanco para el botón */
+  padding: 10px 20px; /* Relleno del botón */
+  border-radius: 8px; /* Bordes redondeados del botón */
+  /* font-weight: bold; /Texto en negrita */
+  text-decoration: none; /* No subrayado */
+  transition: background-color 0.3s ease; /* Transición suave al cambiar de color */
+}
+
+.confirmation-action .custom-button:hover {
+  background-color: #1c6fa9; 
+  text-decoration: none; 
+}
+
+.custom-button:hover {
+  background-color: #1c6fa9;
+  text-decoration: none; 
+}
+
+.carousel-caption {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: rgba(0, 0, 0, 0); /* Aumenté un poco la opacidad */
+  color: #fff;
+  padding: 25px;
+
+  font-size: 1.2em; /* Ajusté el tamaño de fuente */
+  line-height: 1.5; /* Aumenté el espaciado entre líneas */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Agregué una sutil sombra al texto */
+  transition: background 0.5s ease; /* Agregué una transición suave para el cambio de fondo */
+}
+
+.carousel-caption:hover {
+  background: rgba(0, 0, 0, 0.7); 
+}
+
+.close {
+  font-size: 1.5rem; /* Tamaño más grande para el símbolo '×' */
+  font-weight: bold; /* Más peso para que destaque */
+  line-height: 1; /* Alineación vertical con respecto a la línea */
+  color: #000; /* Color oscuro para que se vea en fondos claros */
+  text-shadow: 0 1px 0 #fff; /* Sombra sutil para mejorar contraste */
+  opacity: .5; /* Semi-transparencia para no dominar el diseño */
+}
+
+.float-right {
+  float: right; /* Alinea el botón a la derecha */
+  margin-right: 20px; /* Margen derecho para no pegar al borde del contenedor */
+}
+
+/* Para que al pasar el mouse sobre el botón cambie la opacidad */
+.close:hover, 
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+  opacity: .75;
+>>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
 }

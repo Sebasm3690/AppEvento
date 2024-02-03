@@ -1,0 +1,39 @@
+.sidebar {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100vh;
+    background-color: #2980b9;
+    padding: 10px;
+    box-sizing: border-box;
+    z-index: 100; /* Ensure the sidebar is above other content */
+  }
+  
+  .sidebar-button {
+    background-color: #6aabb5;
+    color: white;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    width: 100%;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: left;
+  }
+  
+  .sidebar-button:hover {
+    background-color: #4a8a9b;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed;
+      width: 100%;
+      height: auto;
+      bottom: 0;
+      top: unset;
+      z-index: 100; /* Ensure the sidebar is above other content */
+    }
+  }

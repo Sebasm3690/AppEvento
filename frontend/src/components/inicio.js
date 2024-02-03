@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { UncontrolledCarousel } from "reactstrap";
 import NavBar from "./navbar";
-import Footer from "./footer";
+import FooterHP from "./otros/footerHP";
 import "./styles/inicio.css";
 
 function Inicio() {
@@ -35,41 +35,53 @@ function Inicio() {
   };
 
   const carouselItems = eventos.map((evento) => ({
-    altText: evento.nombre_evento,
-    caption: evento.descripcion,
+    alt: evento.nombre_evento,
+    caption: evento.nombre_evento,
     key: evento.id_evento,
     src: evento.imagen,
   }));
 
   return (
     <div>
-      <NavBar />  
-      <div style={{ display: 'flex', marginLeft: '60px', marginTop: '80px' }}>
-        <div className="info-container" style={{ textAlign: "center", flex: 1 }}>
-          <h1>¡Bienvenido a PartyConnect!</h1>
-          <p>En PartyConnect, estamos comprometidos a transformar la manera en que planificas, participas y disfrutas de eventos. Nuestra plataforma intuitiva te ofrece la libertad de explorar una amplia variedad de eventos emocionantes, desde fiestas y conciertos hasta conferencias y reuniones sociales. Conéctate con organizadores talentosos, descubre experiencias únicas y crea recuerdos duraderos.</p>
-          <br></br>
-          <div className="image-container">
-            <img src="https://media.revistagq.com/photos/62a8546d6b74c0e2031238a6/1:1/w_770,h_770,c_limit/buzz.jpg" alt="PartyConnect" style={{ width: '50%', height: 'auto' }} /> 
-          </div>
-        </div>
-    
-        <div className="carrucel-container">
-          {/* Carrusel de imágenes */}
-          <h1 style={{ textAlign: "center" }}>EVENTOS PRÓXIMOS</h1>
-          <div className="container mt-5">
-            <div className="col-md-10 offset-md-1">
-              <UncontrolledCarousel
-                items={carouselItems}
-                interval={1500}
-                //className="carousel-item" // Add this class name
-              ></UncontrolledCarousel>
-            </div>
-          </div>
-        </div>
-    
+      <NavBar />
+      {/* Carrusel de imágenes */}
+      <div className="col-md-10 offset-md-1"
+        style={{padding: '10px 0 0 0'}}
+      >
+        <UncontrolledCarousel
+          items={carouselItems}
+          interval={2500}
+          className="fixed-carousel"
+        />
       </div>
-      <Footer />
+      {/* Contenedor de información */}
+      <div className="container">
+  <div className="info-container">
+    <h1>¡Bienvenido a PartyConnect!</h1>
+    <p>En PartyConnect, estamos comprometidos a transformar la manera en que planificas, participas y disfrutas de eventos. Nuestra plataforma intuitiva te ofrece la libertad de explorar una amplia variedad de eventos emocionantes, desde fiestas y conciertos hasta conferencias y reuniones sociales. Conéctate con organizadores talentosos, descubre experiencias únicas y crea recuerdos duraderos.</p>
+    <div className="image-container">
+      <img src="https://i.imgur.com/zMMGfiV.png" alt="PartyConnect" /> 
+    </div>
+  </div>
+
+  <div className="info-container">
+    <h1>Descubre Características Únicas</h1>
+    <p>Explora las características que hacen que PartyConnect sea única. Desde una interfaz intuitiva hasta eventos diversos, estamos aquí para ofrecerte experiencias inolvidables.</p>
+    <div className="image-container">
+      <img src="https://cdn-icons-png.flaticon.com/512/6823/6823088.png" alt="Características Únicas" /> 
+    </div>
+  </div>
+
+  <div className="info-container">
+    <h1>¡Descubre Cómo Usar PartyConnect!</h1>
+    <p>Aprende a sacar el máximo provecho de nuestra plataforma con nuestra guía rápida. Descubre funciones ocultas y consejos para optimizar tu experiencia.</p>
+    <div className="image-container">
+      <img src="https://cdn-icons-png.flaticon.com/512/6214/6214152.png" alt="Guía de Uso" /> 
+    </div>
+  </div>
+</div>
+
+      <FooterHP />
     </div>
   );
   

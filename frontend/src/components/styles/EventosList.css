@@ -1,0 +1,56 @@
+.titulo-eventos {
+  padding: 1rem; /* Reducido para pantallas pequeñas */
+}
+
+.search-filters {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 1rem; /* Reducido para pantallas pequeñas */
+  flex-wrap: wrap;
+}
+
+.eventos-container {
+  display: flex;
+  justify-content: center; /* Asegura que los elementos se centren horizontalmente */
+  flex-wrap: wrap;
+  padding: 1rem;
+  margin: 0 auto; /* Si el contenedor no ocupa todo el ancho, centrarlo */
+}
+
+.evento-card {
+  margin: 10px;
+  max-width: 300px; /* Ajustar según el ancho deseado para la tarjeta */
+  width: 100%; /* Permite que la tarjeta se ajuste hasta el max-width */
+  box-sizing: border-box;
+  display: flex; /* Habilita flexbox para el contenido de la tarjeta */
+  flex-direction: column; /* Alinea los elementos de la tarjeta verticalmente */
+  align-items: center; /* Centra los elementos de la tarjeta horizontalmente */
+}
+
+.evento-column {
+  /* Ajusta el ancho de la columna para que no sea demasiado ancha y permita centrar las tarjetas */
+  max-width: 294px;
+}
+
+/* Asegúrate de que en pantallas más pequeñas las tarjetas se ajusten */
+@media (max-width: 992px) {
+  .evento-card {
+    width: 100%; /* Dos tarjetas por fila */
+  }
+}
+
+@media (max-width: 768px) {
+  .evento-card {
+    width: calc(100% - 20px); /* Una tarjeta por fila */
+    margin: 10px auto; /* Ajusta el margen para centrar la tarjeta */
+  }
+}
+
+/* Para pantallas extremadamente pequeñas, asegúrate de que no haya margen lateral */
+@media (max-width: 576px) {
+  .evento-card {
+    width: 100%; /* La tarjeta ocupa el ancho completo */
+    margin: 10px 0; /* Solo margen vertical */
+  }
+}

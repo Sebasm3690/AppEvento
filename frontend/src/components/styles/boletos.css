@@ -1,0 +1,215 @@
+/* Estilos generales */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Estilos para el contenedor principal */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Estilos para el título */
+  h1 {
+    color: #333;
+  }
+  
+  /* Estilos para el párrafo de total de boletos a llevar 
+  p {
+    font-weight: bold;
+  }*/
+  
+  /* Estilos para la lista de boletos */
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  li {
+    margin-bottom: 20px;
+  }
+  
+  /* Estilos para los checkbox y etiquetas */
+  input[type="checkbox"] {
+    margin-right: 10px;
+  }
+  
+  strong {
+    margin-right: 5px;
+  }
+  
+  /* Estilos para las imágenes */
+  .img-fluid {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+  }
+  
+  /* Estilos para los input de cantidad */
+  input[type="number"] {
+    width: 60px;
+    margin-left: 10px;
+  }
+  
+  /* Estilos para el resumen de compra */
+  .col-md-8 {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  p {
+    margin-bottom: 10px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+
+  .form-check-label {
+    font-size: 1.2em; /* Tamaño de fuente más grande */
+    font-weight: bold;
+    color: #6c757d; /* Texto gris oscuro */
+    margin-bottom: 10px; /* Espacio inferior */
+    display: block; /* Hace que la etiqueta ocupe todo el ancho disponible */
+  }
+  /* Estilo para el título h1 con clase display-4 y text-center */
+h1.display-4.text-center {
+    font-size: 2.5em; /* Tamaño de fuente grande */
+    font-weight: bold; /* Texto en negrita */
+    color: #2980b9; /* Color azul - puedes cambiarlo según tu paleta de colores */
+    margin-bottom: 20px; /* Espaciado inferior */
+  }
+  /* Añadir espacio entre la etiqueta y el checkbox */
+  .form-check-label::before {
+    content: '\00a0\00a0'; /* Añade espacio (espacio en blanco HTML) */
+  }
+  
+  /* Estilo para el checkbox */
+  .form-check-input {
+    margin-top: 5px; /* Ajuste del espacio superior */
+  }
+  .checkbox-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px; /* Ajusta el margen inferior según sea necesario */
+  }
+  
+  .checkbox-label {
+    margin-left: 5px; /* Ajusta el margen izquierdo según sea necesario */
+  }
+  .boleto-info {
+    margin-top: 20px;
+    font-size: 1.5em;
+    text-align: center;
+    background-color: #f8f9fa; /* Fondo gris claro */
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sutil sombra */
+  }
+  
+  .boleto-info strong {
+    color: #3498db; /* Color azul para resaltar */
+  }
+  
+  .boleto-info span {
+    color: #333; /* Color de texto oscuro */
+    display: block;
+    margin-top: 8px;
+  }
+  
+/* Estilo para el contenedor principal */
+.text-center-container {
+    text-align: center;
+    padding: 20px;
+    background-color: #f8f9fa; /* Fondo gris claro */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    transition: background-color 0.3s ease; /* Transición de color de fondo */
+  }
+  
+  /* Cambiar color de fondo al pasar el ratón */
+  .text-center-container:hover {
+    background-color: #e9ecef; /* Fondo gris más claro al pasar el ratón */
+  }
+  
+  /* Estilo para el total a pagar */
+  .total-pagar {
+    font-size: 2em; /* Tamaño de fuente más grande */
+    font-weight: bold;
+    color: #007bff; /* Texto azul */
+    margin-bottom: 20px;
+  }
+  
+  /* Estilo para el total de boletos a llevar */
+  .total-llevar {
+    font-size: 1.5em; /* Tamaño de fuente más grande */
+    font-weight: bold;
+  }
+  
+  /* Estilo para el contenedor del botón */
+  .button-container {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  /* Estilo para el botón */
+  .button-container button {
+    padding: 10px 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    background-color: #28a745; /* Fondo verde */
+    color: #fff; /* Texto blanco */
+    border: none;
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Transición de color de fondo */
+  }
+  
+  /* Cambiar color de fondo del botón al pasar el ratón */
+  .button-container button:hover {
+    background-color: #218838; /* Fondo verde más oscuro al pasar el ratón */
+  }
+  
+  /* Estilo para el contenedor de Precio y Stock */
+.precio-stock-container {
+    text-align: center;
+    padding: 20px;
+    background-color: #2d9de7; /* Fondo azul */
+    color: #fff; /* Texto blanco */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    transition: background-color 0.3s ease; /* Transición de color de fondo */
+  }
+  
+  /* Cambiar color de fondo al pasar el ratón */
+  .precio-stock-container:hover {
+    background-color: #3b95d2; /* Fondo azul más oscuro al pasar el ratón */
+  }
+  
+  /* Estilo para Precio */
+  .precio-label {
+    font-size: 1.5em; /* Tamaño de fuente más grande */
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  /* Estilo para Stock */
+  .stock-label {
+    font-size: 1.2em; /* Tamaño de fuente más grande */
+    font-weight: bold;
+  }
+  
+  .center-container {
+    justify-content: center;
+
+  }

@@ -147,6 +147,7 @@ class Evento(models.Model):
     limite = models.IntegerField()
     eliminado = models.BooleanField(default=False)
     imagen = models.ImageField(upload_to="images/", blank=True, null=True)
+    gasto = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return f"{self.id_evento} {self.id_organizador} {self.nombre_evento} {self.fecha} {self.hora} {self.ubicacion} {self.descripcion} {self.tipo} {self.limite}"
@@ -184,6 +185,7 @@ class Contiene(models.Model):
     boleto_cdg = models.CharField(default='', max_length=50, unique=True)  # Asegúrate de que este campo sea opcional
     num_orden = models.ForeignKey("OrdenCompra", on_delete=models.CASCADE)
     cantidad_total = models.IntegerField()
+    asistido = models.BooleanField(default=False)
 
     class Meta:
         unique_together = (('id_boleto', 'num_orden'),)

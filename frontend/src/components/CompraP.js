@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Button } from 'reactstrap'; 
+import NavBarAsis from "./Asistente/navbaras";
+import Footer from "./footer";
+import { show_alerta } from "../functions";
+import "./styles/compra.css";
+
+import {
+    Card,
+    CardBody,
+    CardTitle,
+    CardText,
+    CardFooter,
+  } from 'reactstrap';
 
 const CompraR = () => {
     const [error, setError] = useState(null);
@@ -77,10 +90,10 @@ const CompraR = () => {
             const data3 = await response3.json();
 
             if (data3.status === 'success') {
-                alert("Compra realizada correctamente! Se le enviará su entrada al correo electrónico registrado");
+                show_alerta("Compra realizada Correctamente! Se le enviará su entrada al correo electrónico registrado", "success");
                 
                 try {
-                    const response2 = await fetch('http://127.0.0.1:8000/api/contiene/agregar/', {
+                    const response2 = await fetch('http://127.0.0.1:8000/compra-boleto/', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -109,18 +122,45 @@ const CompraR = () => {
     };
 
     return (
-        <div className="container mt-5">
-            <h2>Resumen de la compra</h2>
+        
+        <div>
+            <NavBarAsis />
+            <div className="d-flex justify-content-center align-items-center" style={{ marginTop: '50px' }}>
             {error && <p className="text-danger">{error}</p>}
-            <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                    <label htmlFor="valorTotal" className="form-label">A continuación se le muestra lo que compró</label>
-                    <p>Valor total de la compra: {value} $</p>
-                    <p>Cantidad de boletos comprados: {description}</p>
-                    <p>Fecha de compra: {currentDate}</p>
-                </div>
-                <button type="submit" className="btn btn-primary">Confirmar</button>
-            </form>
+                <form onSubmit={handleSubmit}>
+                    <Card style={{ width: '25rem' }}>
+                    <CardBody>
+                        <center >
+                            <CardTitle tag="h3" style={{fontWeight: 'bold'}}>RESUMEN DE LA COMPRA</CardTitle>
+                        </center>
+                    </CardBody>
+                    <img alt="Card cap" src="https://fecbiwu.stripocdn.email/content/guids/4d001e18-5396-4c01-ac01-15dfda6a11b8/images/_ba465e2abddd42d88eaaf734fd9b694dremovebgpreview.png" width="100%" />
+                    <CardBody>
+                        <CardText>
+                        <div className="mb-3">
+                            <p className="mb-3 valor-total">
+                                <strong>Valor total de la compra:</strong> ${value}
+                            </p>
+                            <p className="mb-3 cantidad-boletos">
+                                <strong>Cantidad de boletos comprados:</strong> {description}
+                            </p>
+                            <p className="mb-3 fecha-compra">
+                                <strong>Fecha de compra:</strong> {currentDate}
+                            </p>
+                        </div>
+                        </CardText>
+                    </CardBody>
+                    <CardFooter className="text-center">
+                        <Button type="submit" color="primary"
+                            style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                        >
+                            CONFIRMAR
+                        </Button>
+                    </CardFooter>
+                    </Card>
+                </form>
+            </div>
+            <Footer />  
         </div>
     );
 };

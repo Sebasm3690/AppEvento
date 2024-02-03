@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { UncontrolledCarousel } from "reactstrap";
 import EditarPerfil from "./Asistente/editarPerfil";
+import NavBarAsis from "./Asistente/navbaras";
+import FooterHP from "./otros/footerHP";
+import "./styles/inicio.css";
 
 const Asistente = () => {
   const [asistenteData, setAsistenteData] = useState(null);
@@ -83,62 +86,38 @@ const Asistente = () => {
 
   return (
     <div>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <div className="container-fluid">
-          <a className="navbar-brand" href="/asistente">
-            Inicio
-          </a>
-          <a className="navbar-brand" href="/editarPerfil">
-            Editar Perfil
-          </a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <button className="btn btn-danger" onClick={handleLogout}>
-                  Cerrar sesión
-                </button>
-              </li>
-            </ul>
+      <NavBarAsis />  
+      <div style={{ padding: '50px 0 0 0'}} className="inicio-container">
+        <div>
+          <div >
+
+            {asistenteData && (
+              <h1 className="welcome-message text-center" style={{ color: 'black', fontFamily: 'Cambria', fontWeight: 'bold'}}>
+                ¡Bienvenido, {asistenteData.nombre} {asistenteData.apellido}!
+              </h1>
+            )}
+
+            <div className="col-md-10 offset-md-1 carrucel-asistente">
+              <br />
+              <UncontrolledCarousel
+                items={carouselItems}
+                interval={2500}
+                className="fixed-carousel2"
+              />
+            </div>
+
+            <div className="button-container text-center">
+              <Link to="/meventos/" className="btn btn-primary"
+                style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+              >
+                VER EVENTOS
+              </Link>
+            </div>
           </div>
         </div>
-      </nav>
-
-      <div className="container mt-5">
-        <div className="col-md-6 offset-md-3">
-          {asistenteData && (
-            <>
-              <p className="mb-3">
-                Bienvenido, {asistenteData.nombre} {asistenteData.apellido}.
-              </p>
-            </>
-          )}
-        </div>
       </div>
-
-      <div className="container mt-5">
-        <div className="col-md-10 offset-md-1">
-          <UncontrolledCarousel
-            items={carouselItems}
-            interval={1500}
-            //style={{ maxWidth: "1000px", maxHeight: "100px" }}
-          ></UncontrolledCarousel>
-        </div>
-
-        <Link to={`/meventos/`}>Ver Eventos</Link>
-        <br />
-        <Link to={`/historialas/`}>Ver Compras</Link>
-      </div>
+      <br></br>
+      <FooterHP />  
     </div>
   );
 };

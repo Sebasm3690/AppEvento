@@ -1,0 +1,55 @@
+.header-eventos {
+    background-color: #2980b9; /* Color de fondo */
+    color: #ffffff; /* Color del texto */
+    padding: 20px 10px; /* Espaciado interno */
+    text-align: center; /* Alineación del texto */
+    border-radius: 8px; /* Bordes redondeados */
+    margin: 20px 10px; /* Margen externo */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para dar profundidad */
+  }
+  
+  .header-eventos h1 {
+    margin: 0; /* Eliminar margen por defecto */
+    font-size: 2em; /* Tamaño de la fuente */
+    color: #ffffff; /* Color del texto */
+  }
+  
+  .container-eventos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 10px;
+  }
+  
+  .card-evento {
+    width: calc(100% / 3 - 20px); /* Ajusta esto para manejar el ancho de las tarjetas */
+    margin: 10px;
+  }
+  
+  /* Media queries para diferentes tamaños de pantalla */
+  @media (max-width: 768px) {
+    .card-evento {
+      width: calc(100% / 2 - 20px);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .card-evento {
+      width: 100%;
+    }
+  }
+  
+  .info-container h1 {
+    font-size: 2em; /* Tamaño de la fuente del título */
+    color: #000; /* Color del texto */
+    margin-bottom: 15px; /* Margen inferior */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Sombra del texto para mejor legibilidad */
+  }
+  
+  .info-container p {
+    font-size: 1em; /* Tamaño de la fuente del párrafo */
+    color: #000; /* Color del texto */
+    line-height: 1.6; /* Espaciado entre líneas */
+    text-align: justify; /* Alineación del texto */
+  }
+  

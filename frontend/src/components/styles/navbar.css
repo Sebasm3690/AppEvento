@@ -1,3 +1,10 @@
+<<<<<<< HEAD
+=======
+body {
+  margin: 0;
+}
+
+>>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
 .navbar {
   background-color: #2980b9;
   padding: 15px 20px;
@@ -23,7 +30,12 @@
 }
 
 .navbar-link {
+<<<<<<< HEAD
   color: #fff;
+=======
+  color: #f2f2f2;
+  font-size: 20px;
+>>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
   text-decoration: none;
   margin: 0 15px;
   padding: 10px 15px;
@@ -32,8 +44,14 @@
 }
 
 .navbar-link:hover {
+<<<<<<< HEAD
   background-color: rgba(255, 255, 255, 0.1);
   color: #fff;
+=======
+  /* background-color: rgba(255, 255, 255, 0.1); */
+  color: #333;
+  text-decoration:overline; 
+>>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
 }
 
 .navbar-btn {
@@ -53,7 +71,11 @@
 
 @media (max-width: 768px) {
   .navbar {
+<<<<<<< HEAD
     padding: 10px 15px;
+=======
+    padding: 15px 20px;
+>>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
   }
 
   .navbar-links {
@@ -80,6 +102,107 @@
 }
 
 .navbar-left {
+<<<<<<< HEAD
   margin-right: 20px;
   padding-left: 20px;
+=======
+  width: 45%; 
+  box-sizing: border-box; 
+  padding-left: 20px;
+  padding-right: 0;
+}
+
+.navbar-left a {
+  color: #e0e0e0;
+  text-decoration: none;
+  font-size: 24px;
+}
+
+.navbar-left:hover {
+  color: #333;
+  text-decoration: overline; 
+}
+
+.centered-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1; 
+}
+
+.centered-panel .navbar-brand {
+  color: #fff;
+  text-decoration:overline;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.centered-panel:hover{
+  color: #333;
+  text-decoration: overline; 
+}
+
+.navbar-toggler {
+  background-color: transparent;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  display: none;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .navbar-toggler {
+    display: block;
+  }
+
+  .navbar-right {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background-color: #67B0E0;
+    z-index: 1;
+  }
+
+  .navbar-right.show {
+    display: flex;
+  }
+}
+
+@media (max-width: 758px) {
+  .centered-panel, .navbar-right {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background-color: #67B0E0;
+    z-index: 1;
+  }
+
+  .centered-panel.show, .navbar-right.show {
+    display: flex;
+  }
+}
+
+.navbar-toggler {
+  background-color: #fff; /* Color de fondo */
+  color: #2980b9; /* Color del ícono de hamburguesa */
+  border: 1px solid #2980b9; /* Borde del botón */
+  border-radius: 4px; /* Bordes redondeados */
+  padding: 10px 15px; /* Espaciado interno */
+  font-size: 18px; /* Tamaño del ícono */
+  cursor: pointer; /* Cursor en forma de mano al pasar el ratón */
+  transition: all 0.3s ease; /* Transición suave para cambios de estilo */
+}
+
+.navbar-toggler:hover {
+  background-color: #2980b9; /* Color de fondo al pasar el ratón */
+  color: #fff; /* Color del ícono al pasar el ratón */
+  border-color: #fff; /* Color del borde al pasar el ratón */
+>>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
 }

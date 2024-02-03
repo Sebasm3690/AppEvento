@@ -11,14 +11,14 @@ import {
   ModalFooter,
 } from "reactstrap";
 import { show_alerta } from "../../functions";
+import '../styles/showor.css'
+//import Sidebar from './sidebar';
 //import "./indexAdmin.css";
 
 export default function ShowOrganizers({ adminObj }) {
   return (
     <div>
-      <Header />
       <CrudOrganizers adminObj={adminObj} />;
-      <Footer />
     </div>
   );
 }
@@ -80,16 +80,16 @@ const CrudOrganizers = ({ adminObj }) => {
     if (cedula.length !== 10) {
       return false;
     }
-    const digitos = cedula.substring(0, 9).split('').map(Number);
+    const digitos = cedula.substring(0, 9).split("").map(Number);
     const digitoVerificador = parseInt(cedula.charAt(9), 10);
     let suma = 0;
     for (let i = 0; i < 9; i++) {
-      let multiplicador = (i % 2 === 0) ? 2 : 1;
+      let multiplicador = i % 2 === 0 ? 2 : 1;
       let resultado = digitos[i] * multiplicador;
-      suma += (resultado > 9) ? resultado - 9 : resultado;
+      suma += resultado > 9 ? resultado - 9 : resultado;
     }
     let modulo = suma % 10;
-    let resultadoEsperado = (modulo === 0) ? 0 : 10 - modulo;
+    let resultadoEsperado = modulo === 0 ? 0 : 10 - modulo;
     return resultadoEsperado === digitoVerificador;
   };
 
@@ -105,16 +105,38 @@ const CrudOrganizers = ({ adminObj }) => {
     );
   };
 
+  // Función para verificar si un organizador ha creado eventos
+  const hasOrganizerCreatedEvents = async (organizerId) => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/api/api/v1/event/`);
+      const events = response.data;
+      const organizerEvents = events.filter(event => event.id_organizador === organizerId);
+      return organizerEvents.length > 0;
+    } catch (error) {
+      console.error("Error al verificar eventos del organizador:", error);
+      return false; 
+    }
+  };
+
   const handleEliminarUsuario = async (userId) => {
-    //Solicitud para el borrado lógico
-    await axios.post(
-      `http://127.0.0.1:8000/borrado_logico_organizador/${userId}/`,
-      show_alerta("El organizador ha sido dado de baja", "success")
-    );
-    //Acutalizar lista de organizadores despues del borrado lógico
-    setOrganizers((prevOrganizadores) =>
-      prevOrganizadores.filter((o) => o.id_organizador !== userId)
-    );
+    const hasEvents = await hasOrganizerCreatedEvents(userId);
+    if (hasEvents) {
+      show_alerta("El organizador no puede ser dado de baja porque ha creado eventos.", "error");
+      return;
+    }
+
+    try {
+      await axios.post(
+        `http://127.0.0.1:8000/borrado_logico_organizador/${userId}/`
+      );
+      show_alerta("El organizador ha sido dado de baja", "success");
+      setOrganizers((prevOrganizadores) =>
+        prevOrganizadores.filter((o) => o.id_organizador !== userId)
+      );
+    } catch (error) {
+      console.error("Error al intentar borrar al organizador:", error);
+      show_alerta("No se pudo eliminar al organizador, intenta de nuevo más tarde.", "error");
+    }
   };
 
   const handleRecuperar = async () => {
@@ -132,8 +154,8 @@ const CrudOrganizers = ({ adminObj }) => {
       show_alerta("Escribe el nombre del organizador", "warning");
     } else if (apellido.trim() === "") {
       show_alerta("Escribe el apellido del organizador", "warning");
-    } else if (!validarCedulaEcuatoriana(ci.trim())){
-      show_alerta("La cedula del organizador no es valida", "warning")
+    } else if (!validarCedulaEcuatoriana(ci.trim())) {
+      show_alerta("La cedula del organizador no es valida", "warning");
     } else if (ci.trim() === "") {
       show_alerta("Escribe la cédula del organizador", "warning");
     } else if (correo.trim() === "") {
@@ -195,9 +217,13 @@ const CrudOrganizers = ({ adminObj }) => {
             setOrganizers((organizers) => [...organizers, response.data]);
           })
           .catch((error) => {
-            if(error.response && error.response.data && error.response.data.error){
+            if (
+              error.response &&
+              error.response.data &&
+              error.response.data.error
+            ) {
               show_alerta(error.response.data.error, "error");
-            }else{
+            } else {
               console.error("Error al realizar la solicitud POST:", error);
               show_alerta("Error al agregar el organizador", "error");
             }
@@ -256,67 +282,97 @@ const CrudOrganizers = ({ adminObj }) => {
   return (
     <>
       <Container>
-        <button
-          className="btn btn-primary"
-          onClick={() => setShowModalInsert(true)}
-        >
-          Insertar nuevo organizador
-        </button>
-        <Button className="btn btn-success" onClick={handleRecuperar}>
-          Recuperar Organizador
-        </Button>
-        <br></br>
-        <Table className="table">
-          <thead>
-            <tr>
-              <th>Id_organizador</th>
-              <th>Nombre</th>
-              <th>Apellido</th>
-              <th>CI</th>
-              <th>Correo</th>
-              <th>Id_admin</th>
-            </tr>
-          </thead>
-          <tbody>
-            {organizers
-              .filter((organizer) => !organizer.eliminado)
-              .filter((organizer) => organizer.id_admin === adminObj.id_admin)
-              .map((organizer) => (
-                <tr key={organizer.id_organizador}>
-                  <td>{organizer.id_organizador}</td>
-                  <td>{organizer.nombre}</td>
-                  <td>{organizer.apellido}</td>
-                  <td>{organizer.ci}</td>
-                  <td>{organizer.correo}</td>
-                  <td>{organizer.id_admin}</td>
-                  <td>
-                    <Button
-                      onClick={() =>
-                        handleEditarUsuario(organizer.id_organizador)
-                      }
-                      className="btn btn-warning"
-                    >
-                      Editar
-                    </Button>{" "}
-                    <Button
-                      className="btn btn-danger"
-                      onClick={() =>
-                        handleEliminarUsuario(organizer.id_organizador)
-                      }
-                    >
-                      Dar de baja
-                    </Button>
-                  </td>
+        <div style={{ paddingBlockEnd: '50px'}}>
+            <button
+              style={{ backgroundColor: '#2980b9', borderColor: '#2980b9', padding: '10px 20px', borderRadius: '8px' }}
+              className="btn btn-primary"
+              onClick={() => setShowModalInsert(true)}
+            >
+              INSERTAR ORGANIZADOR
+            </button> 
+            <span style={{ margin: '0 40px' }}></span>
+            <Button style={{ backgroundColor: '#6aabb5', borderColor: '#6aabb5', color: '#fff', padding: '10px 20px', borderRadius: '8px' }} className="btn btn-primary" onClick={handleRecuperar}>
+              RECUPERAR ORGANIZADOR
+            </Button>
+        </div>
+
+            <Table className="table-custom table-borderless table-responsive">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                  <th>Cédula de Identidad</th>
+                  <th>Correo</th>
+                  <th></th>
                 </tr>
-              ))}
-          </tbody>
-        </Table>
+              </thead>
+              <tbody>
+                {organizers
+                  .filter((organizer) => !organizer.eliminado)
+                  .filter((organizer) => organizer.id_admin === adminObj.id_admin)
+                  .map((organizer) => (
+                    <tr key={organizer.id_organizador}>
+                      <td data-title="ID Organizador">{organizer.id_organizador}</td>
+                      <td data-title="Nombre">{organizer.nombre}</td>
+                      <td data-title="Apellido">{organizer.apellido}</td>
+                      <td data-title="Cédula de Identidad">{organizer.ci}</td>
+                      <td data-title="Correo">{organizer.correo}</td>
+                      <td>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        
+                          <Button
+                            style={{
+                              color: "#fff",
+                              padding: "7px 14px",
+                              borderRadius: "8px",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              backgroundColor: '#ffc107' // Color para el botón warning
+                            }}
+                            onClick={() =>
+                              handleEditarUsuario(organizer.id_organizador)
+                            }
+                            className="btn btn-warning"
+                          >
+                            <img src={"https://cdn-icons-png.flaticon.com/512/8188/8188360.png"} alt="Editar" width={'25px'} />
+                            <span style={{ margin: '0 3px'}}></span>
+                          </Button>
+                          <Button
+                            style={{
+                              color: "#fff",
+                              padding: "7px 14px",
+                              borderRadius: "8px",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              backgroundColor: '#dc3545' 
+                            }}
+                            className="btn btn-danger"
+                            onClick={() =>
+                              handleEliminarUsuario(organizer.id_organizador)
+                            }
+                          >
+                            <img
+                              src="https://cdn-icons-png.flaticon.com/512/2340/2340337.png"
+                              alt="Editar"
+                              width={"25px"}
+                            />
+                            <span style={{ margin: "0 3px" }}></span>
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </Table>
       </Container>
 
       <Modal isOpen={showModal}>
         <ModalHeader>
           <div>
-            <h3>Editar Organizador</h3>
+            <h3>EDITAR ORGANIZADOR</h3>
           </div>
         </ModalHeader>
 
@@ -344,7 +400,7 @@ const CrudOrganizers = ({ adminObj }) => {
           </FormGroup>
 
           <FormGroup>
-            <label>CI:</label>
+            <label>Cédula de Identidad:</label>
             <input
               className="form-control"
               name="ci"
@@ -355,7 +411,7 @@ const CrudOrganizers = ({ adminObj }) => {
           </FormGroup>
 
           <FormGroup>
-            <label>Correo:</label>
+            <label>Correo Electrónico:</label>
             <input
               className="form-control"
               name="correo"
@@ -378,13 +434,26 @@ const CrudOrganizers = ({ adminObj }) => {
         </ModalBody>
 
         <ModalFooter>
-          <Button color="primary" onClick={() => validar(2)}>
-            Editar
-          </Button>
-          <Button color="danger" onClick={() => setShowModal(false)}>
-            Cancelar
-          </Button>
+          <div className="container">
+            <div className="row justify-content-center">
+              <div className="col-md-6">
+                <Button 
+                  style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                  color="primary" onClick={() => validar(2)}>
+                  EDITAR
+                </Button>
+              </div>
+              <div className="col-md-6">
+                <Button 
+                  style={{ backgroundColor: '#D32F2F', borderColor: '#D32F2F', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                  color="primary" onClick={() => setShowModal(false)}>
+                  CANCELAR
+                </Button>
+              </div>
+            </div>
+          </div>
         </ModalFooter>
+
       </Modal>
 
       {/*------------------------------------- */}
@@ -392,7 +461,7 @@ const CrudOrganizers = ({ adminObj }) => {
       <Modal isOpen={showModalInsert}>
         <ModalHeader>
           <div>
-            <h3>Insertar Organizador</h3>
+            <h3>REGISTRO</h3>
           </div>
         </ModalHeader>
 
@@ -418,7 +487,7 @@ const CrudOrganizers = ({ adminObj }) => {
           </FormGroup>
 
           <FormGroup>
-            <label>CI:</label>
+            <label>Cédula de Identidad:</label>
             <input
               className="form-control"
               name="ci"
@@ -449,12 +518,24 @@ const CrudOrganizers = ({ adminObj }) => {
         </ModalBody>
 
         <ModalFooter>
-          <Button color="primary" onClick={() => validar(1)}>
-            Insertar
-          </Button>
-          <Button color="danger" onClick={() => setShowModalInsert(false)}>
-            Cancelar
-          </Button>
+          <div className="container">
+            <div className="row justify-content-center">
+              <div className="col-md-6">
+                <Button 
+                  style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                  color="primary" onClick={() => validar(1)}>
+                  REGISTRAR
+                </Button>
+              </div>
+              <div className="col-md-6">
+                <Button 
+                  style={{ backgroundColor: '#D32F2F', borderColor: '#D32F2F', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+                  color="primary" onClick={() => setShowModalInsert(false)}>
+                  CANCELAR
+                </Button>
+              </div>
+            </div>
+          </div>
         </ModalFooter>
       </Modal>
 
@@ -463,16 +544,16 @@ const CrudOrganizers = ({ adminObj }) => {
       <Modal isOpen={showModalRecuperar} size="lg">
         <ModalHeader>
           <div>
-            <h3>Recuperar Organizador</h3>
             <Button
               type="button"
-              className="close" // Agregar la clase "float-right" para alinear a la derecha
+              className="close" 
               aria-label="close"
               style={botonDerechaStyles}
               onClick={() => setShowModalRecuperar(false)}
-            >
+              >
               <span aria-hidden="true">&times;</span>
             </Button>
+            <h3>RECUPERAR ORGANIZADORES</h3>
           </div>
         </ModalHeader>
 
@@ -480,10 +561,10 @@ const CrudOrganizers = ({ adminObj }) => {
           <Table>
             <thead>
               <tr>
-                <th>ID organizador</th>
+                <th>ID</th>
                 <th>Nombre</th>
                 <th>Apellido</th>
-                <th>CI</th>
+                <th>Cédula de Identidad</th>
                 <th>Correo</th>
               </tr>
             </thead>
@@ -501,12 +582,12 @@ const CrudOrganizers = ({ adminObj }) => {
                     <td>{organizer.correo}</td>
                     <td>
                       <button
-                        className="btn btn-success"
+                        style={{ backgroundColor: '#4CAF50 ', borderColor: '#4CAF50', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
                         onClick={() =>
                           recuperar_organizador(organizer.id_organizador)
                         }
                       >
-                        Recuperar
+                        RECUPERAR
                       </button>
                     </td>
                   </tr>
@@ -518,11 +599,3 @@ const CrudOrganizers = ({ adminObj }) => {
     </>
   );
 };
-
-function Footer() {
-  return (
-    <footer className="stats">
-      <em>🏝️ You have X items on your List, and you already packed X (X%)</em>
-    </footer>
-  );
-}

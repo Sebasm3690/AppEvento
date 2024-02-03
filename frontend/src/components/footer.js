@@ -6,8 +6,8 @@ import './styles/footer.css';
 function Footer() {
   return (
     <footer className="footer">
-      <div className="container">
-        <p>&copy; 2023 PartyConnect. Todos los derechos reservados.</p>
+      <div className="containerf">
+        <p>&copy; 2024 PartyConnect. Todos los derechos reservados.</p>
       </div>
     </footer>
   );
