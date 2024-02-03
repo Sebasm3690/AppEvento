@@ -34,6 +34,7 @@ from django.shortcuts import render
 from django.template.loader import get_template
 import base64
 from django.db.models import Sum, functions
+from decimal import Decimal
 #resend.api_key = os.environ["RESEND_API_KEY"]
 
 class UploadImageView(APIView):
@@ -218,6 +219,14 @@ class TicketView(viewsets.ModelViewSet):
     queryset = Boleto.objects.all()
 
 
+
+class ObtetenerEventosActivos (APIView):
+    def get(self,request):
+        organizadores = Organizador.objects.filter(eliminado=False)
+        eventos = Evento.objects.filter(id_organizador__in = organizadores)
+        evento_serializer = EventSerializer(eventos, many=True)
+        return Response ({'eventos':evento_serializer.data})
+
 class ordenCompraDashboard (APIView):
     def get(self,request,id_evento):
         #Obtener compra del evento
@@ -281,13 +290,14 @@ class ordenCompraDashboard (APIView):
         #return JsonResponse(compras_data, safe=False)
 
 class GananciaGeneral(APIView):
-    def get(self, request):
+    def get(self, request,id_organizador):
         # Lista para almacenar la ganancia total de cada evento
         ganancia_por_evento = []
 
-        eventos = Evento.objects.all()   #Los modelos no son iterablesm por lo que se debe guardar en una variable y luego iterar
-
+        organizadores_ids = Organizador.objects.filter(id_organizador=id_organizador).values_list('id_organizador', flat=True).first() 
+        eventos = Evento.objects.filter(id_organizador = organizadores_ids)
         # Lista para almacenar la ganancia total de cada evento
+        
         for evento in eventos:
             ganancia_total_evento = 0
             boletos = Boleto.objects.filter(id_evento=evento)
@@ -315,44 +325,44 @@ class GananciaGeneral(APIView):
                 
 
 class ValoresPIETotal(APIView):
-    def get(self,request):
+    def get(self, request, id_organizador):
         total_boletos = 0
         total_precio = 0
         ganancia_total_eventos = 0
         gasto_total_eventos = 0
         ganancia_total_posible = 0
-        ordenCompras = OrdenCompra.objects.all()
-        eventos = Evento.objects.filter(eliminado=False)
-        vende = Vende.objects.first()
-        boletos = Boleto.objects.all()
-        
+  
 
-        for ordenCompra in ordenCompras:
-            ganancia_total_eventos+=ordenCompra.valor_total
-        
+        # Obtener todos los eventos de un organizador que no han sido eliminados
+        eventos = Evento.objects.filter(eliminado=False, id_organizador=id_organizador)
+        # Boletos de todos los eventos
         for evento in eventos:
-            gasto_total_eventos+=evento.gasto
+            boletos = Boleto.objects.filter(id_evento=evento.id_evento)
+            gasto_total_eventos += evento.gasto
+            for boleto in boletos:
+                total_boletos += boleto.stock
+                ganancia_total_posible += boleto.stock * boleto.precio
+                contienes = Contiene.objects.filter(id_boleto=boleto.id_boleto)
+                for contiene in contienes:
+                    ordenCompras = OrdenCompra.objects.filter(num_orden = contiene.num_orden_id)
+                    for ordenCompra in ordenCompras:
+                        ganancia_total_eventos += ordenCompra.valor_total
 
-        for boleto in boletos:
-            total_boletos+=boleto.stock
-            total_precio+=boleto.precio
-            
-        ganancia_total_posible += total_boletos * total_precio
-      
+        ganancia_porcentaje = round(Decimal(ganancia_total_eventos * 100) / Decimal(ganancia_total_posible), 2) if ganancia_total_posible else 0
+        gasto_total_eventos = round(Decimal(gasto_total_eventos) - Decimal(ganancia_total_eventos), 2)
 
-        ganancia_porcentaje = round (float(ganancia_total_eventos * 100) / float(ganancia_total_posible),2)
-        gasto_total_eventos=round(float(gasto_total_eventos)-float(ganancia_total_eventos),2)
-
+        # Suponiendo que 'vende.iva' es un valor constante o global, necesita ser obtenido correctamente
+        iva = Vende.objects.first().iva if Vende.objects.exists() else 0  # Ajustar según la lógica de tu aplicación
 
         valoresPIE = {
             "ganancia_total_eventos": ganancia_total_eventos,
             "gasto_total_eventos": gasto_total_eventos,
-            "iva": vende.iva,
+            "iva": iva,
             "ganancia_porcentaje": ganancia_porcentaje
         }
 
         return JsonResponse(valoresPIE, safe=False)
-                
+
         
 
         
@@ -781,6 +791,8 @@ class UserViewOrg(APIView):
         admin = Organizador.objects.filter(id_organizador=payload['id']).first()
         serializer = OrganizerSerializer(admin)
         return Response(serializer.data)
+
+
 
 class LogoutViewOrg(APIView):
     def post(self, request):

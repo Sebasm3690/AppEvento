@@ -209,7 +209,7 @@ const MapaDirecciones = ({ setUbicacion, ubicacion }) => {
   );
 };
 
-const CrudEvents = ({ organizerObj }) => {
+const CrudEvents = ({ id_organizador }) => {
   const navigate = useNavigate();
   const estiloModal = {
     maxWidth: "80%",
@@ -240,6 +240,7 @@ const CrudEvents = ({ organizerObj }) => {
   const [tipoBoleto, setTipoBoleto] = useState("");
   const [precio, setPrecio] = useState(0);
   const [idEventoBoleto, setIdEventoBoleto] = useState(0);
+  const [boletoNormalActual, setBoletoNormalActual] = useState({});
 
   const [limite, setLimite] = useState(0);
   //const [image, setImage] = useState("");
@@ -249,10 +250,6 @@ const CrudEvents = ({ organizerObj }) => {
   const [iva, setIva] = useState(0);
   const [descuento, setDescuento] = useState(0);
   const [precio_actual, setPrecioActual] = useState(0);
-
-  const [id_organizador, setIdOrganizador] = useState(
-    organizerObj.id_organizador
-  );
 
   /*Contiene*/
 
@@ -289,6 +286,7 @@ const CrudEvents = ({ organizerObj }) => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showModalQr, setShowModalQr] = useState(false);
   const [showConfirmModalDelete, setShowConfirmModalDelete] = useState(false);
+  const [showModalCloseVIP, setShowModalCloseVIP] = useState(false);
   /*Imagen*/
   const [imagen, setImagen] = useState(null);
   const [eventImages, setEventImages] = useState({});
@@ -307,7 +305,7 @@ const CrudEvents = ({ organizerObj }) => {
 
   useEffect(() => {
     getEvents();
-    handleEliminarEventoPasado();
+    //handleEliminarEventoPasado();
   }, []);
 
   const getEvents = async () => {
@@ -514,7 +512,13 @@ const CrudEvents = ({ organizerObj }) => {
   };
 
   const validarBoletoEditar = async (op) => {
-    const urlEditar = `http://127.0.0.1:8000/api/v1/ticket/${idBoleto}/`;
+    let urlEditar = `http://127.0.0.1:8000/api/v1/ticket/${idBoleto}/`;
+
+    if (op === 3) {
+      const nuevoIdBoleto = parseInt(boletoNormalActual.id_boleto);
+      urlEditar = `http://127.0.0.1:8000/api/v1/ticket/${nuevoIdBoleto}/`;
+    }
+
     var parametrosBoleto;
 
     if (stock > limite) {
@@ -533,23 +537,46 @@ const CrudEvents = ({ organizerObj }) => {
       return;
     }
 
-    parametrosBoleto = {
-      stock: stock,
-      tipoBoleto: tipoBoleto,
-      precio: precio,
-      id_evento: id, //Se queda igual por el editar de evento
-    };
+    op === 3
+      ? (parametrosBoleto = {
+          stock: limite,
+          tipoBoleto: tipoBoleto,
+          precio: precio,
+          id_evento: id, //Se queda igual por el editar de evento
+        })
+      : (parametrosBoleto = {
+          stock: stock,
+          tipoBoleto: tipoBoleto,
+          precio: precio,
+          id_evento: id, //Se queda igual por el editar de evento
+        });
 
     axios
       .put(urlEditar, parametrosBoleto)
       .then((response) => {
         console.log("Respuesta del servidor:", response.data);
-        show_alerta("El boleto ha sido editado exitosamente", "success");
+        op === 3
+          ? show_alerta(
+              "Todo el stock ha sido agregado al boleto normal",
+              "success"
+            )
+          : show_alerta("El boleto ha sido editado exitosamente", "success");
         setShowModalBoleto(false);
         op === 1 && handleEditarBoleto(2);
       })
       .catch((error) => {
-        console.error("Error al realizar la solicitud PUT:", error);
+        if (error.response) {
+          // La solicitud fue hecha y el servidor respondió con un estado de error
+          console.error("Error data:", error.response.data);
+          console.error("Error status:", error.response.status);
+          console.error("Error headers:", error.response.headers);
+        } else if (error.request) {
+          // La solicitud fue hecha pero no se recibió respuesta
+          console.error("Error request:", error.request);
+        } else {
+          // Algo más causó el error
+          console.error("Error message:", error.message);
+        }
       });
   };
 
@@ -601,6 +628,10 @@ const CrudEvents = ({ organizerObj }) => {
       );
       return;
     }
+    if (stock === 0) {
+      show_alerta("Se debe ingresar el stock de boletos a vender", "warning");
+      return;
+    }
     if (option === 2) {
       setStock(stockVIP);
     }
@@ -636,6 +667,8 @@ const CrudEvents = ({ organizerObj }) => {
         console.log("Respuesta del servidor:", response.data);
         show_alerta("El boleto ha sido agregado exitosamente", "success");
         setBoletos((boletos) => [...boletos, response.data]);
+        setBoletoNormalActual(response.data);
+
         handleIngresarVenta(response.data);
       })
       .catch((error) => {
@@ -681,6 +714,13 @@ const CrudEvents = ({ organizerObj }) => {
       prevEvents.filter((prevEvent) => prevEvent.id_evento !== id_evento)
     );
   };*/
+
+  function handleCerrarBoleto() {
+    show_alerta(
+      "Esta ventana no se puede cerrar ya que se debe ingresar el boleto para el evento",
+      "warning"
+    );
+  }
 
   const validar = async (op) => {
     var parametros;
@@ -760,6 +800,8 @@ const CrudEvents = ({ organizerObj }) => {
       axios
         .post(url, parametros)
         .then((response) => {
+          setId(response.data.id_evento);
+          setLimite(response.data.limite);
           setIdEventoBoleto(response.data.id_evento);
           console.log("Respuesta del servidor:", response.data);
           show_alerta("El evento ha sido agregado exitosamente", "success");
@@ -929,8 +971,8 @@ const CrudEvents = ({ organizerObj }) => {
     }
   };
 
-  function handleMapa() {
-    setMostrarMapa(true);
+  function handleCerrarBoletoVIP() {
+    setShowModalCloseVIP(true);
   }
 
   return (
@@ -993,7 +1035,7 @@ const CrudEvents = ({ organizerObj }) => {
               borderRadius: "8px",
             }}
             className="btn btn-primary"
-            onClick={() => navigate("/dashboardGeneral/")}
+            onClick={() => navigate(`/dashboardGeneral/${id_organizador}`)}
           >
             DASHBOARD GENERAL
           </button>
@@ -1030,9 +1072,7 @@ const CrudEvents = ({ organizerObj }) => {
           </thead>
           <tbody>
             {events
-              .filter(
-                (event) => event.id_organizador === organizerObj.id_organizador
-              )
+              .filter((event) => event.id_organizador === id_organizador)
               .filter((event) => event.eliminado === false)
               //.filter((event) => new Date() > new Date(event.fecha))
               .map((event) => (
@@ -1180,7 +1220,7 @@ const CrudEvents = ({ organizerObj }) => {
           <button
             className="close"
             style={{ position: "absolute", left: "16px", top: "16px" }}
-            onClick={() => setShowModalInsert(false)}
+            onClick={() => setShowModal(false)}
           >
             &times;
           </button>
@@ -1513,7 +1553,10 @@ const CrudEvents = ({ organizerObj }) => {
           <button
             className="close"
             style={{ position: "absolute", left: "16px", top: "16px" }}
-            onClick={() => setShowModalInsert(false)}
+            onClick={() => {
+              setShowModalBoleto(false);
+              setStep((s) => s - 1);
+            }}
           >
             &times;
           </button>
@@ -1618,7 +1661,10 @@ const CrudEvents = ({ organizerObj }) => {
           <button
             className="close"
             style={{ position: "absolute", left: "16px", top: "16px" }}
-            onClick={() => setShowModalBoleto(false)}
+            onClick={() => {
+              setStep((s) => (s = 1));
+              setShowModalBoletoVIP(false);
+            }}
           >
             &times;
           </button>
@@ -1735,7 +1781,7 @@ const CrudEvents = ({ organizerObj }) => {
           <button
             className="close"
             style={{ position: "absolute", left: "16px", top: "16px" }}
-            onClick={() => setShowModalInsert(false)}
+            onClick={() => handleCerrarBoleto()}
           >
             &times;
           </button>
@@ -1834,7 +1880,7 @@ const CrudEvents = ({ organizerObj }) => {
           <button
             className="close"
             style={{ position: "absolute", left: "16px", top: "16px" }}
-            onClick={() => setShowModalInsert(false)}
+            onClick={() => handleCerrarBoletoVIP()}
           >
             &times;
           </button>
@@ -2020,10 +2066,7 @@ const CrudEvents = ({ organizerObj }) => {
             </thead>
             <tbody>
               {events
-                .filter(
-                  (event) =>
-                    event.id_organizador === organizerObj.id_organizador
-                )
+                .filter((event) => event.id_organizador === id_organizador)
                 .filter((event) => event.eliminado === true)
                 //.filter((event) => new Date() < new Date(event.fecha))
                 .map((event) => (
@@ -2430,6 +2473,51 @@ const CrudEvents = ({ organizerObj }) => {
         <ModalFooter>
           <Button color="danger" onClick={() => setShowModalAsistente(false)}>
             Cancelar
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+      {/*Ventana modal cerrar ventana boleto VIp*/}
+      <Modal isOpen={showModalCloseVIP}>
+        <ModalHeader>
+          <h3>CONFIRMACIÓN</h3>
+        </ModalHeader>
+        <ModalBody>
+          <p>¿Estás seguro de que no desea insertar boletos VIP?</p>
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            className="btn btn-success"
+            style={{
+              backgroundColor: "#4CAF50  ",
+              borderColor: "#4CAF50 ",
+              color: "#fff",
+              padding: "10px 20px",
+              borderRadius: "8px",
+            }}
+            onClick={() => {
+              setShowModalBoletoIngresarVIP(false);
+              setShowModalCloseVIP(false);
+              setStep((s) => (s = 1));
+              validarBoletoEditar(3);
+            }}
+          >
+            Sí
+          </Button>
+          <Button
+            className="btn btn-error"
+            style={{
+              backgroundColor: "#D32F2F  ",
+              borderColor: "#D32F2F ",
+              color: "#fff",
+              padding: "10px 20px",
+              borderRadius: "8px",
+            }}
+            onClick={() => {
+              setShowModalCloseVIP(false);
+            }}
+          >
+            No
           </Button>
         </ModalFooter>
       </Modal>
