@@ -67,7 +67,9 @@ function Eventos() {
                   alt={evento.nombre_evento}
                 />
                 <div className="card-body">
-                  <h5 className="card-title">{evento.nombre_evento}</h5>
+                  <center>
+                    <h5 className="card-title">{evento.nombre_evento}</h5>
+                  </center>
                   <p className="card-text">{evento.descripcion}</p>
                   <p className="card-text">{evento.ubicacion}</p>
                   <p className="card-text">

@@ -6,7 +6,7 @@ import NavBarAsis from "./Asistente/navbaras";
 import Footer from "./footer";
 import FooterHP from "./otros/footerHP";
 import "./styles/inicio.css";
-import "./styles/EventosList.css"
+import "./styles/EventosList.css";
 
 import {
   Button,
@@ -39,8 +39,10 @@ function EventosList() {
     // Función para obtener los eventos desde tu API
     const fetchEventos = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/vereven/");
-        setEventos(response.data);
+        const response = await axios.get(
+          "http://localhost:8000/eventos_activos/"
+        );
+        setEventos(response.data.eventos);
       } catch (error) {
         console.error("Error al obtener eventos:", error);
       }
@@ -67,19 +69,21 @@ function EventosList() {
       let ordenamiento = "asc"; // Por defecto, ascendente
       if (tipomes === "Mesmenm") {
         ordenamiento = "desc"; // Si se selecciona "Mes (De mayor a menor)", descendente
-      }
-      else{
+      } else {
         ordenamiento = "asc";
       }
-  
-      const response = await axios.get(`http://localhost:8000/api/eventoslist/`, {
-        params: {
-          tipo: tipo,
-          nombre: nombre,
-          //mes: mes !== "Todo" ? mes : null,
-          ordenamiento: ordenamiento, // Utilizar el ordenamiento determinado
-        },
-      });
+
+      const response = await axios.get(
+        `http://localhost:8000/api/eventoslist/`,
+        {
+          params: {
+            tipo: tipo,
+            nombre: nombre,
+            //mes: mes !== "Todo" ? mes : null,
+            ordenamiento: ordenamiento, // Utilizar el ordenamiento determinado
+          },
+        }
+      );
       setEventos(response.data);
     } catch (error) {
       console.error("Error en la búsqueda de eventos:", error);
@@ -138,11 +142,22 @@ function EventosList() {
             {eventos
               .filter((evento) => !evento.eliminado)
               .map((evento) => (
-                <div key={evento.id_evento} className="evento-column mb-4 d-flex justify-content-center">
-                  <div className="card h-100" style={{ maxWidth: '300px' }}> {/* Establecer un ancho máximo para la tarjeta */}
-                    <img src={evento.imagen} className="card-img-top" alt={evento.nombre_evento} />
+                <div
+                  key={evento.id_evento}
+                  className="evento-column mb-4 d-flex justify-content-center"
+                >
+                  <div className="card h-100" style={{ maxWidth: "300px" }}>
+                    {" "}
+                    {/* Establecer un ancho máximo para la tarjeta */}
+                    <img
+                      src={evento.imagen}
+                      className="card-img-top"
+                      alt={evento.nombre_evento}
+                    />
                     <div className="card-body d-flex flex-column">
-                      <h5 className="card-title text-center">{evento.nombre_evento}</h5>
+                      <h5 className="card-title text-center">
+                        {evento.nombre_evento}
+                      </h5>
                       <p className="card-text">{evento.descripcion}</p>
                       <p className="card-text">{evento.ubicacion}</p>
                       <p className="card-text">
@@ -162,14 +177,13 @@ function EventosList() {
               ))}
           </div>
         </div>
-
       </div>
       <Modal isOpen={showModal}>
-      <ModalHeader>
-        <div style={{ textAlign: 'center' }}>
-          <h3 style={{ margin: 0 }}>INFORMACIÓN DEL EVENTO</h3>
-        </div>
-      </ModalHeader>
+        <ModalHeader>
+          <div style={{ textAlign: "center" }}>
+            <h3 style={{ margin: 0 }}>INFORMACIÓN DEL EVENTO</h3>
+          </div>
+        </ModalHeader>
 
         {imagen && (
           <img
@@ -181,7 +195,7 @@ function EventosList() {
 
         <ModalBody>
           <FormGroup>
-            <label style={{fontWeight: 'bold'}}>Evento:</label>
+            <label style={{ fontWeight: "bold" }}>Evento:</label>
             <input
               className="form-control"
               readOnly
@@ -192,7 +206,7 @@ function EventosList() {
             />
           </FormGroup>
           <FormGroup>
-            <label style={{fontWeight: 'bold'}}>Fecha:</label>
+            <label style={{ fontWeight: "bold" }}>Fecha:</label>
             <input
               className="form-control"
               readOnly
@@ -204,7 +218,7 @@ function EventosList() {
           </FormGroup>
 
           <FormGroup>
-            <label style={{fontWeight: 'bold'}}>Hora:</label>
+            <label style={{ fontWeight: "bold" }}>Hora:</label>
             <input
               className="form-control"
               readOnly
@@ -216,7 +230,7 @@ function EventosList() {
           </FormGroup>
 
           <FormGroup>
-            <label style={{fontWeight: 'bold'}}>Ubicación:</label>
+            <label style={{ fontWeight: "bold" }}>Ubicación:</label>
             <input
               className="form-control"
               readOnly
@@ -228,7 +242,7 @@ function EventosList() {
           </FormGroup>
 
           <FormGroup>
-            <label style={{fontWeight: 'bold'}}>Descripción:</label>
+            <label style={{ fontWeight: "bold" }}>Descripción:</label>
             <input
               className="form-control"
               readOnly
@@ -243,15 +257,31 @@ function EventosList() {
         <ModalFooter>
           <div className="row">
             <div className="col-md-6">
-              <Link to={`/verboletos/${id_evento}`} className="btn btn-primary"
-                style={{ backgroundColor: '#3498db', borderColor: '#3498db', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+              <Link
+                to={`/verboletos/${id_evento}`}
+                className="btn btn-primary"
+                style={{
+                  backgroundColor: "#3498db",
+                  borderColor: "#3498db",
+                  color: "#fff",
+                  padding: "10px 20px",
+                  borderRadius: "8px",
+                }}
               >
                 COMPRAR
               </Link>
             </div>
             <div className="col-md-6">
-              <Button className="btn btn-primary" onClick={() => setShowModal(false)}
-                style={{ backgroundColor: '#d32f2f', borderColor: '#d32f2f', color: '#fff', padding: '10px 20px', borderRadius: '8px' }}
+              <Button
+                className="btn btn-primary"
+                onClick={() => setShowModal(false)}
+                style={{
+                  backgroundColor: "#d32f2f",
+                  borderColor: "#d32f2f",
+                  color: "#fff",
+                  padding: "10px 20px",
+                  borderRadius: "8px",
+                }}
               >
                 CANCELAR
               </Button>
@@ -262,7 +292,6 @@ function EventosList() {
       <Footer />
     </>
   );
-  
 }
 
 export default EventosList;
