@@ -107,7 +107,6 @@ function App() {
 
         <Route path="/escanearqr/" element={<QRScanner></QRScanner>}></Route>
       </Routes>
-
     </BrowserRouter>
   );
 }

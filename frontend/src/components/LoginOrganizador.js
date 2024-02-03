@@ -30,6 +30,10 @@ const LoginOrganizador = () => {
         }),
       });
 
+      if(!response.ok){
+        throw response;
+      }
+
       const data = await response.json();
 
       if (data.jwt) {

@@ -1,10 +1,16 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> origin/dev
 body {
   margin: 0;
 }
 
+<<<<<<< HEAD
 >>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
+=======
+>>>>>>> origin/dev
 .navbar {
   background-color: #2980b9;
   padding: 15px 20px;
@@ -31,11 +37,16 @@ body {
 
 .navbar-link {
 <<<<<<< HEAD
+<<<<<<< HEAD
   color: #fff;
 =======
   color: #f2f2f2;
   font-size: 20px;
 >>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
+=======
+  color: #f2f2f2;
+  font-size: 20px;
+>>>>>>> origin/dev
   text-decoration: none;
   margin: 0 15px;
   padding: 10px 15px;
@@ -45,6 +56,7 @@ body {
 
 .navbar-link:hover {
 <<<<<<< HEAD
+<<<<<<< HEAD
   background-color: rgba(255, 255, 255, 0.1);
   color: #fff;
 =======
@@ -52,6 +64,11 @@ body {
   color: #333;
   text-decoration:overline; 
 >>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
+=======
+  /* background-color: rgba(255, 255, 255, 0.1); */
+  color: #333;
+  text-decoration:overline; 
+>>>>>>> origin/dev
 }
 
 .navbar-btn {
@@ -72,10 +89,14 @@ body {
 @media (max-width: 768px) {
   .navbar {
 <<<<<<< HEAD
+<<<<<<< HEAD
     padding: 10px 15px;
 =======
     padding: 15px 20px;
 >>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
+=======
+    padding: 15px 20px;
+>>>>>>> origin/dev
   }
 
   .navbar-links {
@@ -103,12 +124,18 @@ body {
 
 .navbar-left {
 <<<<<<< HEAD
+<<<<<<< HEAD
   margin-right: 20px;
   padding-left: 20px;
 =======
   width: 45%; 
   box-sizing: border-box; 
   padding-left: 20px;
+=======
+  width: 45%; 
+  box-sizing: border-box; 
+  padding-left: 20px;
+>>>>>>> origin/dev
   padding-right: 0;
 }
 
@@ -204,5 +231,8 @@ body {
   background-color: #2980b9; /* Color de fondo al pasar el ratón */
   color: #fff; /* Color del ícono al pasar el ratón */
   border-color: #fff; /* Color del borde al pasar el ratón */
+<<<<<<< HEAD
 >>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
+=======
+>>>>>>> origin/dev
 }

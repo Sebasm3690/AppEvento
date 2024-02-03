@@ -1,5 +1,6 @@
 .custom-form {
 <<<<<<< HEAD
+<<<<<<< HEAD
     width: 50%;
     margin: auto;
     padding: 20px;
@@ -42,6 +43,8 @@
   }
   
 =======
+=======
+>>>>>>> origin/dev
   width: 60%;
   margin: auto;
   padding: 30px;
@@ -115,5 +118,9 @@
   .btn-primary {
     padding: 10px 15px; /* Relleno aún más pequeño para los botones en pantallas de móviles */
   }
+<<<<<<< HEAD
 }
 >>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
+=======
+}
+>>>>>>> origin/dev

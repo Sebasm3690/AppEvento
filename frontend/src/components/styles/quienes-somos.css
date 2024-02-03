@@ -1,5 +1,6 @@
 .quienes-somos-container {
 <<<<<<< HEAD
+<<<<<<< HEAD
     /*background-color: #f9f9f9;*/
     padding: 100px;
     text-align: center;
@@ -41,6 +42,8 @@
   }
   
 =======
+=======
+>>>>>>> origin/dev
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -128,5 +131,9 @@ quienes-somos-sections {
   .desarrolladores-list li, .quienes-somos-content {
     font-size: 16px; /* Reduce el tamaño de fuente para el contenido y lista */
   }
+<<<<<<< HEAD
 }
 >>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
+=======
+}
+>>>>>>> origin/dev
