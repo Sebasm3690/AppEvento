@@ -200,6 +200,7 @@ function BoletosList() {
                           src={imagenEvento}
                           alt={`Imagen del evento ${eventoCorrespondiente.nombre_evento}`}
                           className="img-fluid"
+                          style={{ maxWidth: '600px', marginRight: '100px' }}
                         />
                       )} */}
                       <div
@@ -211,6 +212,7 @@ function BoletosList() {
                         </h4>
                       </div>
                       <div className="form-check checkbox-container">
+                        <br></br>
                         <input
                           className="form-check-input"
                           type="checkbox"
@@ -327,5 +329,6 @@ function BoletosList() {
       <Footer />
     </div>
   );
+  
 }
 export default BoletosList;

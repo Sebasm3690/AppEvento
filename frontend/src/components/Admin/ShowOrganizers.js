@@ -105,16 +105,38 @@ const CrudOrganizers = ({ adminObj }) => {
     );
   };
 
+  // Función para verificar si un organizador ha creado eventos
+  const hasOrganizerCreatedEvents = async (organizerId) => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/api/api/v1/event/`);
+      const events = response.data;
+      const organizerEvents = events.filter(event => event.id_organizador === organizerId);
+      return organizerEvents.length > 0;
+    } catch (error) {
+      console.error("Error al verificar eventos del organizador:", error);
+      return false; 
+    }
+  };
+
   const handleEliminarUsuario = async (userId) => {
-    //Solicitud para el borrado lógico
-    await axios.post(
-      `http://127.0.0.1:8000/borrado_logico_organizador/${userId}/`,
-      show_alerta("El organizador ha sido dado de baja", "success")
-    );
-    //Acutalizar lista de organizadores despues del borrado lógico
-    setOrganizers((prevOrganizadores) =>
-      prevOrganizadores.filter((o) => o.id_organizador !== userId)
-    );
+    const hasEvents = await hasOrganizerCreatedEvents(userId);
+    if (hasEvents) {
+      show_alerta("El organizador no puede ser dado de baja porque ha creado eventos.", "error");
+      return;
+    }
+
+    try {
+      await axios.post(
+        `http://127.0.0.1:8000/borrado_logico_organizador/${userId}/`
+      );
+      show_alerta("El organizador ha sido dado de baja", "success");
+      setOrganizers((prevOrganizadores) =>
+        prevOrganizadores.filter((o) => o.id_organizador !== userId)
+      );
+    } catch (error) {
+      console.error("Error al intentar borrar al organizador:", error);
+      show_alerta("No se pudo eliminar al organizador, intenta de nuevo más tarde.", "error");
+    }
   };
 
   const handleRecuperar = async () => {
