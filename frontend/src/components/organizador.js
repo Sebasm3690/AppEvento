@@ -59,7 +59,7 @@ const Organizador = () => {
 
       <div className="container mt-5">
         {adminData ? (
-          <CrudEvents organizerObj={adminData} ></CrudEvents>
+          <CrudEvents id_organizador={adminData.id_organizador}></CrudEvents>
         ) : (
           <p>Cargando datos del organizador...</p>
         )}

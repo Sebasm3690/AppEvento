@@ -21,6 +21,7 @@ router.register(r'boleto', views.TicketView)
 router.register(r'contiene', views.ContieneViewSet)
 router.register(r'contieneqr', views.ContieneQRViewSet)
 
+
 urlpatterns = [
     path("api/v1/", include(router.urls)),  #/api/v1/
     path("docs/", include_docs_urls(title="Parties API")),
@@ -32,8 +33,9 @@ urlpatterns = [
     path("vendeBoleto/",views.VendeBoleto.as_view(),name="vendeBoleto"),
     path("ganancia/<int:id_evento>/",views.GananciaEvento.as_view(),name="ganancia"),
     path("ordenDashboard/<int:id_evento>/",views.ordenCompraDashboard.as_view(),name="ordenDashboard"),
-    path("ganancia_general/",views.GananciaGeneral.as_view(),name='ganancia_general'),
-    path("valoresPIE/",views.ValoresPIETotal.as_view(),name='valoresPIE'),
+    path("ganancia_general/<int:id_organizador>/",views.GananciaGeneral.as_view(),name='ganancia_general'),
+    path("valoresPIE/<int:id_organizador>",views.ValoresPIETotal.as_view(),name='valoresPIE'),
+    path("eventos_activos/",views.ObtetenerEventosActivos.as_view(),name="eventos_activos"),
 
     path("api/login/", LoginViewAdm.as_view(), name='login'),
     path('api/logout/', LogoutViewAdm.as_view(), name='logout'),
