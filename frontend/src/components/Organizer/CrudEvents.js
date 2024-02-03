@@ -17,7 +17,6 @@ import { show_alerta } from "../../functions";
 import QRScanner from "../QrScanner";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-
 import "../Organizer/indexEvents.css";
 
 const MapaDirecciones = ({ setUbicacion, ubicacion }) => {
@@ -978,7 +977,7 @@ const CrudEvents = ({ id_organizador }) => {
   return (
     <>
       <Container className="meetup-item">
-        <div style={{ paddingBlockEnd: "50px" }}>
+      <div style={{ paddingBlockEnd: "50px" }}>
           <button
             style={{
               backgroundColor: "#3498db",

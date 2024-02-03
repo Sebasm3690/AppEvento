@@ -301,9 +301,7 @@ function BoletosList() {
               ))}
             <div className="text-center mt-3">
               {boletos.some((boleto) => boleto.isChecked) && (
-                <p style={{ color: "#2980b9" }} className="total-pagar">
-                  Total a Pagar: ${total}
-                </p>
+                <p style={{color:'#2980b9'}} className="total-pagar">Total a Pagar: ${total.toFixed(2)}</p>
               )}
               <p style={{ color: "#2980b9" }} className="total-llevar">
                 Total de boletos a llevar: {totalBoletosSeleccionados}

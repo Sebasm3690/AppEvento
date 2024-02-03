@@ -1,29 +1,4 @@
 .footer {
-<<<<<<< HEAD
-<<<<<<< HEAD
-   position: fixed;
-   bottom: 0;
-   width: 100%;
-   background-color: #333;
-   color: #fff;
-   padding: 15px 0;
-   text-align: center;
-   z-index: 1000; /* Asegura que el footer esté en la parte superior de otros elementos */
- }
- 
- .footer p {
-   margin: 0;
- }
- 
- @media (max-height: 600px) {
-   .footer {
-     position: static; /* Cambia a posición estática si la altura de la pantalla es pequeña */
-   }
- }
- 
-=======
-=======
->>>>>>> origin/dev
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -53,9 +28,4 @@
   .footer {
     position: static;
   }
-<<<<<<< HEAD
 }
->>>>>>> 4b36150bddaeb741bd14c61dfc92c1f9954631af
-=======
-}
->>>>>>> origin/dev
