@@ -121,7 +121,6 @@ npm install jspdf-autotable --force
     1. Agregar asistentes:
         - El organizador debe tener la capacidad de añadir asistentes al evento.
         - Se deben recopilar detalles como nombre, información de contacto, y cualquier otro dato relevante.
-
     2. Visualizar lista de asistentes:
         - Debería ser posible ver una lista completa de todos los asistentes registrados para el evento.
         - La lista debería incluir la información clave de cada asistente.
