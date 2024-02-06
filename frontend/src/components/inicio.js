@@ -73,12 +73,15 @@ function Inicio() {
   </div>
 
   <div className="info-container">
-    <h1>¡Descubre Cómo Usar PartyConnect!</h1>
-    <p>Aprende a sacar el máximo provecho de nuestra plataforma con nuestra guía rápida. Descubre funciones ocultas y consejos para optimizar tu experiencia.</p>
-    <div className="image-container">
-      <img src="https://cdn-icons-png.flaticon.com/512/6214/6214152.png" alt="Guía de Uso" /> 
-    </div>
+    <a href="https://liveespochedu-my.sharepoint.com/:b:/g/personal/francisco_alvarez_espoch_edu_ec/EUYvsBYyvlZIvWrrz794q18Bw8YM-z88n3dCxwPqYZgM9Q?e=cRZanl" target="_blank" style={{ textDecoration: 'none', color: 'inherit' }}>
+      <h1>¡Descubre Cómo Usar PartyConnect!</h1>
+      <p>Aprende a sacar el máximo provecho de nuestra plataforma con nuestra guía rápida. Descubre funciones ocultas y consejos para optimizar tu experiencia. <br></br><br></br> Haz clic para acceder a la ayuda.</p>
+      <div className="image-container">
+        <img src="https://cdn-icons-png.flaticon.com/512/6214/6214152.png" alt="Guía de Uso" />
+      </div>
+    </a>
   </div>
+
 </div>
 
       <FooterHP />
