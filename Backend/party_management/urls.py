@@ -21,7 +21,6 @@ router.register(r'boleto', views.TicketView)
 router.register(r'contiene', views.ContieneViewSet)
 router.register(r'contieneqr', views.ContieneQRViewSet)
 
-
 urlpatterns = [
     path("api/v1/", include(router.urls)),  #/api/v1/
     path("docs/", include_docs_urls(title="Parties API")),

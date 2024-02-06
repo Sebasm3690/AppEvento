@@ -1385,7 +1385,7 @@ const CrudEvents = ({ id_organizador }) => {
                     borderRadius: "8px",
                   }}
                 >
-                  VE CANCELAR
+                  CANCELAR
                 </Button>
               </div>
             </div>

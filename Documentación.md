@@ -27,7 +27,7 @@
 - **Sprint 7 - Fecha de Inicio: 08/01/2024 - Fecha de Fin: 14/01/2024 - Estado: REALIZADO**
 - **Sprint 8 - Fecha de Inicio: 15/01/2024 - Fecha de Fin: 21/01/2024 - Estado: REALIZADO**
 - **Sprint 9 - Fecha de Inicio: 22/01/2024 - Fecha de Fin: 28/01/2024 - Estado: REALIZADO**
-- **Sprint 10 - Fecha de Inicio: 29/01/2024 - Fecha de Fin: 04/02/2024 - Estado: PLANIFICADO**
+- **Sprint 10 - Fecha de Inicio: 29/01/2024 - Fecha de Fin: 04/02/2024 - Estado: REALIZADO**
 
 ### Enlace al Sprint Backlog:
 - [`Spring Backlog`](https://liveespochedu-my.sharepoint.com/:x:/g/personal/francisco_alvarez_espoch_edu_ec/Ee6udVe8hCJOri22fGPu3hgBkFqoGL-UxFdKtQTAmOOX_Q?e=NlzIac)
@@ -41,6 +41,8 @@
 ### Enlace de descarga del Diseño del Proyecto:
 - [`Link de Descarga`](https://liveespochedu-my.sharepoint.com/:u:/g/personal/francisco_alvarez_espoch_edu_ec/EXAkpfjXl8FBlOriGBpBw6UBlfHgWs7yLp7nmRSt6DfJvg?e=3PvpFO)
 
+### Ayuda del Party Connect
+- [`Enlace a la Ayuda de la Aplicación`](https://liveespochedu-my.sharepoint.com/:b:/g/personal/francisco_alvarez_espoch_edu_ec/EUYvsBYyvlZIvWrrz794q18Bw8YM-z88n3dCxwPqYZgM9Q?e=cRZanl)
 
 ## DESARROLLADO EN:
 
@@ -85,7 +87,6 @@ npm install react-qr-reader --force
 Para pdf:
 npm install jspdf html2canvas
 npm install jspdf-autotable --force
-
 
 - **Historia de Usuario #01:**
   - ID: HU-001
